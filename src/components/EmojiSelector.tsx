@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import Select from "react-select";
-import { Picker } from "emoji-mart";
 
 const options = [
   { value: "angry", label: "😠 Angry" },
@@ -41,7 +40,6 @@ const EmotionTable = () => {
   return (
     <div>
       <MoodPicker onSelect={setMood} />
-      {/* <Picker onSelect={(emoji) => setMood(emoji.colons)} /> */}
     </div>
   );
 };

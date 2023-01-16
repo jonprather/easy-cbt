@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import EmojiSelector from "../components/EmojiSelector.tsx";
 import FormNavSteps from "../components/FormNavSteps.tsx";
-
+import Table from "../components/Table.tsx";
 import * as z from "zod";
 import { fromZodError } from "zod-validation-error";
-
+// Could add subtitles make it objects
+const columns = ["Name", "ANTS", " for", "Against", "New", "Rerate"];
 const CBT_Schema = z.object({
   nameMood: z.string().nonempty(),
   rateMood: z.number().positive(),
@@ -82,55 +83,6 @@ function JournalTable() {
     }
   };
 
-  const fillData = (setData) => {
-    setData((prev): null => [
-      {
-        nameMood: "dep",
-        rateMood: 5,
-        automaticThoughts: "I am not good enough",
-        evidenceFor: "I failed that test last week",
-        evidenceAgainst: "I have received positive feedback from my colleagues",
-        newThought:
-          "I am capable of doing well, and one test does not define me",
-        rateBelief: 3,
-        rerateEmotion: 4,
-      },
-      {
-        nameMood: "dep",
-        rateMood: 2,
-        automaticThoughts: "I am a failure",
-        evidenceFor: "I lost my job last month",
-        evidenceAgainst:
-          "I have been actively looking for a new job and have had several interviews",
-        newThought:
-          "I am not a failure, I am taking steps to improve my situation",
-        rateBelief: 2,
-        rerateEmotion: 3,
-      },
-      {
-        nameMood: "dep",
-        rateMood: 4,
-        automaticThoughts: "I am not happy",
-        evidenceFor: "I have been feeling down lately",
-        evidenceAgainst: "I have had moments of joy and laughter recently",
-        newThought:
-          "I am not always happy, but that does not mean I am not capable of happiness",
-        rateBelief: 3,
-        rerateEmotion: 3,
-      },
-    ]);
-  };
-
-  const steps = [
-    "Rate Mood",
-    "Automatic Thoughts",
-    "Evidence for the Thought",
-    "Evidence Against the Thought",
-    "New Balanced Thought",
-    "Rate Belief in New Thought",
-    "Rerate Emotion",
-  ];
-
   const handleNext = () => {
     setCurrentStep(currentStep + 1);
   };
@@ -138,15 +90,11 @@ function JournalTable() {
   const handlePrev = () => {
     setCurrentStep(currentStep - 1);
   };
-  //   TODO do i want to make this columnular on desktop
-  // Well lets do mobile first is this the mobile design
-  //  I pictured somethign better bigger text input
-  // Maybe react selects for teh emojis etc
-  // number controls also zod controls for the boundaries or type guards
+  //   TODO zod controls for the boundaries or type guards
 
   return (
-    <div className="container   p-10">
-      <div className="mb-6 text-center">
+    <div className="pt-10 pb-40  md:p-20">
+      <div className="mb-6 p-4 text-center">
         <h1 className="mb-4 text-4xl font-medium text-blue-500">
           EasyCBT Diary
         </h1>
@@ -158,210 +106,197 @@ function JournalTable() {
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
         errors={errors}
+        columns={columns}
       />
-      <form onSubmit={handleSubmit} className="rounded bg-blue-500 p-4">
-        {currentStep === 0 && (
-          <label className="mt-4 block">
-            Name Mood:
-            {/* <input
-            type="text"
-            name="nameMood"
-            className="focus:shadow-outline block w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-          /> */}
-            <EmojiSelector />
-            {errors?.nameMood && (
-              <div className="text-red-500">{errors.nameMood}</div>
-            )}
-          </label>
-        )}
-        {currentStep === 1 && (
-          <label className="mt-4 block">
-            Rate Mood:
-            <input
-              type="number"
-              min="1"
-              max="100"
-              name="rateMood"
-              className="focus:shadow-outline block appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 pl-6 pr-6 leading-normal focus:outline-none"
-            />
-            {errors?.rateMood && (
-              <div className="text-red-500">{errors.rateMood}</div>
-            )}
-          </label>
-        )}
-        {currentStep === 2 && (
-          <label className="mt-4 block">
-            Automatic Thoughts:
-            <textarea
-              type="text-area"
-              name="automaticThoughts"
-              className="focus:shadow-outline block h-80 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-            />
-            {errors?.automaticThoughts && (
-              <div className="text-red-500">{errors.automaticThoughts}</div>
-            )}
-          </label>
-        )}
+      {/* TODO ok left off trying to make this bigger also was working on passing errors to tabs
+      see todos */}
+      <div className=" mx-auto bg-blue-500  p-2 pt-6 pb-6 shadow-lg sm:p-6 md:max-w-5xl md:rounded">
+        <form
+          onSubmit={handleSubmit}
+          className="min-h-50 mx-auto rounded bg-white p-4  shadow sm:mt-4 sm:max-w-3xl md:mt-10"
+        >
+          {currentStep === 0 && (
+            <label className="mt-4 block">
+              Name Mood:
+              <EmojiSelector />
+              {errors?.nameMood && (
+                <div className="text-red-500">{errors.nameMood}</div>
+              )}
+            </label>
+          )}
+          {currentStep === 0 && (
+            <label className="mt-4 block">
+              Rate Mood:
+              <input
+                type="number"
+                min="1"
+                max="100"
+                name="rateMood"
+                className="focus:shadow-outline block appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 pl-6 pr-6 leading-normal focus:outline-none"
+              />
+              {errors?.rateMood && (
+                <div className="text-red-500">{errors.rateMood}</div>
+              )}
+            </label>
+          )}
+          {currentStep === 1 && (
+            <label className="mt-4 block">
+              Automatic Thoughts:
+              <textarea
+                type="text-area"
+                name="automaticThoughts"
+                className="focus:shadow-outline block  h-52  w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
+              />
+              {errors?.automaticThoughts && (
+                <div className="text-red-500">{errors.automaticThoughts}</div>
+              )}
+            </label>
+          )}
 
-        {currentStep === 3 && (
-          <label className="mt-4 block">
-            Evidence for the Thought:
-            <input
-              type="text"
-              name="evidenceFor"
-              className="focus:shadow-outline block h-80 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-            />
-            {errors?.evidenceFor && (
-              <div className="text-red-500">{errors.evidenceFor}</div>
-            )}
-          </label>
-        )}
+          {/* TODO get the hot thought selected (maybe could implement multi path function here
+    like for hot thought 1 have one thing for hot thought 2 have another...
+    so would have to make the evidence rest of form really be tied to that hot thought...
+    hot thought would be primary ( but thas also tied to mood man that just got complicated)
+    anyway
+    // add teh current hot thought and relevant moods to the evidence for
+    // but i think i will need to get the state first ie im not handling it until the end...
+    like there is not value and onCHange on each thing
+    // like would need to store the current value for that entry (current entry)
+    //and seperate it from past entries which would come from db anyway
+    //though could opt update add the newest i suppose..
 
-        {currentStep === 4 && (
-          <label className="mt-4 block">
-            Evidence Against the Thought:
-            <input
-              type="text"
-              name="evidenceAgainst"
-              className="focus:shadow-outline block w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-            />
-            {errors?.evidenceAgainst && (
-              <div className="text-red-500">{errors.evidenceAgainst}</div>
-            )}
-          </label>
-        )}
-        {currentStep === 5 && (
-          <label className="mt-4 block">
-            New Balanced Thought:
-            <input
-              type="text"
-              name="newThought"
-              className="focus:shadow-outline block w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-            />
-            {errors?.newThought && (
-              <div className="text-red-500">{errors.newThought}</div>
-            )}
-          </label>
-        )}
-        {currentStep === 6 && (
-          <label className="mt-4 block">
-            Rate Belief in New Thought:
-            <input
-              type="number"
-              name="rateBelief"
-              min="1"
-              max="100"
-              className="focus:shadow-outline w-22 block appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-              onBlur={() => (errors.rateBelief = "")}
-              onChange={(e) => {
-                setErrors((prev: tableSchema): tableSchema => {
-                  return [{ ...prev, rateBelief: null }];
-                });
-                //  TODO THis resets it all on change which migh tbe jank
-                // also dont want to trigger errros until later..
-                setData((prev) => {
-                  return [{ ...prev, rateBelief: e.target.value }];
-                });
-              }}
-            />
-            {/* TODO im not handling on change not handling state only doing so on submit
+
+
+    ) */}
+          {currentStep === 2 && (
+            <label className="mt-4 block">
+              Evidence for the Thought:
+              <textarea
+                type="text-area"
+                name="evidenceFor"
+                className="focus:shadow-outline block h-52 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
+              />
+              {errors?.evidenceFor && (
+                <div className="text-red-500">{errors.evidenceFor}</div>
+              )}
+            </label>
+          )}
+
+          {currentStep === 3 && (
+            <label className="mt-4 block">
+              Evidence Against the Thought:
+              <textarea
+                type="text-area"
+                name="evidenceAgainst"
+                className="focus:shadow-outline block h-52 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
+              />
+              {errors?.evidenceAgainst && (
+                <div className="text-red-500">{errors.evidenceAgainst}</div>
+              )}
+            </label>
+          )}
+          {currentStep === 4 && (
+            <label className="mt-4 block">
+              New Balanced Thought:
+              <textarea
+                type="text-area"
+                name="newThought"
+                className="focus:shadow-outline block h-52 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
+              />
+              {errors?.newThought && (
+                <div className="text-red-500">{errors.newThought}</div>
+              )}
+            </label>
+          )}
+          {currentStep === 5 && (
+            <label className="mt-4 block">
+              Rate Belief in New Thought:
+              <input
+                type="number"
+                name="rateBelief"
+                min="1"
+                max="100"
+                className="focus:shadow-outline w-22 block  rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
+                onBlur={() => console.log()}
+                // (errors.rateBelief = "")
+                onChange={(e) => {
+                  setErrors((prev: tableSchema): tableSchema => {
+                    return [{ ...prev, rateBelief: null }];
+                  });
+                  //  TODO THis resets it all on change which migh tbe jank
+                  // also dont want to trigger errros until later..
+                  setData((prev) => {
+                    return [{ ...prev, rateBelief: e.target.value }];
+                  });
+                }}
+              />
+              {/* TODO im not handling on change not handling state only doing so on submit
            but i might want to implement autoSaves when person rests for a few secods and stuff has changed
-           will need state for that i can access teh data data.rateMood etc and set it that way
+           will need state for that i can access the data.rateMood etc and set it that way
           */}
-            {errors?.rateBelief && (
-              <div className="text-red-500">{errors.rateBelief}</div>
-            )}
-          </label>
-        )}
+              {errors?.rateBelief && (
+                <div className="text-red-500">{errors.rateBelief}</div>
+              )}
+            </label>
+          )}
 
-        {currentStep === 7 && (
-          <label className="mt-4 block">
-            Rerate Emotion:
-            <input
-              type="number"
-              min="1"
-              max="100"
-              name="rerateEmotion"
-              className="focus:shadow-outline min-w-22 block appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-            />
-            {errors?.rerateEmotion && (
-              <div className="text-red-500">{errors.rerateEmotion}</div>
-            )}
-          </label>
-        )}
-        {currentStep === 7 && (
+          {currentStep === 5 && (
+            <label className="mt-4 block">
+              Rerate Emotion:
+              <input
+                type="number"
+                min="1"
+                max="100"
+                name="rerateEmotion"
+                className="focus:shadow-outline min-w-22 block appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
+              />
+              {errors?.rerateEmotion && (
+                <div className="text-red-500">{errors.rerateEmotion}</div>
+              )}
+            </label>
+          )}
+          {currentStep === 5 && (
+            <button
+              type="submit"
+              className="mt-6 rounded-lg border border-gray-400 bg-green-600 py-2 px-4 font-semibold text-white shadow-md hover:bg-gray-100"
+            >
+              Add Entry
+            </button>
+          )}
+        </form>
+
+        <div className="mx-auto flex gap-4 sm:max-w-3xl">
           <button
-            type="submit"
-            className="mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold text-gray-800 hover:bg-gray-100"
+            onClick={() => setCurrentStep(currentStep - 1)}
+            disabled={currentStep === 0}
+            className={`mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold shadow-sm  hover:bg-gray-100 ${
+              currentStep === 0
+                ? "bg-gray-500  text-white"
+                : "bg-white text-gray-800"
+            }`}
           >
-            Add Entry
+            Previous
           </button>
-        )}
-      </form>
-      <div className="mb-6 mt-20 text-center">
-        <h2 className="mb-4 text-3xl font-medium text-blue-500">
-          Past Entries
-        </h2>
+          <button
+            onClick={() => setCurrentStep(currentStep + 1)}
+            disabled={currentStep === columns.length - 1}
+            className={`mt-6 rounded-lg border border-gray-400 py-2  px-4 font-semibold text-white shadow-sm hover:bg-gray-100 ${
+              currentStep === columns.length - 1
+                ? "bg-gray-500"
+                : "bg-green-500"
+            }`}
+          >
+            Next
+          </button>
+        </div>
       </div>
-      {/* TODO make overflow nicer  */}
-      <div className="container mt-4 overflow-x-auto ">
-        <table className="text-gray w-full table-auto">
-          <thead>
-            <tr>
-              <th className="bg-blue-500 p-2">Name Mood</th>
-
-              <th className="bg-blue-500 p-2">Rate Mood</th>
-              <th className="bg-blue-500 p-2">Automatic Thoughts</th>
-              <th className="bg-blue-500 p-2">Evidence for the Thought</th>
-              <th className="bg-blue-500 p-2">Evidence Against the Thought</th>
-              <th className="bg-blue-500 p-2">New Balanced Thought</th>
-              <th className="bg-blue-500 p-2">Rate Belief in New Thought</th>
-              <th className="bg-blue-500 p-2">Rerate Emotion</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((entry, index) => (
-              <tr key={index}>
-                <td className="td  p-2 text-white">{entry.nameMood}</td>
-                <td className="td border-slate-800 bg-slate-500 p-2 text-white">
-                  {entry.rateMood}
-                </td>
-                <td className="p-2  ">{entry.automaticThoughts}</td>
-                <td className="border-spacing-2  bg-slate-500 p-2">
-                  {entry.evidenceFor}
-                </td>
-                <td className="p-2 ">{entry.evidenceAgainst}</td>
-                <td className="bg-slate-500  p-2">{entry.newThought}</td>
-                <td className="p-2">{entry.rateBelief}</td>
-                <td className="bg-slate-500  p-2">{entry.rerateEmotion}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <button
-        onClick={() => fillData(setData)}
-        className="mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold text-gray-800 hover:bg-gray-100"
-      >
-        {" "}
-        Click Me TO fill
-      </button>
+      {/* <Table setData={setData} data={data} /> */}
     </div>
   );
 }
 export default JournalTable;
 
-// is this the design i want seems weird to have it the inputs as rows not columns but does make sense for mobile
-
-// maybe can elaborate on some designs and check competitors etc
-
-// TODO priritize the key parts and learnings Screw all this boring form validation shit
-// can do that later
-// lets test out the fun bits
-// like save sessions
-//have a nicer UI for past sessions
-
-// TODO IDEAS make it steps liek checkout also has overview choose one it becomes main focus
+// TODO
 // dont forget savablitilty
 // auto saves
 // also save progress

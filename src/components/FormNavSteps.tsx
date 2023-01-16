@@ -1,47 +1,27 @@
 import React, { useState } from "react";
 
-const FormNavigation = ({ currentStep, setCurrentStep, errors }) => {
-  const columns = [
-    "Name Mood",
-    "Rate Mood",
-    "Automatic Thoughts",
-    "Evidence for the Thought",
-    "Evidence Against the Thought",
-    "New Balanced Thought",
-    "Rate Belief in New Thought",
-    "Rerate Emotion",
-  ];
+const FormNavigation = ({ currentStep, setCurrentStep, errors, columns }) => {
   // TODO so errors could be used but they are not cleanly mapped ie the names are diff and the indexs
   // wont nedd match bc obj
   return (
-    <div className="container flex justify-between">
-      <button
-        onClick={() => setCurrentStep(currentStep - 1)}
-        disabled={currentStep === 0}
-      >
-        Previous
-      </button>
+    <div className=" mx-auto flex  justify-center sm:gap-2 md:max-w-5xl  md:pl-2 md:pr-2">
       {columns.map((columnName, index) => (
         <button
           key={columnName}
-          className={` rounded-t-md px-2 py-1 ${
-            currentStep === index ? "bg-blue-500 text-white" : "bg-gray-200"
-          }
-         
-          `}
+          className={`sm:text-md md:text-md min-w-0 flex-1 rounded-t-md px-2 py-2 text-sm capitalize ${
+            currentStep === index
+              ? "bg-blue-500 text-white "
+              : "bg-gray-200 shadow-sm"
+          }`}
           onClick={() => setCurrentStep(index)}
+          disabled={index === currentStep}
         >
-          {/* // handleStepChange this would have diff logic right bc would jump to it so would need to pass it the index */}
-
+          {/* if current step have full name else have ... atleast on mobile */}
           {columnName}
+          {/* {index === currentStep ? index + 1 + " " + columnName : index + 1} */}
+          {/* columnName.split(" ").slice(0, 1).join(" ") + "..." works for desktop but for smaller i want just steps */}
         </button>
       ))}
-      <button
-        onClick={() => setCurrentStep(currentStep + 1)}
-        disabled={currentStep === columns.length - 1}
-      >
-        Next
-      </button>
     </div>
   );
 };
@@ -50,5 +30,3 @@ export default FormNavigation;
 
 // TODO if use stepper this way could also pass down errors to show for each label like mark them red
 // and give msg
-
-// TODO doesnt match other container on small screens
