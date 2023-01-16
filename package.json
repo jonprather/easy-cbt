@@ -18,10 +18,12 @@
     "@trpc/next": "^10.8.1",
     "@trpc/react-query": "^10.8.1",
     "@trpc/server": "^10.8.1",
+    "emoji-mart": "^5.4.0",
     "next": "13.1.1",
     "next-auth": "^4.18.7",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-select": "^5.7.0",
     "superjson": "1.9.1",
     "zod": "^3.20.2",
     "zod-validation-error": "^0.3.0"
