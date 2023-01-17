@@ -25,7 +25,7 @@ const MoodPicker = ({ nameMood, onChange }) => {
     <Select
       options={options}
       value={nameMood}
-      isMulti
+      //   isMulti
       onChange={(selectedOption) =>
         onChange({ target: { name: "nameMood", value: selectedOption } })
       }

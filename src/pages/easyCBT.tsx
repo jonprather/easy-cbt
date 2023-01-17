@@ -1,15 +1,30 @@
 import React, { useState } from "react";
-import EmojiSelector from "../components/EmojiSelector.tsx";
+
 import FormNavSteps from "../components/FormNavSteps.tsx";
 import Table from "../components/Table.tsx";
 import * as z from "zod";
 import { fromZodError } from "zod-validation-error";
+
+import NameAndRateMood from "../components/NameAndRateMood.tsx";
+import AutomaticThoughts from "../components/AutomaticThoughts.tsx";
+import PreviousAndNextButtons from "../components/PreviousAndNextButtons.tsx";
+import Rerate from "../components/Rerate.tsx";
+
+// Can make a reusable component for evi for against and new
+// its all very sim or can reuse teh components i uesd for automaticTHoughts
+// that might work better to make a list that way
 // Could add subtitles make it objects
 const columns = ["Name", "ANTS", " for", "Against", "New", "Rerate"];
+// TODO fix this type to be accurate then can use it to know prisma types
 const CBT_Schema = z.object({
   nameMood: z.array(),
   rateMood: z.number().positive(),
-  automaticThoughts: z.string().nonempty(),
+  automaticThoughts: z.array(
+    z.object({
+      thought: z.string(),
+      isHot: z.boolean(),
+    })
+  ),
   evidenceFor: z.string().nonempty(),
   evidenceAgainst: z.string().nonempty(),
   newThought: z.string().nonempty(),
@@ -21,18 +36,8 @@ type tableSchema = z.infer<typeof CBT_Schema>;
 
 function JournalTable() {
   const [currentStep, setCurrentStep] = useState(0);
-  const [automaticThoughts, setAutomaticThoughts] = useState([]);
-  const [errors, setErrors] = React.useState(null);
 
-  const handleChange = (event) => {
-    if (event.target.name === "automaticThoughts") {
-      setAutomaticThoughts([...automaticThoughts, event.target.value]);
-      return;
-    }
-    console.log("EVENT", event);
-    const { name, value } = event.target;
-    setData((prevState) => ({ ...prevState, [name]: value }));
-  };
+  const [errors, setErrors] = React.useState(null);
   const [data, setData] = React.useState({
     nameMood: [],
     rateMood: "",
@@ -43,13 +48,41 @@ function JournalTable() {
     rateBelief: "",
     rerateEmotion: "",
   });
+
+  // TODO  Do similar for mood and rating for the given mood maybe can not have multi
+  // otherwise have to use similar logic
+  const getHotThoughtsText = () => {
+    let hotThoughts = data?.automaticThoughts
+      ?.filter((thoughts) => thoughts.isHot)
+      ?.map((thoughts) => thoughts.thought + "  🔥 ")
+      ?.join(" - ");
+    return hotThoughts;
+  };
+  //   TODO not sure how i want this designed is mutli moods really benificial?
+  // Imean they can make a new table or i guess it could be nice to have that ability...
+  const getMoodText = () => {
+    let hotThoughts = data?.automaticThoughts
+      ?.filter((thoughts) => thoughts.isHot)
+      ?.map((thoughts) => thoughts.thought)
+      ?.join(";");
+    return hotThoughts;
+  };
+  const handleChange = (event, index) => {
+    if (event.target.name === "automaticThoughts") {
+      const newThoughts = [...data.automaticThoughts];
+      newThoughts[index].thought = event.target.value;
+      setData({ ...data, automaticThoughts: newThoughts });
+    }
+    const { name, value } = event.target;
+    setData((prevState) => ({ ...prevState, [name]: value }));
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
     const formValues = {
       nameMood: formData.get("nameMood"),
-
       rateMood: Number(formData.get("rateMood")),
       automaticThoughts: formData.get("automaticThoughts"),
       evidenceFor: formData.get("evidenceFor"),
@@ -78,13 +111,10 @@ function JournalTable() {
         };
       });
     } catch (err: Error) {
-      //   TODO ok i was trying to get tabel working also on submit doesnt clear table
-
       // Table is being auto set to current data i guess that will change when i use BE
       const validationError = String(fromZodError(err));
       // the error now is readable by the user
 
-      console.log(validationError.split(";"));
       const errorArray = validationError.split("; ");
       const errorObject = {};
       errorArray.forEach((error) => {
@@ -96,40 +126,8 @@ function JournalTable() {
     }
   };
 
-  const handleNext = () => {
-    setCurrentStep(currentStep + 1);
-  };
-
-  const handlePrev = () => {
-    setCurrentStep(currentStep - 1);
-  };
   //   TODO zod controls for the boundaries or type guards
-  let textInput = React.createRef();
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      setData((prev) => {
-        return {
-          ...prev,
-          automaticThoughts: [...data.automaticThoughts, event.target.value],
-        };
-      });
-    }
-    // so handlechange is already doing updates so what is this for?
-    // should just be to add new lis not set data right?
-  };
-  const handleAutomaticThoughtsKeyDown = (event) => {
-    if (event.key === "Enter") {
-      setData((prevData) => {
-        return {
-          ...prevData,
-          automaticThoughts: [
-            ...prevData.automaticThoughts,
-            event.target.value,
-          ],
-        };
-      });
-    }
-  };
+
   return (
     <div className=" bg-gray-100  pt-10 pb-80 md:p-20">
       <div className="mb-6 p-4 text-center">
@@ -155,96 +153,24 @@ function JournalTable() {
             onSubmit={handleSubmit}
             className="min-h-60 mx-auto w-full rounded bg-gray-100  p-4  shadow sm:mt-4 sm:max-w-3xl md:mt-10"
           >
-            {currentStep === 0 && (
-              <label className="mt-4 block">
-                Name Mood:
-                {console.log("HANDLE CHANGE RIGHT B$", handleChange)}
-                <EmojiSelector
-                  nameMood={data.nameMood}
-                  onChange={handleChange}
-                />
-                {errors?.nameMood && (
-                  <div className="text-red-500">{errors.nameMood}</div>
-                )}
-              </label>
-            )}
-            {currentStep === 0 && (
-              <label className="mt-4 block">
-                Rate Mood:
-                <input
-                  value={data.rateMood}
-                  onChange={handleChange}
-                  type="number"
-                  min="1"
-                  max="100"
-                  name="rateMood"
-                  className="focus:shadow-outline block appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 pl-6 pr-6 leading-normal focus:outline-none"
-                />
-                {errors?.rateMood && (
-                  <div className="text-red-500">{errors.rateMood}</div>
-                )}
-              </label>
-            )}
-            {currentStep === 1 && (
-              // TODO make this overflow correctly also make the
-              <div className={"bg-gray-100 sm:h-80"}>
-                <label className="mt-4 block ">
-                  Automatic Thoughts:
-                  <input
-                    type="text"
-                    name="automaticThoughts"
-                    ref={textInput}
-                    className="focus:shadow-outline block    w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-                  />
-                </label>
-                <div className="flex justify-start ">
-                  <button
-                    onClick={(e) => {
-                      setAutomaticThoughts([
-                        ...automaticThoughts,
-                        textInput.current.value,
-                      ]);
-                      textInput.current.value = "";
-                    }}
-                    className="mt-6 mb-3 rounded-lg border border-gray-400 bg-blue-600 py-2 px-4 font-semibold text-white shadow-md hover:bg-blue-700"
-                  >
-                    {" "}
-                    Add Thought
-                  </button>
-                  <h3 className="semibold my-auto p-2 text-lg font-medium">
-                    Thought List
-                  </h3>
-                </div>
-                <div className="h-36 overflow-y-scroll bg-white p-2 md:h-52 ">
-                  {automaticThoughts.map((thought, index) => (
-                    <li key={index}>{thought}</li>
-                  ))}
-                </div>
+            <NameAndRateMood
+              currentStep={currentStep}
+              errors={errors}
+              handleChange={handleChange}
+              data={data}
+            />
+            <AutomaticThoughts
+              setData={setData}
+              data={data}
+              currentStep={currentStep}
+              errors={errors}
+              handleChange={handleChange}
+            />
 
-                {errors?.automaticThoughts && (
-                  <div className="text-red-500">{errors.automaticThoughts}</div>
-                )}
-              </div>
-            )}
-
-            {/* TODO get the hot thought selected (maybe could implement multi path function here
-    like for hot thought 1 have one thing for hot thought 2 have another...
-    so would have to make the evidence rest of form really be tied to that hot thought...
-    hot thought would be primary ( but thas also tied to mood man that just got complicated)
-    anyway
-    // add teh current hot thought and relevant moods to the evidence for
-    // but i think i will need to get the state first ie im not handling it until the end...
-    like there is not value and onCHange on each thing
-    // like would need to store the current value for that entry (current entry)
-    //and seperate it from past entries which would come from db anyway
-    //though could opt update add the newest i suppose..
-
-
-
-    ) */}
             {currentStep === 2 && (
               <label className="mt-4 block">
-                Evidence for the Thought:
+                Evidence for the Thought:{" "}
+                <span className=" text-red-500"> {getHotThoughtsText()}</span>
                 <textarea
                   value={data.evidenceFor}
                   onChange={handleChange}
@@ -260,7 +186,8 @@ function JournalTable() {
 
             {currentStep === 3 && (
               <label className="mt-4 block">
-                Evidence Against the Thought:
+                Evidence Against the Thought:{" "}
+                <span className=" text-red-500"> {getHotThoughtsText()}</span>
                 <textarea
                   value={data.evidenceAgainst}
                   onChange={handleChange}
@@ -288,85 +215,25 @@ function JournalTable() {
                 )}
               </label>
             )}
-            {currentStep === 5 && (
-              <label className="mt-4 block">
-                Rate Belief in New Thought:
-                <input
-                  type="number"
-                  name="rateBelief"
-                  value={data.rateBelief}
-                  min="1"
-                  max="100"
-                  className="focus:shadow-outline w-22 block  rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-                  onBlur={() => console.log()}
-                  // (errors.rateBelief = "")
-                  onChange={handleChange}
-                />
-                {/* TODO im not handling on change not handling state only doing so on submit
-           but i might want to implement autoSaves when person rests for a few secods and stuff has changed
-           will need state for that i can access the data.rateMood etc and set it that way
-          */}
-                {errors?.rateBelief && (
-                  <div className="text-red-500">{errors.rateBelief}</div>
-                )}
-              </label>
-            )}
 
-            {currentStep === 5 && (
-              <label className="mt-4 block">
-                Rerate Emotion:
-                <input
-                  onChange={handleChange}
-                  value={data.rerateEmotion}
-                  type="number"
-                  min="1"
-                  max="100"
-                  name="rerateEmotion"
-                  className="focus:shadow-outline min-w-22 block appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-                />
-                {errors?.rerateEmotion && (
-                  <div className="text-red-500">{errors.rerateEmotion}</div>
-                )}
-              </label>
-            )}
-            {currentStep === 5 && (
-              <button
-                type="submit"
-                className="mt-6 rounded-lg border border-gray-400 bg-green-600 py-2 px-4 font-semibold text-white shadow-md hover:bg-green-700"
-              >
-                Add Entry
-              </button>
-            )}
+            <Rerate
+              currentStep={currentStep}
+              errors={errors}
+              data={data}
+              handleChange={handleChange}
+              columns={columns}
+            />
           </form>
 
           <div className="   ">
-            <div className=" m-auto flex flex-row justify-between  sm:max-w-3xl">
-              <button
-                onClick={() => setCurrentStep(currentStep - 1)}
-                disabled={currentStep === 0}
-                className={`mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold shadow-sm   ${
-                  currentStep === 0
-                    ? "bg-gray-500  text-white"
-                    : "bg-white text-gray-800 text-white hover:bg-gray-200"
-                }`}
-              >
-                Previous
-              </button>
-              <button
-                onClick={() => setCurrentStep(currentStep + 1)}
-                disabled={currentStep === columns.length - 1}
-                className={`mt-6 rounded-lg border border-gray-400 py-2  px-4 font-semibold text-white shadow-sm  ${
-                  currentStep === columns.length - 1
-                    ? "bg-gray-500 "
-                    : "bg-green-600 hover:bg-green-700"
-                }`}
-              >
-                Next
-              </button>
-            </div>
+            <PreviousAndNextButtons
+              currentStep={currentStep}
+              columns={columns}
+            />
           </div>
         </div>
-        <Table setData={setData} data={data} />
+        {/* TODO fix for new ds */}
+        {/* <Table setData={setData} data={data} /> */}
       </div>
     </div>
   );
@@ -411,7 +278,4 @@ export default JournalTable;
 // TODO could add two btns one for genereal info help and another for the advanced help
 // TODO not storing anystate at this time when move tabs
 
-// TODO set up the text area li stuff
-//  and ability to select hot thought and moods to work on
-//  maybe multi rate moods in both areas...
-// reference things from earlie ras needed
+// TODO reference things from earlie ras needed
