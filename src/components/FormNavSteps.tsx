@@ -4,7 +4,7 @@ const FormNavigation = ({ currentStep, setCurrentStep, errors, columns }) => {
   // TODO so errors could be used but they are not cleanly mapped ie the names are diff and the indexs
   // wont nedd match bc obj
   return (
-    <div className=" mx-auto flex  justify-center sm:gap-2 md:max-w-5xl  md:pl-2 md:pr-2">
+    <div className=" mx-auto flex  justify-center sm:gap-2 md:max-w-5xl  md:pl-12 md:pr-0">
       {columns.map((columnName, index) => (
         <button
           key={columnName}

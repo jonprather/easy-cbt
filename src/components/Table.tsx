@@ -1,6 +1,18 @@
 import React, { useState } from "react";
 
 const Table = ({ setData, data }) => {
+  data = [data];
+  //   let testData = data.map((entry, index) => {
+  //     return entry.nameMood.map((mood) => {
+  //       return mood;
+  //     });
+  //   });
+
+  //   console.log("eg", testData, testData[0][0].value);
+  //   so this will likely be for history of many tables...
+  //  but for current for testing just fake it liek its in an array
+  // can figure out how to display many things later vs just the new one
+  console.log("data: __>", data);
   const fillData = (setData) => {
     setData((prev): null => [
       {
@@ -61,10 +73,15 @@ const Table = ({ setData, data }) => {
               <th className="bg-blue-500 p-2">Rerate Emotion</th>
             </tr>
           </thead>
+
           <tbody>
             {data.map((entry, index) => (
               <tr key={index}>
-                <td className="td  p-2 text-white">{entry.nameMood}</td>
+                <td className="td  p-2 text-white">
+                  {entry?.nameMood?.map((mood) => (
+                    <span>{mood.name}</span>
+                  ))}
+                </td>
                 <td className="td border-slate-800 bg-slate-500 p-2 text-white">
                   {entry.rateMood}
                 </td>

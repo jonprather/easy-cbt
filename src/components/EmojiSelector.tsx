@@ -7,6 +7,7 @@ const options = [
   { value: "content", label: "😊 Content" },
   { value: "depressed", label: "😔 Depressed" },
   { value: "excited", label: "😃 Excited" },
+  { value: "frustrated", label: "😤 Frustrated" },
   { value: "grateful", label: "😌 Grateful" },
   { value: "happy", label: "😃 Happy" },
   { value: "inspired", label: "😃 Inspired" },
@@ -19,27 +20,32 @@ const options = [
   { value: "worried", label: "😟 Worried" },
 ];
 
-const MoodPicker = ({ onSelect }) => {
-  const [selected, setSelected] = useState(null);
+const MoodPicker = ({ nameMood, onChange }) => {
   return (
     <Select
       options={options}
-      value={selected}
+      value={nameMood}
       isMulti
-      onChange={(option) => {
-        setSelected(option);
-        onSelect(option.value);
-      }}
+      onChange={(selectedOption) =>
+        onChange({ target: { name: "nameMood", value: selectedOption } })
+      }
       components={{ DropdownIndicator: () => null }}
     />
   );
 };
+// TODO NOTE if use isMulti flag for multi emo at once then selectedOption becomes an array of values
+// value
+// :
+// Array(1)
+// 0
+// :
+// {value: 'angry', label: '😠 Angry'}
 
-const EmotionTable = () => {
+const EmotionTable = ({ nameMood, onChange }) => {
   const [mood, setMood] = useState(null);
   return (
     <div>
-      <MoodPicker onSelect={setMood} />
+      <MoodPicker onChange={onChange} nameMood={nameMood} />
     </div>
   );
 };
