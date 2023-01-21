@@ -1,54 +1,87 @@
 import React, { useState } from "react";
+import { ChangeEvent } from "react";
 
 import FormNavSteps from "../components/FormNavSteps.tsx";
 import Table from "../components/Table.tsx";
 import * as z from "zod";
 import { fromZodError } from "zod-validation-error";
-
+import type { CBT_FormDataType, CBT_FormSchema } from "../types/CBTFormTypes";
 import NameAndRateMood from "../components/NameAndRateMood.tsx";
 import AutomaticThoughts from "../components/AutomaticThoughts.tsx";
 import PreviousAndNextButtons from "../components/PreviousAndNextButtons.tsx";
 import Rerate from "../components/Rerate.tsx";
+import { api } from "../utils/api";
+// TODO look up api new syntax
+// import {trpc} from utils
 
 // Can make a reusable component for evi for against and new
 // its all very sim or can reuse teh components i uesd for automaticTHoughts
 // that might work better to make a list that way
 // Could add subtitles make it objects
-const columns = ["Name", "ANTS", " for", "Against", "New", "Rerate"];
-// TODO fix this type to be accurate then can use it to know prisma types
-const CBT_Schema = z.object({
-  nameMood: z.array(),
-  rateMood: z.number().positive(),
-  automaticThoughts: z.array(
-    z.object({
-      thought: z.string(),
-      isHot: z.boolean(),
-    })
-  ),
-  evidenceFor: z.string().nonempty(),
-  evidenceAgainst: z.string().nonempty(),
-  newThought: z.string().nonempty(),
-  rateBelief: z.number().positive(),
-  rerateEmotion: z.number().positive(),
-});
 
-type tableSchema = z.infer<typeof CBT_Schema>;
+// type CBT_FormDataType = {
+//   nameMood?: {
+//       label?: string | undefined;
+//       value?: string | undefined;
+//   } | undefined;
+//   rateMood?: number | undefined;
+//   evidenceFor?: string | undefined;
+//   evidenceAgainst?: string | undefined;
+
+//   name: string;
+//   newThought?: string | undefined;
+//   rateBelief?: number | undefined;
+//   rerateEmotion?: number | undefined;
+//   automaticThoughts: ({
+//       thought?: string | undefined;
+//       isHot?: boolean | undefined;
+//   } | undefined)[];
+// }
+const columns = ["Name", "ANTS", "For", "against", "New", "Rerate"];
+// TODO fix this type to be accurate then can use it to know prisma types
 
 function JournalTable() {
   const [currentStep, setCurrentStep] = useState(0);
+  const { mutate } = api.CBT.postMessage.useMutation();
+  const getAllPosts = api.CBT.getAll.useQuery();
 
   const [errors, setErrors] = React.useState(null);
-  const [data, setData] = React.useState({
-    nameMood: [],
-    rateMood: "",
+  // TODO now that types are diff update ares that use old types ie setting nameMood obj
+  // also use setData pass that down rather onChange handle change or something...
+
+  const [data, setData] = React.useState<CBT_FormDataType>({
+    name: "",
+    moodName: "",
+    moodLabel: "",
+    moodRating: 1,
     automaticThoughts: [],
     evidenceFor: "",
     evidenceAgainst: "",
     newThought: "",
-    rateBelief: "",
-    rerateEmotion: "",
+    rateBelief: 1,
+    rerateEmotion: 1,
   });
+  // For testing
+  React.useEffect(() => {
+    console.log(getAllPosts.data);
+  }, [getAllPosts]);
 
+  // React.useEffect(() => {
+  //   const data = {
+  //     name: "TESTS1",
+  //     moodName: "anxious",
+  //     moodLabel: "anxious emo",
+  //     moodRating: 44,
+  //     automaticThoughts: [{ thought: "This sucks", isHot: true }],
+  //     evidenceFor: "This took forever, i have a headache",
+  //     evidenceAgainst: "Its working maybe",
+  //     newThought: "idgaf",
+  //     rateBelief: 11,
+  //     rerateEmotion: 12,
+  //   };
+  //   mutate(data);
+  //   console.log("data", data);
+  // }, [data, mutate]);
   // TODO  Do similar for mood and rating for the given mood maybe can not have multi
   // otherwise have to use similar logic
   const getHotThoughtsText = () => {
@@ -57,6 +90,19 @@ function JournalTable() {
       ?.map((thoughts) => thoughts.thought + "  🔥 ")
       ?.join(" - ");
     return hotThoughts;
+  };
+  const handleHotThoughtClick = (index) => {
+    setData((prev) => {
+      const newThoughts = [...prev.automaticThoughts];
+      newThoughts[index] = {
+        ...newThoughts[index],
+        isHot: !newThoughts[index].isHot,
+      };
+      return {
+        ...prev,
+        automaticThoughts: newThoughts,
+      };
+    });
   };
   //   TODO not sure how i want this designed is mutli moods really benificial?
   // Imean they can make a new table or i guess it could be nice to have that ability...
@@ -67,10 +113,19 @@ function JournalTable() {
       ?.join(";");
     return hotThoughts;
   };
-  const handleChange = (event, index) => {
+
+  // Ok the onChange complains that i have a index here
+  // It is only used for when the input is clciked to edit the existing hot thought
+  // The textArea new line approach may be easier
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === "automaticThoughts") {
-      const newThoughts = [...data.automaticThoughts];
-      newThoughts[index].thought = event.target.value;
+      const newAutoThoughts = [...data.automaticThoughts];
+      const index = data.automaticThoughts.findIndex(
+        (thought) => thought?.thought === value
+      );
+      if (newAutoThoughts && newAutoThoughts[index]) {
+        newAutoThoughts[index].thought = event.target.value;
+      }
       setData({ ...data, automaticThoughts: newThoughts });
     }
     const { name, value } = event.target;
@@ -79,62 +134,68 @@ function JournalTable() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // console.log("FORM SUBMITTED");
 
-    const formData = new FormData(event.target);
-    const formValues = {
-      nameMood: formData.get("nameMood"),
-      rateMood: Number(formData.get("rateMood")),
-      automaticThoughts: formData.get("automaticThoughts"),
-      evidenceFor: formData.get("evidenceFor"),
-      evidenceAgainst: formData.get("evidenceAgainst"),
-      newThought: formData.get("newThought"),
-      rateBelief: Number(formData.get("rateBelief")),
-      rerateEmotion: Number(formData.get("rerateEmotion")),
-    };
     try {
       //   CBT_Schema.parse(formValues);
+
+      mutate(data);
       // so parse mighght be too strick can use it as a warning anyway
       //   ie set some state and warn user but it doesnt matter as ill allow it..
       //   setData([...data, formValues]);
+      // const test = api.CBT.postMessage(data);
+      console.log("FORM SUBMITTED", test);
 
       setErrors({});
       setData((prevData) => {
         return {
-          nameMood: [],
-          rateMood: "",
+          name: "",
+          moodName: "",
+          moodLabel: "",
+          moodRating: 1,
           automaticThoughts: [],
           evidenceFor: "",
           evidenceAgainst: "",
           newThought: "",
-          rateBelief: "",
-          rerateEmotion: "",
+          rateBelief: 1,
+          rerateEmotion: 1,
         };
       });
     } catch (err: Error) {
       // Table is being auto set to current data i guess that will change when i use BE
-      const validationError = String(fromZodError(err));
-      // the error now is readable by the user
+      // const validationError = String(fromZodError(err));
+      // // the error now is readable by the user
 
-      const errorArray = validationError.split("; ");
-      const errorObject = {};
-      errorArray.forEach((error) => {
-        const key = error.match(/\"(.*?)\"/)[1];
-        const message = error;
-        errorObject[key] = message;
-      });
-      setErrors(errorObject);
+      // const errorArray = validationError.split("; ");
+      // const errorObject = {};
+      // errorArray.forEach((error) => {
+      //   const key = error.match(/\"(.*?)\"/)[1];
+      //   const message = error;
+      //   errorObject[key] = message;
+      // });
+      // setErrors(errorObject);
+      console.log(JSON.stringify(err));
     }
   };
-
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      if (currentStep !== columns.length - 1) {
+        // event.preventDefault();
+        // This is way too agressive I just want the form not to submit yet
+        // i still want normal enter stuff to work
+      }
+    }
+  };
   //   TODO zod controls for the boundaries or type guards
 
   return (
-    <div className=" bg-gray-100  pt-10 pb-80 md:p-20">
+    <div className=" bg-zinc-900  pt-10 pb-80 md:p-20">
       <div className="mb-6 p-4 text-center">
-        <h1 className="mb-4 text-4xl font-medium text-blue-500">
+        <h1 className="mb-4 text-4xl font-medium text-sky-600">
           EasyCBT Diary
         </h1>
-        <p className="text-xl font-medium text-gray-600">
+        <p className="text-xl font-medium text-white ">
+          {/*  */}
           Track your thoughts, moods and progress with CBT
         </p>
       </div>
@@ -148,18 +209,21 @@ function JournalTable() {
         />
         {/* TODO ok left off trying to make this bigger also was working on passing errors to tabs
       see todos */}
-        <div className="min-h-80 mx-auto flex flex-col  justify-between bg-blue-500  p-4 pt-6 pb-6 shadow-lg sm:p-6 md:max-w-5xl md:rounded-b md:rounded-tl">
+        <div className="min-h-90 mx-auto flex flex-col  justify-between bg-sky-900  p-4 pt-6 pb-6 shadow-lg sm:p-6 md:max-w-5xl md:rounded-b md:rounded-tl">
           <form
+            onKeyDown={handleKeyDown}
             onSubmit={handleSubmit}
-            className="min-h-60 mx-auto w-full rounded bg-gray-100  p-4  shadow sm:mt-4 sm:max-w-3xl md:mt-10"
+            className="min-h-73 mx-auto w-full rounded bg-gray-200 p-4   shadow sm:mt-4 sm:max-w-3xl md:mt-10"
           >
             <NameAndRateMood
               currentStep={currentStep}
               errors={errors}
+              setData={setData}
               handleChange={handleChange}
               data={data}
             />
             <AutomaticThoughts
+              handleHotThoughtClick={handleHotThoughtClick}
               setData={setData}
               data={data}
               currentStep={currentStep}
@@ -168,59 +232,148 @@ function JournalTable() {
             />
 
             {currentStep === 2 && (
-              <label className="mt-4 block">
-                Evidence for the Thought:{" "}
-                <span className=" text-red-500"> {getHotThoughtsText()}</span>
-                <textarea
-                  value={data.evidenceFor}
-                  onChange={handleChange}
-                  type="text-area"
-                  name="evidenceFor"
-                  className="focus:shadow-outline block h-52 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-                />
-                {errors?.evidenceFor && (
-                  <div className="text-red-500">{errors.evidenceFor}</div>
-                )}
-              </label>
+              <>
+                <div className="text-clip-max-md mt-4 overflow-hidden text-ellipsis whitespace-nowrap ">
+                  <h1 className="text-md font-medium sm:text-lg">
+                    🔥 Hot Thoughts
+                  </h1>
+
+                  <div className="h-36 overflow-x-hidden overflow-y-scroll text-clip bg-gray-100 p-2 md:h-52 ">
+                    <ul>
+                      {data.automaticThoughts.map((thoughts, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleHotThoughtClick(index)}
+                          className={` cursor-pointer text-lg ${
+                            thoughts.isHot && "text-red-700"
+                          }`}
+                        >
+                          {thoughts?.isHot && `🔥 ${thoughts?.thought}`}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <label className="text-md mt-4 block font-medium sm:text-lg ">
+                  🕵️ Evidence for the Thought:
+                  <textarea
+                    value={data.evidenceFor}
+                    onChange={handleChange}
+                    type="text-area"
+                    name="evidenceFor"
+                    className="focus:shadow-outline block h-40 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 font-normal leading-normal focus:outline-none"
+                  />
+                  {errors?.evidenceFor && (
+                    <div className="text-red-500">{errors.evidenceFor}</div>
+                  )}
+                </label>
+              </>
             )}
 
             {currentStep === 3 && (
-              <label className="mt-4 block">
-                Evidence Against the Thought:{" "}
-                <span className=" text-red-500"> {getHotThoughtsText()}</span>
-                <textarea
-                  value={data.evidenceAgainst}
-                  onChange={handleChange}
-                  type="text-area"
-                  name="evidenceAgainst"
-                  className="focus:shadow-outline block h-52 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-                />
-                {errors?.evidenceAgainst && (
-                  <div className="text-red-500">{errors.evidenceAgainst}</div>
-                )}
-              </label>
+              <>
+                {/* TODO can extract this top part its p much the same 3 times make a component with props */}
+                <div className="text-clip-max-md mt-4 overflow-hidden text-ellipsis whitespace-nowrap ">
+                  <h1 className="text-md  font-medium sm:text-lg">
+                    🔥 Hot Thoughts
+                  </h1>
+
+                  <div className="h-36 overflow-x-hidden overflow-y-scroll text-clip bg-white p-2 md:h-52 ">
+                    <ul>
+                      {data.automaticThoughts.map((thoughts, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleHotThoughtClick(index)}
+                          className={` cursor-pointer text-lg ${
+                            thoughts.isHot && "text-red-500"
+                          }`}
+                        >
+                          {thoughts.isHot && thoughts.thought}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+
+                <label className="text-md mt-4 block font-medium sm:text-lg ">
+                  🕵️ Evidence Against the Thought:
+                  {/* <span className=" text-red-500"> {getHotThoughtsText()}</span> */}
+                  <textarea
+                    value={data.evidenceAgainst}
+                    onChange={handleChange}
+                    type="text-area"
+                    name="evidenceAgainst"
+                    className="focus:shadow-outline block  h-40 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 font-normal leading-normal focus:outline-none"
+                  />
+                  {errors?.evidenceAgainst && (
+                    <div className="text-red-500">{errors.evidenceAgainst}</div>
+                  )}
+                </label>
+              </>
             )}
             {currentStep === 4 && (
-              <label className="mt-4 block">
-                New Balanced Thought:
-                <textarea
-                  value={data.newThought}
-                  onChange={handleChange}
-                  type="text-area"
-                  name="newThought"
-                  className="focus:shadow-outline block h-52 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
-                />
-                {errors?.newThought && (
-                  <div className="text-red-500">{errors.newThought}</div>
-                )}
-              </label>
+              <>
+                <div className="text-clip-max-md mt-4 overflow-hidden text-ellipsis whitespace-nowrap ">
+                  <h1 className="text-md  font-medium sm:text-lg">
+                    🕵️ Consider the evidence:
+                  </h1>
+
+                  <div className="border-gray-600 bg-gray-100 shadow-sm">
+                    <h3 className="rounded-t  bg-sky-900 p-1 pl-4 text-sm font-normal text-white">
+                      Evidence For:
+                    </h3>
+                    <div className="overflow h-16 w-full max-w-full overflow-x-hidden overflow-y-scroll p-2  md:h-28">
+                      <ul>
+                        {data.evidenceFor.split("\n").map((evidence, i) => (
+                          <li
+                            key={i}
+                            className="sm:text-md whitespace-pre-line break-words text-sm italic decoration-gray-700"
+                          >
+                            {evidence}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <h3 className="rounded-t bg-sky-900 p-1 pt-2 pl-4 text-sm font-normal text-white">
+                      Evidence Against:
+                    </h3>
+                    <hr />
+                    <div className="overflow h-16 w-full max-w-full overflow-x-hidden overflow-y-scroll p-2 md:h-28">
+                      <ul>
+                        {data.evidenceAgainst.split("\n").map((evidence, i) => (
+                          <li
+                            key={i}
+                            className="sm:text-md whitespace-pre-line break-words text-sm italic"
+                          >
+                            {evidence}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <label className="text-md mt-4 block font-medium sm:text-lg ">
+                  ⚖️ New Balanced Thought:
+                  <textarea
+                    value={data.newThought}
+                    onChange={handleChange}
+                    type="text-area"
+                    name="newThought"
+                    className="focus:shadow-outline lg:text-md block h-28 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 text-sm font-normal leading-normal focus:outline-none"
+                  />
+                  {errors?.newThought && (
+                    <div className="text-red-500">{errors.newThought}</div>
+                  )}
+                </label>
+              </>
             )}
 
             <Rerate
               currentStep={currentStep}
               errors={errors}
               data={data}
-              handleChange={handleChange}
+              setData={setData}
               columns={columns}
             />
           </form>
@@ -228,12 +381,15 @@ function JournalTable() {
           <div className="   ">
             <PreviousAndNextButtons
               currentStep={currentStep}
+              setCurrentStep={setCurrentStep}
               columns={columns}
             />
           </div>
         </div>
+
+        <button></button>
         {/* TODO fix for new ds */}
-        {/* <Table setData={setData} data={data} /> */}
+        <Table setData={setData} data={getAllPosts.data} />
       </div>
     </div>
   );
@@ -278,4 +434,24 @@ export default JournalTable;
 // TODO could add two btns one for genereal info help and another for the advanced help
 // TODO not storing anystate at this time when move tabs
 
-// TODO reference things from earlie ras needed
+// TODO reference things from earlie ras needed eg like new thought when doing rate belief etc
+// alos consider diff groupings... like could for and against be on same page?
+// what about new thourght and rating it and new mood could be on final?
+
+//TODO could have a button to toglle the validation things as a helper ie trigger them so that they help tell you
+// but i do it in a way that doesnt block submitting - this wont work with optionality ... so id have to adjust that
+
+// also have buttons which provide helpful info they can just use the current step...
+
+// TODO next- lets get the basic flow going add the relevant steps carryover stuff test it more
+// when solidifies then fix up UI UX
+//then BE connection
+// in mean time can also fix up TS issues
+
+// Need a way to distinguish visually between carryover items that are read only and ones to add stuff
+
+// TODO using a div will solve the form submit on enter prob
+// TODO can also use enter on the ANT box
+
+// IDea auto push these TODO list into the cloud link with other providers
+// Can make the reference material show hidable  to clean up ui make less cluttered etc

@@ -4,14 +4,12 @@ const FormNavigation = ({ currentStep, setCurrentStep, errors, columns }) => {
   // TODO so errors could be used but they are not cleanly mapped ie the names are diff and the indexs
   // wont nedd match bc obj
   return (
-    <div className=" mx-auto flex  justify-center sm:gap-2 md:max-w-5xl  md:pl-12 md:pr-0">
+    <div className=" mx-auto flex  justify-center sm:gap-1 md:max-w-5xl  md:pl-12 md:pr-0">
       {columns.map((columnName, index) => (
         <button
           key={columnName}
-          className={`sm:text-md md:text-md min-w-0 flex-1 rounded-t-md px-2 py-2 text-sm capitalize ${
-            currentStep === index
-              ? "bg-blue-500 text-white "
-              : "bg-gray-200 shadow-sm"
+          className={`sm:text-md md:text-md min-w-0 flex-1 rounded-t-md px-2 py-2 text-sm font-normal capitalize text-white ${
+            currentStep === index ? "bg-sky-900  " : "bg-gray-700 shadow-sm"
           }`}
           onClick={() => setCurrentStep(index)}
           disabled={index === currentStep}

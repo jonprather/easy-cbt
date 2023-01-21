@@ -1,5 +1,5 @@
 import React from "react";
-const PreviousAndNextButtons = ({ currentStep, columns }) => {
+const PreviousAndNextButtons = ({ setCurrentStep, currentStep, columns }) => {
   const textInput = React.createRef();
 
   // TODO finish pulling these out figure out why this is jank and sayign expression expected and shit
@@ -15,6 +15,11 @@ const PreviousAndNextButtons = ({ currentStep, columns }) => {
         }`}
       >
         Previous
+      </button>
+      <button
+        className={`mt-6 rounded-lg border border-gray-400 bg-purple-500  py-2 px-4 font-semibold text-white shadow-sm`}
+      >
+        Help
       </button>
       <button
         onClick={() => setCurrentStep(currentStep + 1)}

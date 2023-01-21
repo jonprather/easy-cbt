@@ -1,11 +1,47 @@
 import React from "react";
-const Rerate = ({ currentStep, errors, data, handleChange, columns }) => {
+import type { CBT_FormDataType } from "../types/CBTFormTypes";
+import type { ChangeEvent } from "react";
+
+type RerateProps = {
+  data: CBT_FormDataType;
+  currentStep: number;
+  errors: any;
+  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
+  columns: ["Name", "ANTS", "For", "against", "New", "Rerate"];
+};
+const Rerate: React.FC<RerateProps> = ({
+  data,
+  currentStep,
+  errors,
+  setData,
+  columns,
+}) => {
+  // TODO can reuse this for all the ratings as they require string to number conversion
+  const handleRateMood = (e) => {
+    setData((prev) => {
+      return {
+        ...prev,
+        [e.target.name]: +e.target.value,
+      };
+    });
+  };
   // TODO finish pulling these out figure out why this is jank and sayign expression expected and shit
-  if (currentStep !== columns.length - 1) return;
+  if (currentStep !== columns.length - 1) return null;
   return (
     <>
-      <label className="mt-4 block">
-        Rate Belief in New Thought:
+      <div className="text-clip-max-md mt-4 overflow-hidden text-ellipsis whitespace-nowrap ">
+        <h1 className="text-md  text-md font-medium sm:text-lg">
+          ⚖️ Balanced Thought:
+        </h1>
+
+        <div className="h-36 overflow-x-hidden overflow-y-scroll text-clip bg-white p-2 md:h-52 ">
+          <ul>
+            <li>{data.newThought}</li>
+          </ul>
+        </div>
+      </div>
+      <label className="text-md mt-4 block font-medium sm:text-lg ">
+        📏 Rate Belief in New Thought:
         <input
           type="number"
           name="rateBelief"
@@ -15,21 +51,20 @@ const Rerate = ({ currentStep, errors, data, handleChange, columns }) => {
           className="focus:shadow-outline w-22 block  rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
           onBlur={() => console.log()}
           // (errors.rateBelief = "")
-          onChange={handleChange}
+          onChange={handleRateMood}
         />
         {/* TODO im not handling on change not handling state only doing so on submit
- but i might want to implement autoSaves when person rests for a few secods and stuff has changed
- will need state for that i can access the data.rateMood etc and set it that way
+but i might want to implement autoSaves when person rests for a few secods and stuff has changed
+will need state for that i can access the data.rateMood etc and set it that way
 */}
         {errors?.rateBelief && (
           <div className="text-red-500">{errors.rateBelief}</div>
         )}
       </label>
-
-      <label className="mt-4 block">
-        Rerate Emotion:
+      <label className="text-md mt-4 block font-medium sm:text-lg ">
+        📏 Rerate Emotion: {data?.nameMood?.label}
         <input
-          onChange={handleChange}
+          onChange={handleRateMood}
           value={data.rerateEmotion}
           type="number"
           min="1"
@@ -44,6 +79,7 @@ const Rerate = ({ currentStep, errors, data, handleChange, columns }) => {
 
       <button
         type="submit"
+        disabled={currentStep !== columns.length - 1}
         className="mt-6 rounded-lg border border-gray-400 bg-green-600 py-2 px-4 font-semibold text-white shadow-md hover:bg-green-700"
       >
         Add Entry

@@ -1,18 +1,22 @@
 import React, { useState } from "react";
+import type { CBT_FormDataType } from "../types/CBTFormTypes";
+import { api } from "../utils/api";
 
-const Table = ({ setData, data }) => {
-  data = [data];
-  //   let testData = data.map((entry, index) => {
-  //     return entry.nameMood.map((mood) => {
-  //       return mood;
-  //     });
-  //   });
+type TableProps = {
+  data: CBT_FormDataType;
+  setData: (data: CBT_FormDataType) => CBT_FormDataType;
+};
 
-  //   console.log("eg", testData, testData[0][0].value);
-  //   so this will likely be for history of many tables...
-  //  but for current for testing just fake it liek its in an array
-  // can figure out how to display many things later vs just the new one
-  console.log("data: __>", data);
+const Table: React.FC<TableProps> = ({ setData, data }) => {
+  const utils = api.useContext();
+
+  const { mutate: deletePost } = api.CBT.delete.useMutation({
+    onSettled: async () => {
+      await utils.CBT.invalidate();
+    },
+  });
+  const getAllPosts = api.CBT.getAll.useQuery();
+
   const fillData = (setData) => {
     setData((prev): null => [
       {
@@ -59,11 +63,13 @@ const Table = ({ setData, data }) => {
         </h2>
       </div>
       <div className=" mt-4 overflow-x-auto ">
-        <table className="text-gray w-full table-auto">
+        <table className="w-full table-auto text-white">
           <thead>
             <tr>
+              {" "}
+              {/* <th className="bg-blue-500 p-2">ID</th> */}
+              <th className="bg-blue-500 p-2">Table Name</th>
               <th className="bg-blue-500 p-2">Name Mood</th>
-
               <th className="bg-blue-500 p-2">Rate Mood</th>
               <th className="bg-blue-500 p-2">Automatic Thoughts</th>
               <th className="bg-blue-500 p-2">Evidence for the Thought</th>
@@ -71,21 +77,32 @@ const Table = ({ setData, data }) => {
               <th className="bg-blue-500 p-2">New Balanced Thought</th>
               <th className="bg-blue-500 p-2">Rate Belief in New Thought</th>
               <th className="bg-blue-500 p-2">Rerate Emotion</th>
+              <th className="bg-blue-500 p-2">Delete</th>
             </tr>
           </thead>
 
           <tbody>
-            {data.map((entry, index) => (
-              <tr key={index}>
-                <td className="td  p-2 text-white">
-                  {entry?.nameMood?.map((mood) => (
-                    <span>{mood.name}</span>
-                  ))}
+            {/* Can add id 
+            also add button to open updata maybe reuse og forms
+            idk if diff page 
+            also button to delte based on id
+            */}
+            {getAllPosts.data?.map((entry, index) => (
+              <tr key={entry.id} className="text-white">
+                {/* <td className="td  p-2 text-white">{entry.id}</td> */}
+
+                <td className="td  p-2 text-white">{entry.name}</td>
+                <td className="td border-slate-800 bg-slate-500 p-2 text-white">
+                  {entry.moodLabel}
                 </td>
                 <td className="td border-slate-800 bg-slate-500 p-2 text-white">
-                  {entry.rateMood}
+                  {entry.moodRating}
                 </td>
-                <td className="p-2  ">{entry.automaticThoughts}</td>
+                <td className="p-2  ">
+                  {entry?.automaticThoughts?.map((thoughts, index) => {
+                    return <span key={index}>{thoughts.thought}</span>;
+                  })}
+                </td>
                 <td className="border-spacing-2  bg-slate-500 p-2">
                   {entry.evidenceFor}
                 </td>
@@ -93,6 +110,14 @@ const Table = ({ setData, data }) => {
                 <td className="bg-slate-500  p-2">{entry.newThought}</td>
                 <td className="p-2">{entry.rateBelief}</td>
                 <td className="bg-slate-500  p-2">{entry.rerateEmotion}</td>
+                <td className="bg-slate-500  p-2">
+                  <button
+                    className="mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold text-gray-900  hover:bg-gray-100"
+                    onClick={() => deletePost({ id: entry.id })}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -100,7 +125,7 @@ const Table = ({ setData, data }) => {
       </div>
       <button
         onClick={() => fillData(setData)}
-        className="mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold text-gray-800 hover:bg-gray-100"
+        className="mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold  hover:bg-gray-100"
       >
         {" "}
         Click Me TO fill

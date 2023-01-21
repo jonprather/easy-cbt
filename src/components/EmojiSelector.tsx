@@ -20,14 +20,20 @@ const options = [
   { value: "worried", label: "😟 Worried" },
 ];
 
-const MoodPicker = ({ nameMood, onChange }) => {
+const MoodPicker = ({ moodName, moodLabel, setData }) => {
   return (
     <Select
       options={options}
-      value={nameMood}
-      //   isMulti
-      onChange={(selectedOption) =>
-        onChange({ target: { name: "nameMood", value: selectedOption } })
+      value={{ label: moodLabel, value: moodName }}
+      // isMulti
+      onChange={(opt) =>
+        setData((prev) => {
+          return {
+            ...prev,
+            moodLabel: opt.label,
+            moodName: opt.value,
+          };
+        })
       }
       components={{ DropdownIndicator: () => null }}
     />
@@ -41,11 +47,10 @@ const MoodPicker = ({ nameMood, onChange }) => {
 // :
 // {value: 'angry', label: '😠 Angry'}
 
-const EmotionTable = ({ nameMood, onChange }) => {
-  const [mood, setMood] = useState(null);
+const EmotionTable = ({ moodName, moodLabel, setData }) => {
   return (
     <div>
-      <MoodPicker onChange={onChange} nameMood={nameMood} />
+      <MoodPicker setData={setData} moodLabel={moodLabel} moodName={moodName} />
     </div>
   );
 };
