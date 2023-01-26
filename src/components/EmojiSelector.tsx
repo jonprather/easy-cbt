@@ -20,26 +20,6 @@ const options = [
   { value: "worried", label: "😟 Worried" },
 ];
 
-const MoodPicker = ({ moodName, moodLabel, setData }) => {
-  return (
-    <Select
-      options={options}
-      value={{ label: moodLabel, value: moodName }}
-      // isMulti
-      onChange={(opt) =>
-        setData((prev) => {
-          return {
-            ...prev,
-            moodLabel: opt.label,
-            moodName: opt.value,
-          };
-        })
-      }
-      className="w-1/2"
-      components={{ DropdownIndicator: () => null }}
-    />
-  );
-};
 // TODO NOTE if use isMulti flag for multi emo at once then selectedOption becomes an array of values
 // value
 // :
@@ -48,12 +28,27 @@ const MoodPicker = ({ moodName, moodLabel, setData }) => {
 // :
 // {value: 'angry', label: '😠 Angry'}
 
-const EmotionTable = ({ moodName, moodLabel, setData }) => {
+const EmojiSelector = ({ moodName, moodLabel, setData }) => {
   return (
     <div>
-      <MoodPicker setData={setData} moodLabel={moodLabel} moodName={moodName} />
+      <Select
+        className={" w-full max-w-xs rounded-full "}
+        options={options}
+        value={{ label: moodLabel, value: moodName }}
+        // isMulti
+        onChange={(opt) =>
+          setData((prev) => {
+            return {
+              ...prev,
+              moodLabel: opt.label,
+              moodName: opt.value,
+            };
+          })
+        }
+        // components={{ DropdownIndicator: () => null }}
+      />
     </div>
   );
 };
 
-export default EmotionTable;
+export default EmojiSelector;

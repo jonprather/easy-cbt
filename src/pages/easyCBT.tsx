@@ -13,6 +13,9 @@ import Rerate from "../components/Rerate.tsx";
 import { api } from "../utils/api";
 import { useMutation, useQueryClient } from "react-query";
 import Layout from "../components/Layout";
+import Collapse from "src/components/Collapse";
+import NewBalancedThought from "src/components/NewBalancedThought";
+import Evidence from "src/components/Evidence";
 // import { cBT_FormDataType } from "@prisma/client";
 // TODO look up api new syntax
 // import {trpc} from utils
@@ -229,11 +232,11 @@ function JournalTable() {
         />
         {/* TODO ok left off trying to make this bigger also was working on passing errors to tabs
       see todos */}
-        <div className="min-h-90 mx-auto flex flex-col  justify-between bg-sky-900  p-4 pt-6 pb-6 shadow-lg sm:p-6 md:max-w-5xl md:rounded-b md:rounded-tl">
+        <div className="min-h-90 mx-auto flex flex-col justify-between p-4  pt-6 pb-6 sm:bg-slate-800  sm:p-6 md:max-w-5xl md:rounded-b md:rounded-tl md:shadow-lg ">
           <form
             onKeyDown={handleKeyDown}
             onSubmit={handleSubmit}
-            className="min-h-73 mx-auto w-full rounded bg-gray-200 p-4   shadow sm:mt-4 sm:max-w-3xl md:mt-10"
+            className=" min-h-73 mx-auto w-full rounded p-4  sm:mt-4   sm:max-w-3xl sm:bg-slate-700 md:mt-10"
           >
             <NameAndRateMood
               currentStep={currentStep}
@@ -251,143 +254,30 @@ function JournalTable() {
               handleChange={handleChange}
             />
 
-            {currentStep === 2 && (
-              <>
-                <div className="text-clip-max-md mt-4 overflow-hidden text-ellipsis whitespace-nowrap ">
-                  <h1 className="text-md font-medium sm:text-lg">
-                    🔥 Hot Thoughts
-                  </h1>
-
-                  <div className="h-36 overflow-x-hidden overflow-y-scroll text-clip bg-gray-100 p-2 md:h-52 ">
-                    <ul>
-                      {data.automaticThoughts.map((thoughts, index) => (
-                        <li
-                          key={index}
-                          onClick={() => handleHotThoughtClick(index)}
-                          className={` cursor-pointer text-lg ${
-                            thoughts.isHot && "text-red-700"
-                          }`}
-                        >
-                          {thoughts?.isHot && `🔥 ${thoughts?.thought}`}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <label className="text-md mt-4 block font-medium sm:text-lg ">
-                  🕵️ Evidence for the Thought:
-                  <textarea
-                    value={data.evidenceFor}
-                    onChange={handleChange}
-                    type="text-area"
-                    name="evidenceFor"
-                    className="focus:shadow-outline block h-40 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 font-normal leading-normal focus:outline-none"
-                  />
-                  {errors?.evidenceFor && (
-                    <div className="text-red-500">{errors.evidenceFor}</div>
-                  )}
-                </label>
-              </>
-            )}
-
-            {currentStep === 3 && (
-              <>
-                {/* TODO can extract this top part its p much the same 3 times make a component with props */}
-                <div className="text-clip-max-md mt-4 overflow-hidden text-ellipsis whitespace-nowrap ">
-                  <h1 className="text-md  font-medium sm:text-lg">
-                    🔥 Hot Thoughts
-                  </h1>
-
-                  <div className="h-36 overflow-x-hidden overflow-y-scroll text-clip bg-white p-2 md:h-52 ">
-                    <ul>
-                      {data.automaticThoughts.map((thoughts, index) => (
-                        <li
-                          key={index}
-                          onClick={() => handleHotThoughtClick(index)}
-                          className={` cursor-pointer text-lg ${
-                            thoughts.isHot && "text-red-500"
-                          }`}
-                        >
-                          {thoughts.isHot && thoughts.thought}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <label className="text-md mt-4 block font-medium sm:text-lg ">
-                  🕵️ Evidence Against the Thought:
-                  {/* <span className=" text-red-500"> {getHotThoughtsText()}</span> */}
-                  <textarea
-                    value={data.evidenceAgainst}
-                    onChange={handleChange}
-                    type="text-area"
-                    name="evidenceAgainst"
-                    className="focus:shadow-outline block  h-40 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 font-normal leading-normal focus:outline-none"
-                  />
-                  {errors?.evidenceAgainst && (
-                    <div className="text-red-500">{errors.evidenceAgainst}</div>
-                  )}
-                </label>
-              </>
-            )}
-            {currentStep === 4 && (
-              <>
-                <div className="text-clip-max-md mt-4 overflow-hidden text-ellipsis whitespace-nowrap ">
-                  <h1 className="text-md  font-medium sm:text-lg">
-                    🕵️ Consider the evidence:
-                  </h1>
-
-                  <div className="border-gray-600 bg-gray-100 shadow-sm">
-                    <h3 className="rounded-t  bg-sky-900 p-1 pl-4 text-sm font-normal text-white">
-                      Evidence For:
-                    </h3>
-                    <div className="overflow h-16 w-full max-w-full overflow-x-hidden overflow-y-scroll p-2  md:h-28">
-                      <ul>
-                        {data.evidenceFor.split("\n").map((evidence, i) => (
-                          <li
-                            key={i}
-                            className="sm:text-md whitespace-pre-line break-words text-sm italic decoration-gray-700"
-                          >
-                            {evidence}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <h3 className="rounded-t bg-sky-900 p-1 pt-2 pl-4 text-sm font-normal text-white">
-                      Evidence Against:
-                    </h3>
-                    <hr />
-                    <div className="overflow h-16 w-full max-w-full overflow-x-hidden overflow-y-scroll p-2 md:h-28">
-                      <ul>
-                        {data.evidenceAgainst.split("\n").map((evidence, i) => (
-                          <li
-                            key={i}
-                            className="sm:text-md whitespace-pre-line break-words text-sm italic"
-                          >
-                            {evidence}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <label className="text-md mt-4 block font-medium sm:text-lg ">
-                  ⚖️ New Balanced Thought:
-                  <textarea
-                    value={data.newThought}
-                    onChange={handleChange}
-                    type="text-area"
-                    name="newThought"
-                    className="focus:shadow-outline lg:text-md block h-28 w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 text-sm font-normal leading-normal focus:outline-none"
-                  />
-                  {errors?.newThought && (
-                    <div className="text-red-500">{errors.newThought}</div>
-                  )}
-                </label>
-              </>
-            )}
+            <Evidence
+              data={data}
+              handleChange={handleChange}
+              currentStep={currentStep}
+              targetStep={2}
+              errors={errors}
+              title="Evidence Supporting the Thought"
+            />
+            <Evidence
+              data={data}
+              handleChange={handleChange}
+              currentStep={currentStep}
+              targetStep={3}
+              errors={errors}
+              title="Evidence against the thought"
+            />
+            {/* TODO ok i left off creating these components next up fix ANTS and 
+add collpase to rerate */}
+            <NewBalancedThought
+              data={data}
+              handleChange={handleChange}
+              currentStep={currentStep}
+              errors={errors}
+            />
 
             <Rerate
               currentStep={currentStep}
@@ -405,10 +295,63 @@ function JournalTable() {
               columns={columns}
             />
           </div>
+
+          {/* Bottom NAV looks p good can make use of on mobile */}
+          <div className="btm-nav sm:hidden">
+            <button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                />
+              </svg>
+              <span className="btm-nav-label">Home</span>
+            </button>
+            <button className="active">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span className="btm-nav-label">Warnings</span>
+            </button>
+            <button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+              <span className="btm-nav-label">Statics</span>
+            </button>
+          </div>
         </div>
 
-        <button></button>
-        {/* TODO fix for new ds */}
         {/* <Table setData={setData} formData={data} /> */}
       </div>
     </Layout>

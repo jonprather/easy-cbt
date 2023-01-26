@@ -1,6 +1,7 @@
 import React from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import type { ChangeEvent } from "react";
+import Collapse from "src/components/Collapse";
 
 type RerateProps = {
   data: CBT_FormDataType;
@@ -25,30 +26,26 @@ const Rerate: React.FC<RerateProps> = ({
       };
     });
   };
-  // TODO finish pulling these out figure out why this is jank and sayign expression expected and shit
   if (currentStep !== columns.length - 1) return null;
   return (
     <>
-      <div className="text-clip-max-md mt-4 overflow-hidden text-ellipsis whitespace-nowrap ">
-        <h1 className="text-md  text-md font-medium sm:text-lg">
-          ⚖️ Balanced Thought:
-        </h1>
-
-        <div className="h-36 overflow-x-hidden overflow-y-scroll text-clip bg-white p-2 md:h-52 ">
-          <ul>
-            <li>{data.newThought}</li>
-          </ul>
-        </div>
+      <div className="mt-5 mb-5">
+        <Collapse
+          evidence={data.newThought}
+          title="Balanced Thought"
+        ></Collapse>
       </div>
       <label className="text-md mt-4 block font-medium sm:text-lg ">
-        📏 Rate Belief in New Thought:
+        <span className="label-text capitalize text-white">
+          Rate Belief in New Thought:
+        </span>
         <input
           type="range"
           name="rateBelief"
           value={data.rateBelief}
           min="1"
           max="100"
-          className="focus:shadow-outline block w-1/3 rounded-lg border border-gray-300 bg-white py-2   leading-normal "
+          className="range range-secondary mt-2 block sm:w-1/2  md:w-1/3"
           onBlur={() => console.log()}
           // (errors.rateBelief = "")
           onChange={handleRateMood}
@@ -62,7 +59,9 @@ will need state for that i can access the data.rateMood etc and set it that way
         )}
       </label>
       <label className="text-md mt-4 block font-medium sm:text-lg ">
-        📏 Rerate Emotion: {data?.nameMood?.label}
+        <span className="label-text capitalize text-white">
+          Rerate mood intensity: {data?.nameMood?.label}
+        </span>
         <input
           onChange={handleRateMood}
           value={data.rerateEmotion}
@@ -70,7 +69,7 @@ will need state for that i can access the data.rateMood etc and set it that way
           min="1"
           max="100"
           name="rerateEmotion"
-          className="focus:shadow-outline block w-1/3 rounded-lg border border-gray-300 bg-white py-2  leading-normal "
+          className="range range-primary mt-2 block sm:w-1/2  md:w-1/3"
         />
         {errors?.rerateEmotion && (
           <div className="text-red-500">{errors.rerateEmotion}</div>
@@ -80,7 +79,7 @@ will need state for that i can access the data.rateMood etc and set it that way
       <button
         type="submit"
         disabled={currentStep !== columns.length - 1}
-        className="mt-6 rounded-lg border border-gray-400 bg-green-600 py-2 px-4 font-semibold text-white shadow-md hover:bg-green-700"
+        className="mt-6 rounded-lg border border-gray-400 bg-accent py-2 px-4 font-semibold text-white shadow-md hover:bg-green-600"
       >
         {data.id ? "Update Entry" : "Add Entry"}
       </button>

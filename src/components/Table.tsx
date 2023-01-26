@@ -62,22 +62,22 @@ const Table: React.FC<TableProps> = ({ setData, formData }) => {
         </h2>
       </div>
       <div className=" mt-4 overflow-x-auto ">
-        <table className="w-full table-auto text-white">
+        <table className="table-zebra table w-full table-auto text-white">
           <thead>
             <tr>
               {" "}
               {/* <th className="bg-blue-500 p-2">ID</th> */}
-              <th className="bg-blue-500 p-2">Table Name</th>
-              <th className="bg-blue-500 p-2">Name Mood</th>
-              <th className="bg-blue-500 p-2">Rate Mood</th>
-              <th className="bg-blue-500 p-2">Automatic Thoughts</th>
-              <th className="bg-blue-500 p-2">Evidence for the Thought</th>
-              <th className="bg-blue-500 p-2">Evidence Against the Thought</th>
-              <th className="bg-blue-500 p-2">New Balanced Thought</th>
-              <th className="bg-blue-500 p-2">Rate Belief in New Thought</th>
-              <th className="bg-blue-500 p-2">Rerate Emotion</th>
-              <th className="bg-blue-500 p-2">Update</th>
-              <th className="bg-blue-500 p-2">Delete</th>
+              <th className="bg-primary p-2">Table Name</th>
+              <th className="bg-primary p-2">Name Mood</th>
+              <th className="bg-primary p-2">Rate Mood</th>
+              <th className="bg-primary p-2">Automatic Thoughts</th>
+              <th className="bg-primary p-2">Evidence for the Thought</th>
+              <th className="bg-primary p-2">Evidence Against the Thought</th>
+              <th className="bg-primary p-2">New Balanced Thought</th>
+              <th className="bg-primary p-2">Rate Belief in New Thought</th>
+              <th className="bg-primary p-2">Rerate Emotion</th>
+              <th className="bg-primary p-2">Update</th>
+              <th className="bg-primary p-2">Delete</th>
             </tr>
           </thead>
 
@@ -98,7 +98,7 @@ const Table: React.FC<TableProps> = ({ setData, formData }) => {
                 <td className="td border-slate-800 bg-slate-500 p-2 text-white">
                   {entry.moodRating}
                 </td>
-                <td className="p-2  ">
+                <td className="max-w-80  p-2">
                   {entry?.automaticThoughts?.map((thoughts, index) => {
                     return (
                       <span

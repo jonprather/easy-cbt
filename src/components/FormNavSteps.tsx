@@ -4,15 +4,15 @@ const FormNavigation = ({ currentStep, setCurrentStep, errors, columns }) => {
   // TODO so errors could be used but they are not cleanly mapped ie the names are diff and the indexs
   // wont nedd match bc obj
   return (
-    <div className=" mx-auto flex  justify-center sm:gap-1 md:max-w-5xl  md:pl-12 md:pr-0">
+    <div className="btn-group mx-auto flex max-w-4xl justify-center  sm:p-2">
       {columns.map((columnName, index) => (
         <button
           key={columnName}
-          className={`sm:text-md md:text-md min-w-0 flex-1 rounded-t-md px-2 py-2 text-sm font-normal capitalize text-white ${
-            currentStep === index ? "bg-sky-900  " : "bg-gray-700 shadow-sm"
+          className={`btn  flex-1 capitalize text-white active:bg-primary active:text-white max-xs:p-3 max-six:p-2 ${
+            currentStep === index ? "btn-active  " : " "
           }`}
           onClick={() => setCurrentStep(index)}
-          disabled={index === currentStep}
+          // disabled={index === currentStep}
         >
           {/* if current step have full name else have ... atleast on mobile */}
           {columnName}
@@ -28,3 +28,6 @@ export default FormNavigation;
 
 // TODO if use stepper this way could also pass down errors to show for each label like mark them red
 // and give msg
+
+// TODO continue using daisyui to improve forms i worked on outsides but not all of them
+// also settle bg colors on lg would be nice if worked on light mode as well

@@ -18,12 +18,15 @@ const NameAndRateMood = ({
   if (currentStep !== 0) return;
   // TODO finish pulling these out figure out why this is jank and sayign expression expected and shit
   return (
-    <>
+    <div className="form-control">
       {/* TODO ok all the inputs are working it would be cool to refactor and add ts types some tests for edge cases etc
      then move on to reading into table then edit and delete etc
     */}
       <label className="text-md mt-4 block font-medium sm:text-lg">
-        🏷️ Name This entry
+        <span className="label-text capitalize text-white">
+          {" "}
+          Name This entry
+        </span>
         <input
           value={data.name}
           // TODO
@@ -35,7 +38,8 @@ const NameAndRateMood = ({
         {errors?.name && <div className="text-red-500">{errors.name}</div>}
       </label>
       <label className="text-md mt-4 block font-medium sm:text-lg">
-        🏷️ Name Mood:
+        <span className="label-text text-white"> Name Mood:</span>
+
         <EmojiSelector
           moodLabel={data.moodLabel}
           moodName={data.moodName}
@@ -46,7 +50,11 @@ const NameAndRateMood = ({
         )}
       </label>
       <label className="text-md mt-4 block font-medium sm:text-lg">
-        📏 Rate Mood:
+        <span className="label-text text-white">
+          {" "}
+          How intense is this feeling?
+        </span>
+
         <input
           value={data.moodRating}
           // TODO
@@ -55,13 +63,14 @@ const NameAndRateMood = ({
           min="1"
           max="100"
           name="moodRating"
-          className="focus:shadow-outline block w-full rounded-lg border border-gray-300 bg-white py-2 leading-normal sm:w-1/2  md:w-1/3 "
+          className="range range-primary mt-2 block sm:w-1/2  md:w-1/3"
+          // className="focus:shadow-outline block w-full rounded-lg border border-gray-300 bg-white py-2 leading-normal sm:w-1/2  md:w-1/3 "
         />
         {errors?.rateMood && (
           <div className="text-red-500">{errors.rateMood}</div>
         )}
       </label>
-    </>
+    </div>
   );
 };
 

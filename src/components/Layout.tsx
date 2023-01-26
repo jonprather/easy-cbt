@@ -15,7 +15,7 @@ export default function Layout({
         <meta name="description" content={description} />
         <meta name="keywords" content={keywords} />
       </Head>
-      <div className=" bg-zinc-900  ">
+      <div className=" bg-base-100 sm:pb-20">
         <Navbar />
         {children}
       </div>

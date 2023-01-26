@@ -8,7 +8,7 @@ const PreviousAndNextButtons = ({ setCurrentStep, currentStep, columns }) => {
       <button
         onClick={() => setCurrentStep(currentStep - 1)}
         disabled={currentStep === 0}
-        className={`mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold shadow-sm   ${
+        className={` mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold shadow-sm   ${
           currentStep === 0
             ? "bg-gray-500  text-white"
             : "bg-white text-gray-800 text-white hover:bg-gray-200"
@@ -24,10 +24,8 @@ const PreviousAndNextButtons = ({ setCurrentStep, currentStep, columns }) => {
       <button
         onClick={() => setCurrentStep(currentStep + 1)}
         disabled={currentStep === columns.length - 1}
-        className={`mt-6 rounded-lg border border-gray-400 py-2  px-4 font-semibold text-white shadow-sm  ${
-          currentStep === columns.length - 1
-            ? "bg-gray-500 "
-            : "bg-teal-900 hover:bg-green-700"
+        className={` mt-6 rounded-lg border border-gray-400 py-2  px-4 font-semibold text-white shadow-sm  ${
+          currentStep === columns.length - 1 ? "bg-gray-500 " : "bg-accent"
         }`}
       >
         Next
