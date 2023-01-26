@@ -58,6 +58,8 @@ model User {
     cBT_FormDataType cBT_FormDataType[]
 }
 
+// Add a delete cascade here for cbt
+
 model VerificationToken {
     identifier String
     token      String   @unique
@@ -86,6 +88,6 @@ model AutomaticThoughts {
     id                 String            @id @default(cuid())
     thought            String
     isHot              Boolean
-    cBT_FormDataType   cBT_FormDataType? @relation(fields: [cBT_FormDataTypeId], references: [id])
+    cBT_FormDataType   cBT_FormDataType? @relation(fields: [cBT_FormDataTypeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
     cBT_FormDataTypeId String?
 }

@@ -43,12 +43,12 @@ const Rerate: React.FC<RerateProps> = ({
       <label className="text-md mt-4 block font-medium sm:text-lg ">
         📏 Rate Belief in New Thought:
         <input
-          type="number"
+          type="range"
           name="rateBelief"
           value={data.rateBelief}
           min="1"
           max="100"
-          className="focus:shadow-outline w-22 block  rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
+          className="focus:shadow-outline block w-1/3 rounded-lg border border-gray-300 bg-white py-2   leading-normal "
           onBlur={() => console.log()}
           // (errors.rateBelief = "")
           onChange={handleRateMood}
@@ -66,11 +66,11 @@ will need state for that i can access the data.rateMood etc and set it that way
         <input
           onChange={handleRateMood}
           value={data.rerateEmotion}
-          type="number"
+          type="range"
           min="1"
           max="100"
           name="rerateEmotion"
-          className="focus:shadow-outline min-w-22 block appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 leading-normal focus:outline-none"
+          className="focus:shadow-outline block w-1/3 rounded-lg border border-gray-300 bg-white py-2  leading-normal "
         />
         {errors?.rerateEmotion && (
           <div className="text-red-500">{errors.rerateEmotion}</div>
@@ -82,7 +82,7 @@ will need state for that i can access the data.rateMood etc and set it that way
         disabled={currentStep !== columns.length - 1}
         className="mt-6 rounded-lg border border-gray-400 bg-green-600 py-2 px-4 font-semibold text-white shadow-md hover:bg-green-700"
       >
-        Add Entry
+        {data.id ? "Update Entry" : "Add Entry"}
       </button>
     </>
   );

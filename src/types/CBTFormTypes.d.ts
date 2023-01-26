@@ -1,6 +1,7 @@
 import * as z from "zod";
 
 export const CBT_FormSchema = z.object({
+  id: z.string().optional(),
   name: z.string().optional(),
   moodName: z.string().optional(),
   moodLabel: z.string().optional(),

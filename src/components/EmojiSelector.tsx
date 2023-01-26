@@ -35,6 +35,7 @@ const MoodPicker = ({ moodName, moodLabel, setData }) => {
           };
         })
       }
+      className="w-1/2"
       components={{ DropdownIndicator: () => null }}
     />
   );

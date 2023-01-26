@@ -11,6 +11,9 @@ import AutomaticThoughts from "../components/AutomaticThoughts.tsx";
 import PreviousAndNextButtons from "../components/PreviousAndNextButtons.tsx";
 import Rerate from "../components/Rerate.tsx";
 import { api } from "../utils/api";
+import { useMutation, useQueryClient } from "react-query";
+import Layout from "../components/Layout";
+// import { cBT_FormDataType } from "@prisma/client";
 // TODO look up api new syntax
 // import {trpc} from utils
 
@@ -37,13 +40,19 @@ import { api } from "../utils/api";
 //       isHot?: boolean | undefined;
 //   } | undefined)[];
 // }
+
 const columns = ["Name", "ANTS", "For", "against", "New", "Rerate"];
 // TODO fix this type to be accurate then can use it to know prisma types
-
+// could reuse the columns from nav steps here as well
 function JournalTable() {
   const [currentStep, setCurrentStep] = useState(0);
-  const { mutate } = api.CBT.postMessage.useMutation();
+  // const { mutate: postMessage } = api.CBT.postMessage.useMutation();
   const getAllPosts = api.CBT.getAll.useQuery();
+  const { mutate: updatePost } = api.CBT.update.useMutation();
+  const utils = api.useContext();
+  // const queryClient = useQueryClient();
+
+  const { mutate: postMessage } = api.CBT.postMessage.useMutation();
 
   const [errors, setErrors] = React.useState(null);
   // TODO now that types are diff update ares that use old types ie setting nameMood obj
@@ -63,6 +72,8 @@ function JournalTable() {
   });
   // For testing
   React.useEffect(() => {
+    // Why is this calling so much i mean its calling any time somehting changes that seems bad?
+    //well it does log again but the mutations arent happening at same rate
     console.log(getAllPosts.data);
   }, [getAllPosts]);
 
@@ -138,13 +149,23 @@ function JournalTable() {
 
     try {
       //   CBT_Schema.parse(formValues);
-
-      mutate(data);
+      // So if going to reuse the form could do things differently ie
+      //could use upsert in prisma pro 1 interface con id requirement wouldnt work for new things
+      // could base it on if id is not a empty string if so update if not create new
+      if (data.id) {
+        console.log("updated post", data);
+        // TODO next make a btn to load a post into the form data obj
+        // so that on next submit it will be an update
+        updatePost(data);
+      } else {
+        // Can also check if data has changed here like if its the same as default can prompt user
+        postMessage(data);
+      }
       // so parse mighght be too strick can use it as a warning anyway
       //   ie set some state and warn user but it doesnt matter as ill allow it..
       //   setData([...data, formValues]);
       // const test = api.CBT.postMessage(data);
-      console.log("FORM SUBMITTED", test);
+      // console.log("FORM SUBMITTED", test);
 
       setErrors({});
       setData((prevData) => {
@@ -162,7 +183,6 @@ function JournalTable() {
         };
       });
     } catch (err: Error) {
-      // Table is being auto set to current data i guess that will change when i use BE
       // const validationError = String(fromZodError(err));
       // // the error now is readable by the user
 
@@ -189,8 +209,8 @@ function JournalTable() {
   //   TODO zod controls for the boundaries or type guards
 
   return (
-    <div className=" bg-zinc-900  pt-10 pb-80 md:p-20">
-      <div className="mb-6 p-4 text-center">
+    <Layout>
+      <div className="mb-6 mt-10 p-4  text-center md:p-20">
         <h1 className="mb-4 text-4xl font-medium text-sky-600">
           EasyCBT Diary
         </h1>
@@ -389,9 +409,9 @@ function JournalTable() {
 
         <button></button>
         {/* TODO fix for new ds */}
-        <Table setData={setData} data={getAllPosts.data} />
+        {/* <Table setData={setData} formData={data} /> */}
       </div>
-    </div>
+    </Layout>
   );
 }
 export default JournalTable;
@@ -455,3 +475,6 @@ export default JournalTable;
 
 // IDea auto push these TODO list into the cloud link with other providers
 // Can make the reference material show hidable  to clean up ui make less cluttered etc
+// TODO  COuld add swipe functionality to the inputs
+// make it more app like
+//  could add help data as an object with keys for each type of input...

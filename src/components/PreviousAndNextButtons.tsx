@@ -27,7 +27,7 @@ const PreviousAndNextButtons = ({ setCurrentStep, currentStep, columns }) => {
         className={`mt-6 rounded-lg border border-gray-400 py-2  px-4 font-semibold text-white shadow-sm  ${
           currentStep === columns.length - 1
             ? "bg-gray-500 "
-            : "bg-green-600 hover:bg-green-700"
+            : "bg-teal-900 hover:bg-green-700"
         }`}
       >
         Next

@@ -1,13 +1,16 @@
 import React, { useState } from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import { api } from "../utils/api";
-
+// TODO extract api stuff to custom hook
+// make custom hook call less
+// table probably doesnt need to update that frequently
+// also make the mutations optimisic
 type TableProps = {
-  data: CBT_FormDataType;
+  formData: CBT_FormDataType;
   setData: (data: CBT_FormDataType) => CBT_FormDataType;
 };
 
-const Table: React.FC<TableProps> = ({ setData, data }) => {
+const Table: React.FC<TableProps> = ({ setData, formData }) => {
   const utils = api.useContext();
 
   const { mutate: deletePost } = api.CBT.delete.useMutation({
@@ -16,45 +19,41 @@ const Table: React.FC<TableProps> = ({ setData, data }) => {
     },
   });
   const getAllPosts = api.CBT.getAll.useQuery();
+  // So this works comparing to default but doesnt tell you if you loaded something then clicked again
+  // idk if thats  enough of an issue
+  // but maybe it would be better to compare current form data to current table data as well
+  // so if current form === default then go ahead
+  // if its different is it the same as the taable in
+  // seems pretty minor
+  // TODO add see more extension buttons to the long text also can make jus tthe hot thoughts visiable and or indicate them in red
 
-  const fillData = (setData) => {
-    setData((prev): null => [
-      {
-        nameMood: "dep",
-        rateMood: 5,
-        automaticThoughts: "I am not good enough",
-        evidenceFor: "I failed that test last week",
-        evidenceAgainst: "I have received positive feedback from my colleagues",
-        newThought:
-          "I am capable of doing well, and one test does not define me",
-        rateBelief: 3,
-        rerateEmotion: 4,
-      },
-      {
-        nameMood: "dep",
-        rateMood: 2,
-        automaticThoughts: "I am a failure",
-        evidenceFor: "I lost my job last month",
-        evidenceAgainst:
-          "I have been actively looking for a new job and have had several interviews",
-        newThought:
-          "I am not a failure, I am taking steps to improve my situation",
-        rateBelief: 2,
-        rerateEmotion: 3,
-      },
-      {
-        nameMood: "dep",
-        rateMood: 4,
-        automaticThoughts: "I am not happy",
-        evidenceFor: "I have been feeling down lately",
-        evidenceAgainst: "I have had moments of joy and laughter recently",
-        newThought:
-          "I am not always happy, but that does not mean I am not capable of happiness",
-        rateBelief: 3,
-        rerateEmotion: 3,
-      },
-    ]);
-  };
+  function hasDataChanged(
+    currentData: CBT_FormDataType,
+    defaultData: CBT_FormDataType = {
+      name: "",
+      moodName: "",
+      moodLabel: "",
+      moodRating: 1,
+      automaticThoughts: [],
+      evidenceFor: "",
+      evidenceAgainst: "",
+      newThought: "",
+      rateBelief: 1,
+      rerateEmotion: 1,
+    }
+  ) {
+    if (
+      JSON.stringify(currentData.automaticThoughts) !==
+      JSON.stringify(defaultData.automaticThoughts)
+    ) {
+      return true;
+    }
+    return Object.entries(currentData).some(
+      ([key, value]) =>
+        key !== "automaticThoughts" && currentData[key] !== defaultData[key]
+    );
+  }
+
   return (
     <>
       <div className="mb-6 mt-20 text-center">
@@ -77,6 +76,7 @@ const Table: React.FC<TableProps> = ({ setData, data }) => {
               <th className="bg-blue-500 p-2">New Balanced Thought</th>
               <th className="bg-blue-500 p-2">Rate Belief in New Thought</th>
               <th className="bg-blue-500 p-2">Rerate Emotion</th>
+              <th className="bg-blue-500 p-2">Update</th>
               <th className="bg-blue-500 p-2">Delete</th>
             </tr>
           </thead>
@@ -100,7 +100,17 @@ const Table: React.FC<TableProps> = ({ setData, data }) => {
                 </td>
                 <td className="p-2  ">
                   {entry?.automaticThoughts?.map((thoughts, index) => {
-                    return <span key={index}>{thoughts.thought}</span>;
+                    return (
+                      <span
+                        key={index}
+                        className={`"text-gray-900" ${
+                          thoughts.isHot && "text-red-600"
+                        }`}
+                      >
+                        {thoughts.thought}
+                        <br />
+                      </span>
+                    );
                   })}
                 </td>
                 <td className="border-spacing-2  bg-slate-500 p-2">
@@ -110,6 +120,31 @@ const Table: React.FC<TableProps> = ({ setData, data }) => {
                 <td className="bg-slate-500  p-2">{entry.newThought}</td>
                 <td className="p-2">{entry.rateBelief}</td>
                 <td className="bg-slate-500  p-2">{entry.rerateEmotion}</td>
+                <td className="bg-slate-500  p-2">
+                  <button
+                    className="mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold text-gray-900  hover:bg-gray-100"
+                    onClick={() => {
+                      // how do i determine if the form has data...
+                      const text =
+                        "You sure you want to load in an update It will Replace your current Form entry?";
+
+                      const dataChanged = hasDataChanged(formData);
+                      if (!dataChanged) {
+                        setData((prev) => {
+                          return entry;
+                        });
+                        return;
+                      }
+                      if (confirm(text)) {
+                        setData((prev) => {
+                          return entry;
+                        });
+                      }
+                    }}
+                  >
+                    Update
+                  </button>
+                </td>
                 <td className="bg-slate-500  p-2">
                   <button
                     className="mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold text-gray-900  hover:bg-gray-100"
@@ -123,13 +158,6 @@ const Table: React.FC<TableProps> = ({ setData, data }) => {
           </tbody>
         </table>
       </div>
-      <button
-        onClick={() => fillData(setData)}
-        className="mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold  hover:bg-gray-100"
-      >
-        {" "}
-        Click Me TO fill
-      </button>
     </>
   );
 };
@@ -139,3 +167,12 @@ export default Table;
 {
   /* TODO make overflow nicer  */
 }
+
+{
+  /* TODO make sure for update Btn it doesnt delete current add a confirm if there is already data
+                   are you sure this will delete your current data unless its saved but can still warn about overwrite
+                   
+                  */
+}
+
+// TODO  can add sorts and filter by emo type or date orstrong moods...
