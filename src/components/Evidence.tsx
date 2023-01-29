@@ -7,9 +7,10 @@ type newThoughtPropsI = {
   data: CBT_FormDataType;
   currentStep: number;
   targetStep: number;
-
+  evidence: string;
   errors: any;
   title: string;
+  evidenceName: string;
   handleChange: ChangeEventHandler<HTMLTextAreaElement>;
 };
 const NewBalancedThought: React.FC<newThoughtPropsI> = ({
@@ -19,6 +20,8 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
   handleChange,
   title,
   targetStep,
+  evidence,
+  evidenceName,
 }) => {
   // TODO so errors could be used but they are not cleanly mapped ie the names are diff and the indexs
   // wont nedd match bc obj
@@ -27,7 +30,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
   //   I feel like i could have another layer of abstraction here since so many of these are the same
   return (
     <>
-      <div className="form-control mb-10">
+      <div className="form-control mt-4 mb-10">
         <label className="label">
           <span className="label-text capitalize text-white">{title}</span>
         </label>
@@ -35,17 +38,17 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
         <textarea
           className="textarea-bordered textarea h-24 bg-white text-black"
           placeholder="The following Evidence suggests..."
-          value={data.evidenceFor}
-          name="evidenceFor"
+          value={evidence}
+          name={evidenceName}
           onChange={handleChange}
         ></textarea>
-        {errors?.evidenceFor && (
-          <div className="text-red-500">{errors.evidenceFor}</div>
+        {errors?.evidenceName && (
+          <div className="text-red-500">{errors.evidenceName}</div>
         )}
       </div>
       {/* Extract this all to own component to clean up sectiosn */}
       <Collapse
-        evidence={data.automaticThoughts.join("\n")}
+        evidence={data.automaticThoughts.map((ele) => ele.thought).join("\n")}
         title={"Hot Thoughts"}
       />
     </>

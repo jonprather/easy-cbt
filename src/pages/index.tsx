@@ -5,8 +5,6 @@ import Layout from "../components/Layout";
 import { api } from "../utils/api";
 import Table from "../components/Table";
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-
   return (
     <Layout>
       <main className=" min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#0d026d] to-[#15162c]">
@@ -36,8 +34,11 @@ const Home: NextPage = () => {
           </div>
         </div>
         <div className=" flex flex-col items-center gap-2">
-          <p className="text-2xl text-white">View History</p>
-          <div className=" max-w-full">
+          {/* <p className="text-2xl text-white">View History</p> */}
+          <div className=" mx-auto flex max-w-full justify-center">
+            {/* TODO make set data global handler so can pass here...
+            setData={setData}
+            */}
             <Table></Table>
           </div>
         </div>

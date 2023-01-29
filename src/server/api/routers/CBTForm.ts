@@ -31,6 +31,7 @@ export const CBT_FormSchema = z.object({
 const CBT_FormSchemaWithId = CBT_FormSchema.extend({
   id: z.string(),
 });
+// TODO maybe just get the prisma types here
 import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 
 export const CBTFormRouter = createTRPCRouter({
@@ -76,6 +77,34 @@ export const CBTFormRouter = createTRPCRouter({
     });
   }),
 
+  getOne: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user?.id;
+
+      const post = await prisma?.cBT_FormDataType.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+      if (!post) {
+        throw new Error(`Post with id ${input.id} not found`);
+      }
+      if (post.userId !== userId) {
+        throw new Error(
+          `User ${userId} is not authorized to delete post ${input.id}`
+        );
+      }
+      return ctx.prisma.cBT_FormDataType.findUnique({
+        where: {
+          id: input.id,
+          // include: {
+          //   automaticThoughts: true,
+          // },
+        },
+      });
+    }),
+
   // So for this id should be required...
   // Or should i have the id be seperate as something passed to it...
   // Ok this works but all is hot and only hot has to be to be saved
@@ -84,25 +113,7 @@ export const CBTFormRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       try {
         const userId = ctx.session.user?.id;
-        const thoughts = input.automaticThoughts.map(
-          ({ thought, isHot, cBT_FormDataType }) => ({
-            create: {
-              thought,
-              isHot,
-              cBT_FormDataType: cBT_FormDataType
-                ? {
-                    connect: {
-                      id: cBT_FormDataType.id,
-                    },
-                  }
-                : undefined,
-            },
-            update: {
-              thought,
-              isHot,
-            },
-          })
-        );
+
         const post = await prisma?.cBT_FormDataType.findUnique({
           where: {
             id: input.id,
@@ -221,3 +232,4 @@ export const CBTFormRouter = createTRPCRouter({
 
 // also
 // TODO make sure deletes happen on cascade or if not delete manually
+// Can add a you have shown improvement etc celebration

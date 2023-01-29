@@ -17,16 +17,28 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
   errors,
   handleHotThoughtClick,
   setData,
+  handleChange,
 }) => {
   const [input, setInput] = React.useState("");
   const [lastLine, setLastLine] = React.useState("");
 
   const extractData = (e) => {
-    if (e.key === "Enter") {
-      const data = input.split("\n");
-      if (lastLine && lastLine !== data[data.length - 1]) data.push(lastLine);
-      console.log(data);
-    }
+    let antArr = e.target.value
+      .split("\n")
+      .filter((ele) => ele)
+      .map((thought) => {
+        return {
+          thought,
+          isHot: false,
+        };
+      });
+
+    setData((prev) => {
+      return {
+        ...prev,
+        automaticThoughts: antArr,
+      };
+    });
   };
   const textInput: RefObject<HTMLInputElement> = React.createRef();
 
@@ -37,57 +49,76 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
     woudl be faster easier less key strokes and just be better UI and UX
     // Yeah lets do it also filter out the empty ones ie dont push them to othe rbox or to data
     */}
-      <div className="form-control">
-        <label className="label">
-          <span className="label-text capitalize text-white">
-            List your Automatic Negative Thoughts
-          </span>
-        </label>
-        <textarea
-          className="textarea-bordered textarea h-24 bg-white text-black"
-          placeholder="thoughts..."
-          onKeyDown={(e) => setInput(e.target.value)}
-          onBlur={() => {
-            const lines = input.split("\n");
-            setLastLine(lines[lines.length - 1]);
-          }}
-          onClick={(e) => {
-            const newThought = textInput?.current?.value || "";
-            // TODO i have no idea why the same type wouldnt match here
-            // data is the prev CBT_FormDataType and so is this param idk
-            setData((data: CBT_FormDataType): CBT_FormDataType => {
-              return {
-                ...data,
-                automaticThoughts: [
-                  ...data.automaticThoughts,
-                  { thought: newThought, isHot: false },
-                ],
-              };
-            });
-            if (textInput && textInput.current) {
-              textInput.current.value = "";
-            }
-          }}
-        ></textarea>
-      </div>
+
+      {/*  */}
       <div className={" sm:h-80"}>
+        <div className="mb-2 mt-4 ">
+          <label className="label block w-full">
+            <span className="label-text mb-2 block capitalize text-white">
+              {/* These are slighly off ie name input and select mood slighlty deff padding on container */}{" "}
+              List Thoughts
+            </span>
+            <input
+              // value={data.name}
+              // TODO
+              onChange={handleChange}
+              ref={textInput}
+              placeholder="Thoughts..."
+              type="text"
+              name="name"
+              className="sm:max-w-x-lg input-bordered input w-full w-full bg-white text-black"
+              // className="focus:shadow-outline block w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 pl-6 pr-6 leading-normal text-black focus:outline-none md:w-1/2"
+            />
+            {/* TODO could add a way to remove automatic thoughts but note if its old data have to also remove from db */}
+            {errors?.name && <div className="text-red-500">{errors.name}</div>}
+          </label>
+        </div>
+        {/* <label className="label mt-4  block">
+          <span className="label-text block text-white">
+            🐜 Automatic Negative Thoughts:
+          </span>
+          <input
+            type="text"
+            name="automaticThoughts"
+            className="input-bordered input block bg-white text-black"
+            // className="focus:shadow-outline block w-full   appearance-none rounded-lg border border-gray-300  py-2 px-4 font-normal leading-normal focus:outline-none"
+          />
+        </label> */}
         <div className="flex justify-between ">
           {/* TODO figure these types out */}
 
-          <span className=" text-label my-auto block p-2 text-white">
-            Thought List
-          </span>
           <button
             type="button"
-            className="text-md mt-6 mb-3 rounded-lg border border-gray-400 bg-primary py-2 px-4 font-semibold text-white shadow-md hover:bg-base-300"
+            onClick={(e) => {
+              const newThought = textInput?.current?.value || "";
+              if (!newThought) return;
+              // TODO i have no idea why the same type wouldnt match here
+              // data is the prev CBT_FormDataType and so is this param idk
+              setData((data: CBT_FormDataType): CBT_FormDataType => {
+                return {
+                  ...data,
+                  automaticThoughts: [
+                    ...data.automaticThoughts,
+                    { thought: newThought, isHot: false },
+                  ],
+                };
+              });
+              if (textInput && textInput.current) {
+                textInput.current.value = "";
+              }
+            }}
+            className="btn-accent btn mb-10"
           >
-            Add
+            Add Thoughts
           </button>
         </div>
-
-        <div className="h-36 overflow-y-scroll bg-gray-100 p-2 md:h-52 ">
+      </div>
+      {/*  */}
+      <div className={" sm:h-80"}>
+        <span className=" label-text mb-2 block text-white">Thought List</span>
+        <div className="h-36 overflow-y-scroll rounded-lg bg-gray-100 p-2 md:h-52">
           <ul>
-            {data.automaticThoughts.map((thoughts, index) => (
+            {data?.automaticThoughts?.map((thoughts, index) => (
               <li
                 key={index}
                 onClick={() => handleHotThoughtClick(index)}

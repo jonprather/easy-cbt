@@ -132,24 +132,26 @@ function JournalTable() {
   // It is only used for when the input is clciked to edit the existing hot thought
   // The textArea new line approach may be easier
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (event.target.name === "automaticThoughts") {
-      const newAutoThoughts = [...data.automaticThoughts];
-      const index = data.automaticThoughts.findIndex(
-        (thought) => thought?.thought === value
-      );
-      if (newAutoThoughts && newAutoThoughts[index]) {
-        newAutoThoughts[index].thought = event.target.value;
-      }
-      setData({ ...data, automaticThoughts: newThoughts });
-    }
+    // if (event.target.name === "automaticThoughts") {
+    //   const newAutoThoughts = [...data.automaticThoughts];
+    //   const index = data.automaticThoughts.findIndex(
+    //     (thought) => thought?.thought === value
+    //   );
+    //   if (newAutoThoughts && newAutoThoughts[index]) {
+    //     newAutoThoughts[index].thought = event.target.value;
+    //   }
+    //   setData({ ...data, automaticThoughts: newThoughts });
+    // }
     const { name, value } = event.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  // TODO fix the submit on enter its not pleasant UX when happens at AT ...
+  // ALSO put max char counts on all the text feilds...
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     // console.log("FORM SUBMITTED");
-
+    // also need to reset the ref on automatic thoughts .... when submit
     try {
       //   CBT_Schema.parse(formValues);
       // So if going to reuse the form could do things differently ie
@@ -214,7 +216,7 @@ function JournalTable() {
   return (
     <Layout>
       <div className="mb-6 mt-10 p-4  text-center md:p-20">
-        <h1 className="mb-4 text-4xl font-medium text-sky-600">
+        <h1 className="mb-4 text-4xl font-medium text-primary">
           EasyCBT Diary
         </h1>
         <p className="text-xl font-medium text-white ">
@@ -232,11 +234,11 @@ function JournalTable() {
         />
         {/* TODO ok left off trying to make this bigger also was working on passing errors to tabs
       see todos */}
-        <div className="min-h-90 mx-auto flex flex-col justify-between p-4  pt-6 pb-6 sm:bg-slate-800  sm:p-6 md:max-w-5xl md:rounded-b md:rounded-tl md:shadow-lg ">
+        <div className="min-h-90 mx-auto flex flex-col justify-between p-2 pt-6  pb-6 xs:p-4 sm:bg-slate-800  sm:p-6 md:max-w-5xl md:rounded-b md:rounded-tl md:shadow-lg ">
           <form
             onKeyDown={handleKeyDown}
             onSubmit={handleSubmit}
-            className=" min-h-73 mx-auto w-full rounded p-4  sm:mt-4   sm:max-w-3xl sm:bg-slate-700 md:mt-10"
+            className=" min-h-73 mx-auto w-full rounded p-2 xs:p-4 sm:mt-4   sm:max-w-3xl sm:bg-slate-700 md:mt-10"
           >
             <NameAndRateMood
               currentStep={currentStep}
@@ -248,6 +250,7 @@ function JournalTable() {
             <AutomaticThoughts
               handleHotThoughtClick={handleHotThoughtClick}
               setData={setData}
+              handleChange={handleChange}
               data={data}
               currentStep={currentStep}
               errors={errors}
@@ -257,18 +260,22 @@ function JournalTable() {
             <Evidence
               data={data}
               handleChange={handleChange}
+              evidence={data.evidenceFor}
               currentStep={currentStep}
               targetStep={2}
               errors={errors}
               title="Evidence Supporting the Thought"
+              evidenceName={"evidenceFor"}
             />
             <Evidence
               data={data}
+              evidence={data.evidenceAgainst}
               handleChange={handleChange}
               currentStep={currentStep}
               targetStep={3}
               errors={errors}
               title="Evidence against the thought"
+              evidenceName={"evidenceAgainst"}
             />
             {/* TODO ok i left off creating these components next up fix ANTS and 
 add collpase to rerate */}

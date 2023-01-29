@@ -21,7 +21,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
 
   return (
     <>
-      <div className="form-control mb-10">
+      <div className="form-control mt-4 mb-10">
         <label className="label">
           <span className="label-text text-white">New Balanced Thought:</span>
         </label>

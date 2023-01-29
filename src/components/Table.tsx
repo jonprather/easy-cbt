@@ -5,6 +5,9 @@ import { api } from "../utils/api";
 // make custom hook call less
 // table probably doesnt need to update that frequently
 // also make the mutations optimisic
+
+//TODO  Add react toastify on success and error
+
 type TableProps = {
   formData: CBT_FormDataType;
   setData: (data: CBT_FormDataType) => CBT_FormDataType;
@@ -43,8 +46,8 @@ const Table: React.FC<TableProps> = ({ setData, formData }) => {
     }
   ) {
     if (
-      JSON.stringify(currentData.automaticThoughts) !==
-      JSON.stringify(defaultData.automaticThoughts)
+      JSON?.stringify(currentData?.automaticThoughts) !==
+      JSON?.stringify(defaultData?.automaticThoughts)
     ) {
       return true;
     }
@@ -57,106 +60,58 @@ const Table: React.FC<TableProps> = ({ setData, formData }) => {
   return (
     <>
       <div className="mb-6 mt-20 text-center">
-        <h2 className="mb-4 text-3xl font-medium text-blue-500">
-          Past Entries
-        </h2>
-      </div>
-      <div className=" mt-4 overflow-x-auto ">
-        <table className="table-zebra table w-full table-auto text-white">
-          <thead>
-            <tr>
-              {" "}
-              {/* <th className="bg-blue-500 p-2">ID</th> */}
-              <th className="bg-primary p-2">Table Name</th>
-              <th className="bg-primary p-2">Name Mood</th>
-              <th className="bg-primary p-2">Rate Mood</th>
-              <th className="bg-primary p-2">Automatic Thoughts</th>
-              <th className="bg-primary p-2">Evidence for the Thought</th>
-              <th className="bg-primary p-2">Evidence Against the Thought</th>
-              <th className="bg-primary p-2">New Balanced Thought</th>
-              <th className="bg-primary p-2">Rate Belief in New Thought</th>
-              <th className="bg-primary p-2">Rerate Emotion</th>
-              <th className="bg-primary p-2">Update</th>
-              <th className="bg-primary p-2">Delete</th>
-            </tr>
-          </thead>
+        <h2 className="mb-4 text-3xl font-medium text-white">Past Entries</h2>
+        {/* Add the delete and update buttons get icons for them */}
+        {getAllPosts.data?.map((entry, i) => (
+          <div
+            key={i}
+            className="card mt-10 w-96 bg-primary text-primary-content"
+          >
+            <div className="card-body">
+              <h2 className="card-title">{entry?.name}</h2>
+              <p className="text-xl">{entry?.moodLabel}</p>
+              {/* <p className="text-xl">{entry?.}</p> */}
 
-          <tbody>
-            {/* Can add id 
-            also add button to open updata maybe reuse og forms
-            idk if diff page 
-            also button to delte based on id
-            */}
-            {getAllPosts.data?.map((entry, index) => (
-              <tr key={entry.id} className="text-white">
-                {/* <td className="td  p-2 text-white">{entry.id}</td> */}
+              <div className="card-actions justify-end">
+                {/* <button className="btn-primary btn">Buy Now</button> */}
+                <button
+                  className="btn-neutral btn"
+                  onClick={() => {
+                    // how do i determine if the form has data...
+                    const text =
+                      "You sure you want to load in an update It will Replace your current Form entry?";
 
-                <td className="td  p-2 text-white">{entry.name}</td>
-                <td className="td border-slate-800 bg-slate-500 p-2 text-white">
-                  {entry.moodLabel}
-                </td>
-                <td className="td border-slate-800 bg-slate-500 p-2 text-white">
-                  {entry.moodRating}
-                </td>
-                <td className="max-w-80  p-2">
-                  {entry?.automaticThoughts?.map((thoughts, index) => {
-                    return (
-                      <span
-                        key={index}
-                        className={`"text-gray-900" ${
-                          thoughts.isHot && "text-red-600"
-                        }`}
-                      >
-                        {thoughts.thought}
-                        <br />
-                      </span>
-                    );
-                  })}
-                </td>
-                <td className="border-spacing-2  bg-slate-500 p-2">
-                  {entry.evidenceFor}
-                </td>
-                <td className="p-2 ">{entry.evidenceAgainst}</td>
-                <td className="bg-slate-500  p-2">{entry.newThought}</td>
-                <td className="p-2">{entry.rateBelief}</td>
-                <td className="bg-slate-500  p-2">{entry.rerateEmotion}</td>
-                <td className="bg-slate-500  p-2">
-                  <button
-                    className="mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold text-gray-900  hover:bg-gray-100"
-                    onClick={() => {
-                      // how do i determine if the form has data...
-                      const text =
-                        "You sure you want to load in an update It will Replace your current Form entry?";
+                    const dataChanged = hasDataChanged(formData);
+                    if (!dataChanged) {
+                      setData((prev) => {
+                        return entry;
+                      });
+                      return;
+                    }
+                    if (confirm(text)) {
+                      setData((prev) => {
+                        return entry;
+                      });
+                    }
+                  }}
+                >
+                  Update
+                </button>
 
-                      const dataChanged = hasDataChanged(formData);
-                      if (!dataChanged) {
-                        setData((prev) => {
-                          return entry;
-                        });
-                        return;
-                      }
-                      if (confirm(text)) {
-                        setData((prev) => {
-                          return entry;
-                        });
-                      }
-                    }}
-                  >
-                    Update
-                  </button>
-                </td>
-                <td className="bg-slate-500  p-2">
-                  <button
-                    className="mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold text-gray-900  hover:bg-gray-100"
-                    onClick={() => deletePost({ id: entry.id })}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                <button
+                  className="btn-ghost btn"
+                  onClick={() => {
+                    if (confirm("Are You sure you want to delete this?")) {
+                      deletePost({ id: entry.id });
+                    }
+                  }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </>
   );
@@ -176,3 +131,9 @@ export default Table;
 }
 
 // TODO  can add sorts and filter by emo type or date orstrong moods...
+// note doesnt have to be Table i think it would be better as a list of cards
+// with just info about the title and creation date maybe mood as well like the icon
+// and can have icons for the edit and delete buttons as well
+// also can have character limits on input so that doesnt get out of hand, and can show how many chars
+// in file out of total
+// oh i like the create icon at the button as well thought i can have a button

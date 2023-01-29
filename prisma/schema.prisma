@@ -68,7 +68,11 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+// TODO update all the cases that use this or use the prisma type?
+// ie update the controller and the clients code so that i can have accesss to this info in client
 model cBT_FormDataType {
+    createdAt         DateTime            @default(now())
+    updatedAt         DateTime            @updatedAt
     id                String              @id @default(cuid())
     name              String?
     moodLabel         String?

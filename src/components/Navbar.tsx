@@ -3,7 +3,7 @@ import AuthShowCase from "./AuthShowCase";
 import Link from "next/link";
 const Navbar: React.FC = () => {
   return (
-    <div className="flex w-full items-center justify-between bg-teal-900 p-4 text-lg">
+    <div className="flex w-full items-center justify-between bg-primary p-4 text-lg">
       <div className="flex-1">Logo</div>
       <div className="flex items-center">
         <Link className="mr-6 text-white" href="/">

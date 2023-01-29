@@ -33,6 +33,14 @@ const EmojiSelector = ({ moodName, moodLabel, setData }) => {
     <div>
       <Select
         className={" w-full max-w-xs rounded-full "}
+        styles={{
+          control: (baseStyles, state) => ({
+            ...baseStyles,
+            background: state.isFocused ? "grey" : "bg-primary",
+            borderRadius: "6px",
+            padding: "4px",
+          }),
+        }}
         options={options}
         value={{ label: moodLabel, value: moodName }}
         // isMulti
