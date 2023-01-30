@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
+import Link from "next/link";
 import { api } from "../utils/api";
 // TODO extract api stuff to custom hook
 // make custom hook call less
@@ -74,29 +75,9 @@ const Table: React.FC<TableProps> = ({ setData, formData }) => {
 
               <div className="card-actions justify-end">
                 {/* <button className="btn-primary btn">Buy Now</button> */}
-                <button
-                  className="btn-neutral btn"
-                  onClick={() => {
-                    // how do i determine if the form has data...
-                    const text =
-                      "You sure you want to load in an update It will Replace your current Form entry?";
-
-                    const dataChanged = hasDataChanged(formData);
-                    if (!dataChanged) {
-                      setData((prev) => {
-                        return entry;
-                      });
-                      return;
-                    }
-                    if (confirm(text)) {
-                      setData((prev) => {
-                        return entry;
-                      });
-                    }
-                  }}
-                >
+                <Link className="btn-neutral btn" href={`/update/${entry.id}`}>
                   Update
-                </button>
+                </Link>
 
                 <button
                   className="btn-ghost btn"

@@ -9,7 +9,7 @@ const Navbar: React.FC = () => {
         <Link className="mr-6 text-white" href="/">
           Home
         </Link>
-        <Link className=" mr-6 text-white" href="/easyCBT">
+        <Link className=" mr-6 text-white" href="/create">
           App
         </Link>
         {/* <button className="bg-white py-2 px-4 text-teal-900">Sign In</button> */}

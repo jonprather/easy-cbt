@@ -86,23 +86,19 @@ export const CBTFormRouter = createTRPCRouter({
         where: {
           id: input.id,
         },
+        include: {
+          automaticThoughts: true,
+        },
       });
       if (!post) {
         throw new Error(`Post with id ${input.id} not found`);
       }
       if (post.userId !== userId) {
         throw new Error(
-          `User ${userId} is not authorized to delete post ${input.id}`
+          `User ${userId} is not authorized to access post ${input.id}`
         );
       }
-      return ctx.prisma.cBT_FormDataType.findUnique({
-        where: {
-          id: input.id,
-          // include: {
-          //   automaticThoughts: true,
-          // },
-        },
-      });
+      return post;
     }),
 
   // So for this id should be required...
