@@ -1,35 +1,33 @@
 import React from "react";
+import { FaArrowLeft, FaArrowRight, FaQuestionCircle } from "react-icons/fa";
 const PreviousAndNextButtons = ({ setCurrentStep, currentStep, columns }) => {
   const textInput = React.createRef();
-
-  // TODO finish pulling these out figure out why this is jank and sayign expression expected and shit
+  // TODO ok can add guide stuff to bottom nav
+  //  ? for queries can be on bottom opp of up down btns
+  // any other tips help can be inline with form
   return (
-    <div className=" m-auto flex flex-row justify-between  sm:max-w-3xl">
-      <button
-        onClick={() => setCurrentStep(currentStep - 1)}
-        disabled={currentStep === 0}
-        className={` mt-6 rounded-lg border border-gray-400 bg-white py-2 px-4 font-semibold shadow-sm   ${
-          currentStep === 0
-            ? "bg-gray-500  text-white"
-            : "bg-white text-gray-800 text-white hover:bg-gray-200"
-        }`}
-      >
-        Previous
-      </button>
-      <button
-        className={`mt-6 rounded-lg border border-gray-400 bg-purple-500  py-2 px-4 font-semibold text-white shadow-sm`}
-      >
-        Help
-      </button>
-      <button
-        onClick={() => setCurrentStep(currentStep + 1)}
-        disabled={currentStep === columns.length - 1}
-        className={` mt-6 rounded-lg border border-gray-400 py-2  px-4 font-semibold text-white shadow-sm  ${
-          currentStep === columns.length - 1 ? "bg-gray-500 " : "bg-accent"
-        }`}
-      >
-        Next
-      </button>
+    <div className=" m-auto flex flex-row justify-between xs:justify-between sm:max-w-3xl">
+      <div>
+        <button className={`btn-ghost btn mt-1 ml-4 text-lg xs:ml-0`}>
+          <FaQuestionCircle />
+        </button>
+      </div>
+      <div>
+        <button
+          onClick={() => setCurrentStep(currentStep - 1)}
+          disabled={currentStep === 0}
+          className="btn-neutral btn mt-1 mr-4 text-lg"
+        >
+          <FaArrowLeft />
+        </button>
+        <button
+          onClick={() => setCurrentStep(currentStep + 1)}
+          disabled={currentStep === columns.length - 1}
+          className="btn-neutral btn mt-1 mr-4 text-lg xs:mr-0"
+        >
+          <FaArrowRight />
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-import AuthShowCase from "./AuthShowCase";
 import Link from "next/link";
-import { FaHome } from "react-icons/fa";
-const Navbar: React.FC = () => {
+import AuthShowcase from "./AuthShowCase";
+import { FaPlusCircle } from "react-icons/fa";
+const BottomNav = () => {
   const router = useRouter();
   const [isHomeActive, setIsHomeActive] = useState(false);
   const [isCreateActive, setIsCreateActive] = useState(false);
@@ -38,26 +38,40 @@ const Navbar: React.FC = () => {
   }, [router.pathname]);
 
   return (
-    <div className="hidden w-full items-center justify-between bg-neutral p-4 text-lg sm:flex ">
-      <div className="flex-1">Logo</div>
-      <div className="flex items-center">
-        <Link
-          className="btn-ghost active btn mr-6 flex items-center text-white"
-          href="/"
+    <div className="btm-nav sm:hidden">
+      <Link href="/" className={` ${isHomeActive ? "active" : ""} `}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
         >
-          <span className="active mr-2 text-lg">
-            <FaHome></FaHome>
-          </span>
-          Home
-        </Link>
-        <Link className="btn-ghost btn mr-6 text-white" href="/create">
-          App
-        </Link>
-        {/* <button className="bg-white py-2 px-4 text-teal-900">Sign In</button> */}
-          <AuthShowCase />
-      </div>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+          />
+        </svg>
+        <span className={"btm-nav-label "}>Home</span>
+      </Link>
+      <Link
+        href="/create"
+        className={isCreateActive || isUpdateActive ? "active" : ""}
+      >
+        <span className="text-lg">
+          <FaPlusCircle />
+        </span>
+        <span className={"btm-nav-label"}>
+          {isUpdateActive ? "Updating Entry" : "New Entry"}
+        </span>
+      </Link>
+      <button className={isUserActive ? "active" : ""}>
+        <AuthShowcase />
+      </button>
     </div>
   );
 };
 
-export default Navbar;
+export default BottomNav;

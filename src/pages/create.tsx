@@ -216,7 +216,7 @@ function JournalTable() {
 
   return (
     <Layout>
-      <div className="mb-6 mt-10 p-4  text-center md:p-20">
+      <div className="mb-6 p-4 text-center  sm:mt-10 md:p-20">
         <h1 className="mb-4 text-4xl font-medium text-primary">
           EasyCBT Diary
         </h1>

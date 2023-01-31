@@ -48,7 +48,10 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
       </div>
       {/* Extract this all to own component to clean up sectiosn */}
       <Collapse
-        evidence={data.automaticThoughts.map((ele) => ele.thought).join("\n")}
+        evidence={data.automaticThoughts
+          .filter((thought) => thought?.isHot)
+          .map((ele) => ele.thought)
+          .join("\n")}
         title={"Hot Thoughts"}
       />
     </>

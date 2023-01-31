@@ -1,5 +1,6 @@
 import { api } from "../utils/api";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { FaPlusCircle, FaUserCircle } from "react-icons/fa";
 
 const AuthShowcase: React.FC = () => {
   const { data: sessionData } = useSession();
@@ -11,10 +12,21 @@ const AuthShowcase: React.FC = () => {
 
   return (
     <button
-      className="rounded-full bg-white/10 px-10 py-3 font-semibold text-white no-underline transition hover:bg-white/20"
+      className="btm-nav-label sm:uppercase sm:btn-ghost sm:btn"
       onClick={sessionData ? () => void signOut() : () => void signIn()}
     >
-      {sessionData ? "Sign out" : "Sign in"}
+      <span className="flex flex-col items-center justify-around gap-1 sm:flex-row  sm:text-lg">
+        <span
+          className=" text-lg sm:hidden
+        "
+          key="mobile"
+        >
+          <FaUserCircle />
+        </span>
+        <span className=" b ml-2 capitalize">
+          {sessionData ? "Sign out" : "Sign in"}
+        </span>
+      </span>
     </button>
   );
 };

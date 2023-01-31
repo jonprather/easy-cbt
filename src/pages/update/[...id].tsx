@@ -43,7 +43,6 @@ const UpdateNote = () => {
   return (
     <Layout>
       <div>
-        <h1>Update Note</h1>
         <CBTAppTemplate initialData={getPost.data} />
       </div>
     </Layout>

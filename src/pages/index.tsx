@@ -15,8 +15,7 @@ const Home: NextPage = () => {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
             <Link
               className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href="/easyCBT"
-              // target="_blank"
+              href="/create"
             >
               <h3 className="text-2xl font-bold">New CBT Journal</h3>
               <div className="text-lg">Open the CBT to create a new entry </div>
@@ -35,7 +34,7 @@ const Home: NextPage = () => {
         </div>
         <div className=" flex flex-col items-center gap-2">
           {/* <p className="text-2xl text-white">View History</p> */}
-          <div className=" mx-auto flex max-w-full justify-center">
+          <div className=" mx-auto mb-16 flex max-w-full justify-center">
             {/* TODO make set data global handler so can pass here...
             setData={setData}
             */}

@@ -2,7 +2,7 @@ import React from "react";
 
 import type { RefObject } from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
-
+import { FaPlusCircle } from "react-icons/fa";
 type AutomaticThoughtsProps = {
   data: CBT_FormDataType;
   currentStep: number;
@@ -51,9 +51,9 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
     */}
 
       {/*  */}
-      <div className={" sm:h-80"}>
+      <div className={" sm:h-2/3"}>
         <div className="mb-2 mt-4 ">
-          <label className="label block w-full">
+          <label className="label block w-full pl-0 pr-0">
             <span className="label-text mb-2 block capitalize text-white">
               {/* These are slighly off ie name input and select mood slighlty deff padding on container */}{" "}
               List Thoughts
@@ -66,7 +66,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
               placeholder="Thoughts..."
               type="text"
               name="name"
-              className="sm:max-w-x-lg input-bordered input w-full w-full bg-white text-black"
+              className="sm:max-w-x-lg input-bordered input  w-full bg-white text-black"
               // className="focus:shadow-outline block w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 pl-6 pr-6 leading-normal text-black focus:outline-none md:w-1/2"
             />
             {/* TODO could add a way to remove automatic thoughts but note if its old data have to also remove from db */}
@@ -109,14 +109,17 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
             }}
             className="btn-accent btn mb-10"
           >
-            Add Thoughts
+            <span className="mr-4 text-lg">
+              <FaPlusCircle />
+            </span>
+            Add Thought
           </button>
         </div>
       </div>
       {/*  */}
-      <div className={" sm:h-80"}>
+      <div className={" "}>
         <span className=" label-text mb-2 block text-white">Thought List</span>
-        <div className="h-36 overflow-y-scroll rounded-lg bg-gray-100 p-2 md:h-52">
+        <div className="h-36 overflow-y-scroll rounded-lg bg-gray-100 p-2 ">
           <ul>
             {data?.automaticThoughts?.map((thoughts, index) => (
               <li

@@ -70,6 +70,7 @@ model VerificationToken {
 
 // TODO update all the cases that use this or use the prisma type?
 // ie update the controller and the clients code so that i can have accesss to this info in client
+// 
 model cBT_FormDataType {
     createdAt         DateTime            @default(now())
     updatedAt         DateTime            @updatedAt

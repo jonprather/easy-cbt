@@ -29,7 +29,7 @@ const Rerate: React.FC<RerateProps> = ({
   };
   if (currentStep !== columns.length - 1) return null;
   return (
-    <div className="min-h-73 mt-4 flex flex-col justify-between">
+    <div className="min-h- min-h-16 mt-4 flex flex-col justify-between">
       {/* TODO COULD give these all a class like form child one so that they all have same top margin 
       also same for parent , also for child two to give it consistent bottom margin
       */}
@@ -59,7 +59,7 @@ will need state for that i can access the data.rateMood etc and set it that way
         </label>
         <label className="label mt-4 block  ">
           <span className="label-text capitalize text-white">
-            Rerate mood intensity: {data?.nameMood?.label}
+            Rerate mood intensity: {data?.moodLabel}
           </span>
           <input
             onChange={handleRateMood}
@@ -74,28 +74,13 @@ will need state for that i can access the data.rateMood etc and set it that way
             <div className="text-red-500">{errors.rerateEmotion}</div>
           )}
         </label>
-
-        <div className="mt-10 mb-10">
-          <Collapse
-            evidence={data.newThought}
-            title="Balanced Thought"
-          ></Collapse>
-        </div>
       </div>
-      <button
-        type="submit"
-        disabled={currentStep !== columns.length - 1}
-        className="btn-accent btn"
-      >
-        {data.id ? "Update Entry" : "Add Entry"}
-      </button>
-      {/* <button
-        type="submit"
-        disabled={currentStep !== columns.length - 1}
-        className="mb-6 rounded-lg border border-gray-400 bg-accent py-2 px-4 font-semibold text-white shadow-md hover:bg-green-600"
-      >
-        {data.id ? "Update Entry" : "Add Entry"}
-      </button> */}
+      <div className="mt-4 mb-2">
+        <Collapse
+          evidence={data.newThought}
+          title="Balanced Thought"
+        ></Collapse>
+      </div>
     </div>
   );
 };

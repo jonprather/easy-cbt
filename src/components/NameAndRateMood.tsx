@@ -23,8 +23,8 @@ const NameAndRateMood = ({
      then move on to reading into table then edit and delete etc
     */}
       {/* Child one for flex */}
-      <div className="mb-10 mt-4 ">
-        <label className="label block w-full">
+      <div className="mb-4 mt-4 ">
+        <label className="label block w-full pr-0 pl-0">
           <span className="label-text mb-2 block capitalize text-white">
             {/* These are slighly off ie name input and select mood slighlty deff padding on container */}{" "}
             Name This entry
