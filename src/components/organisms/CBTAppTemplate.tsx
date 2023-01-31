@@ -11,6 +11,9 @@ import { api } from "../../utils/api";
 import Layout from "../Layout";
 import NewBalancedThought from "src/components/NewBalancedThought";
 import Evidence from "src/components/Evidence";
+
+import { toast } from "react-toastify";
+
 // import { cBT_FormDataType } from "@prisma/client";
 // import { cBT_FormDataType } from "@prisma/client";
 // TODO look up api new syntax
@@ -23,10 +26,20 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData }) => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const getAllPosts = api.CBT.getAll.useQuery();
-  const { mutate: updatePost } = api.CBT.update.useMutation();
+  const { mutate: updatePost } = api.CBT.update.useMutation({
+    onSettled: async () => {
+      await utils.CBT.invalidate();
+      toast.success("Succesfully updated post!");
+    },
+  });
   const utils = api.useContext();
 
-  const { mutate: postMessage } = api.CBT.postMessage.useMutation();
+  const { mutate: postMessage } = api.CBT.postMessage.useMutation({
+    onSettled: async () => {
+      await utils.CBT.invalidate();
+      toast.success("Succesfully created post!");
+    },
+  });
 
   const [errors, setErrors] = React.useState(null);
   // TODO now that types are diff update ares that use old types ie setting nameMood obj
