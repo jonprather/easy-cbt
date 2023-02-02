@@ -15,24 +15,22 @@ import Evidence from "src/components/Evidence";
 import { toast } from "react-toastify";
 
 // import { cBT_FormDataType } from "@prisma/client";
-// import { cBT_FormDataType } from "@prisma/client";
-// TODO look up api new syntax
-// import {trpc} from utils
 
+// TODO on update make it clear feilds...
+// TODO make sure add accessible buttons even for the tool tips
 const columns = ["Name", "ANTS", "For", "against", "New", "Rerate"];
 // TODO
 // could reuse the columns from nav steps here as well
-const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData }) => {
+const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData, title }) => {
   const [currentStep, setCurrentStep] = useState(0);
 
-  const getAllPosts = api.CBT.getAll.useQuery();
   const { mutate: updatePost } = api.CBT.update.useMutation({
     onSettled: async () => {
       await utils.CBT.invalidate();
       toast.success("Succesfully updated post!");
     },
   });
-  const utils = api.useContext();
+  const utils = api?.useContext();
 
   const { mutate: postMessage } = api.CBT.postMessage.useMutation({
     onSettled: async () => {
@@ -43,7 +41,6 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData }) => {
 
   const [errors, setErrors] = React.useState(null);
   // TODO now that types are diff update ares that use old types ie setting nameMood obj
-  // also use setData pass that down rather onChange handle change or something...
   const [data, setData] = useState<CBT_FormDataType>({
     name: "",
     moodName: "",
@@ -100,16 +97,10 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData }) => {
 
     try {
       //   CBT_Schema.parse(formValues);
-      // So if going to reuse the form could do things differently ie
-      //could use upsert in prisma pro 1 interface con id requirement wouldnt work for new things
-      // could base it on if id is not a empty string if so update if not create new
+
       if (data.id) {
-        console.log("updated post", data);
-        // TODO next make a btn to load a post into the form data obj
-        // so that on next submit it will be an update
         updatePost(data);
       } else {
-        // Can also check if data has changed here like if its the same as default can prompt user
         postMessage(data);
       }
 
@@ -156,14 +147,16 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData }) => {
 
   return (
     <div className="sticky top-0">
+      <div className="mb-6 pt-6 text-center  sm:mb-16 sm:pt-16 lg:mb-20 lg:pt-24 ">
+        <h1 className="text-md font-medium text-primary sm:text-xl">{title}</h1>
+      </div>
       <FormNavSteps
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
         errors={errors}
         columns={columns}
       />
-      {/* TODO ok left off trying to make this bigger also was working on passing errors to tabs
-      see todos */}
+
       <div className="min-h-60 mx-auto flex flex-col justify-between p-0 pb-6  xs:p-4 sm:bg-slate-800 sm:p-6  sm:pt-6 md:max-w-5xl md:rounded-b md:rounded-tl md:shadow-lg ">
         <form
           onKeyDown={handleKeyDown}
@@ -208,8 +201,7 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData }) => {
               title="Evidence against the thought"
               evidenceName={"evidenceAgainst"}
             />
-            {/* TODO ok i left off creating these components next up fix ANTS and 
-add collpase to rerate */}
+
             <NewBalancedThought
               data={data}
               handleChange={handleChange}
@@ -248,3 +240,6 @@ add collpase to rerate */}
   );
 };
 export default CBTAppTemplate;
+
+// TODO so what if autosave didnt use validation but final submit does... that way can have the ease of use
+// and in the final get the final form correct

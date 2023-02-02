@@ -26,3 +26,9 @@
 .min-w-10 {
   min-width: 2rem;
 }
+
+body {
+  max-width: 1440px;
+  margin: 0 auto;
+  background-color: #f2f2f2;
+}

@@ -13,7 +13,6 @@ const Navbar: React.FC = () => {
   const [isUserActive, setIsUserActive] = useState(false);
 
   useEffect(() => {
-    console.log("TP", router.pathname, router.pathname === "/");
     if (router.pathname === "/") {
       setIsHomeActive(true);
       setIsCreateActive(false);
@@ -42,19 +41,29 @@ const Navbar: React.FC = () => {
       <div className="flex-1">Logo</div>
       <div className="flex items-center">
         <Link
-          className="btn-ghost active btn mr-6 flex items-center text-white"
+          className={`btn-ghost active btn mr-6 flex items-center text-white ${
+            isHomeActive
+              ? "rounded-b-none border-b-primary text-primary hover:rounded-lg"
+              : ""
+          } `}
           href="/"
         >
-          <span className="active mr-2 text-lg">
+          <span className={` mr-2 text-lg `}>
             <FaHome></FaHome>
           </span>
           Home
         </Link>
-        <Link className="btn-ghost btn mr-6 text-white" href="/create">
-          App
+        <Link
+          className={`btn-ghost btn mr-6 text-white ${
+            isCreateActive
+              ? "rounded-b-none border-b-primary text-primary hover:rounded-lg"
+              : ""
+          } `}
+          href="/create"
+        >
+          New Entry
         </Link>
-        {/* <button className="bg-white py-2 px-4 text-teal-900">Sign In</button> */}
-          <AuthShowCase />
+        <AuthShowCase />
       </div>
     </div>
   );

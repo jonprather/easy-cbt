@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Select from "react-select";
 
 const options = [
@@ -19,14 +19,6 @@ const options = [
   { value: "tired", label: "😴 Tired" },
   { value: "worried", label: "😟 Worried" },
 ];
-
-// TODO NOTE if use isMulti flag for multi emo at once then selectedOption becomes an array of values
-// value
-// :
-// Array(1)
-// 0
-// :
-// {value: 'angry', label: '😠 Angry'}
 
 const EmojiSelector = ({ moodName, moodLabel, setData }) => {
   return (
@@ -53,7 +45,6 @@ const EmojiSelector = ({ moodName, moodLabel, setData }) => {
             };
           })
         }
-        // components={{ DropdownIndicator: () => null }}
       />
     </div>
   );

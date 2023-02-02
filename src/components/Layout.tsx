@@ -19,7 +19,6 @@ export default function Layout({
       <div className=" bg-base-100 sm:pb-20">
         <Navbar />
         {children}
-        {/* Bottom NAV looks p good can make use of on mobile */}
         <BottomNav />
       </div>
     </>

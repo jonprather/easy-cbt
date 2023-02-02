@@ -4,25 +4,10 @@ import Link from "next/link";
 import { api } from "../utils/api";
 import dayjs from "dayjs";
 import { FaTrash, FaEdit } from "react-icons/fa";
-import { signIn, signOut, useSession } from "next-auth/react";
 import { toast } from "react-toastify";
 import PuffLoader from "react-spinners/PuffLoader";
 
-// TODO extract api stuff to custom hook
-// make custom hook call less
-// table probably doesnt need to update that frequently
-// also make the mutations optimisic
-
-//TODO  Add react toastify on success and error
-
-type TableProps = {
-  formData: CBT_FormDataType;
-  setData: (data: CBT_FormDataType) => CBT_FormDataType;
-};
-
-const Table: React.FC<TableProps> = ({ setData, formData }) => {
-  const { data: sessionData } = useSession();
-
+const Table = () => {
   const utils = api.useContext();
 
   const { mutate: deletePost } = api.CBT.delete.useMutation({
@@ -35,13 +20,7 @@ const Table: React.FC<TableProps> = ({ setData, formData }) => {
     },
   });
   const { data, isLoading, isError } = api.CBT.getAll.useQuery();
-  // So this works comparing to default but doesnt tell you if you loaded something then clicked again
-  // idk if thats  enough of an issue
-  // but maybe it would be better to compare current form data to current table data as well
-  // so if current form === default then go ahead
-  // if its different is it the same as the taable in
-  // seems pretty minor
-  // TODO add see more extension buttons to the long text also can make jus tthe hot thoughts visiable and or indicate them in red
+
   const formatString = (str: string, maxLength: number) => {
     const words = str.split(" ");
     let shortString = words?.slice(0, maxLength)?.join(" ");
@@ -67,21 +46,13 @@ const Table: React.FC<TableProps> = ({ setData, formData }) => {
 
   // if (isError) return <p>Error</p>;
 
-  // if (!sessionData) return <p>Log In to save your entries</p>;
-
   if (isLoading) {
     return (
       <div className="mb-6 mt-20 min-h-[16rem] text-center xs:p-2">
         <h2 className="mb-4 text-3xl font-medium text-white sm:mb-6 ">
           Past Entries
         </h2>
-        <PuffLoader
-          loading
-          color="white"
-          size={150}
-          //TODO can try passing rem here instead to make it fit better in the cart container on mobile
-          className=""
-        />
+        <PuffLoader loading color="white" size={150} className="" />
       </div>
     );
   }
@@ -103,7 +74,6 @@ const Table: React.FC<TableProps> = ({ setData, formData }) => {
           Past Entries
         </h2>
 
-        {/* Add the delete and update buttons get icons for them */}
         {data?.map((entry, i) => (
           <div
             key={entry.id}
@@ -138,7 +108,6 @@ const Table: React.FC<TableProps> = ({ setData, formData }) => {
                 <FaTrash />
               </label>
 
-              {/* Put this part before </body> tag */}
               <input
                 type="checkbox"
                 id={`my-modal-${i}`}
@@ -159,14 +128,6 @@ const Table: React.FC<TableProps> = ({ setData, formData }) => {
                     <button
                       className="btn-accent  btn text-lg"
                       onClick={() => {
-                        console.log(
-                          "ENTRY NAme",
-                          entry.name,
-                          "Entry ID",
-                          entry.id
-                        );
-                        // This always has the first id rather than the current entries or rather
-                        // it somehow becomes the first entry
                         deletePost({ id: entry.id });
                       }}
                     >
@@ -185,7 +146,6 @@ const Table: React.FC<TableProps> = ({ setData, formData }) => {
     </>
   );
 };
-// TODO seems to be having issues with id
 export default Table;
 
 // TODO add infinite scroll pagination

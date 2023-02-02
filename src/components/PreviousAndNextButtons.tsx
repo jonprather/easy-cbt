@@ -1,10 +1,6 @@
 import React from "react";
 import { FaArrowLeft, FaArrowRight, FaQuestionCircle } from "react-icons/fa";
 const PreviousAndNextButtons = ({ setCurrentStep, currentStep, columns }) => {
-  const textInput = React.createRef();
-  // TODO ok can add guide stuff to bottom nav
-  //  ? for queries can be on bottom opp of up down btns
-  // any other tips help can be inline with form
   return (
     <div className=" m-auto flex flex-row justify-between xs:justify-between sm:max-w-3xl">
       <div>

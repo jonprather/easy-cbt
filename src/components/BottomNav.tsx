@@ -13,7 +13,6 @@ const BottomNav = () => {
   const [isUserActive, setIsUserActive] = useState(false);
 
   useEffect(() => {
-    console.log("TP", router.pathname, router.pathname === "/");
     if (router.pathname === "/") {
       setIsHomeActive(true);
       setIsCreateActive(false);
@@ -67,11 +66,11 @@ const BottomNav = () => {
           {isUpdateActive ? "Updating Entry" : "New Entry"}
         </span>
       </Link>
-      <button className={isUserActive ? "active" : ""}>
+      <div className={isUserActive ? "active" : ""}>
         <AuthShowcase />
-      </button>
+      </div>
     </div>
   );
 };
-
+// TODO Could make the user settings instead of logout signin etc and make it a page
 export default BottomNav;

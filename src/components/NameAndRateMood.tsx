@@ -1,5 +1,6 @@
 import EmojiSelector from "./EmojiSelector.tsx";
-
+import { Tooltip } from "react-tooltip";
+import { FaInfoCircle } from "react-icons/fa";
 const NameAndRateMood = ({
   currentStep,
   errors,
@@ -16,67 +17,103 @@ const NameAndRateMood = ({
     });
   };
   if (currentStep !== 0) return;
-  // TODO finish pulling these out figure out why this is jank and sayign expression expected and shit
   return (
-    <div className="form-control ">
-      {/* TODO ok all the inputs are working it would be cool to refactor and add ts types some tests for edge cases etc
-     then move on to reading into table then edit and delete etc
-    */}
+    <div className="form-control mt-4 ">
       {/* Child one for flex */}
-      <div className="mb-4 mt-4 ">
-        <label className="label block w-full pr-0 pl-0">
-          <span className="label-text mb-2 block capitalize text-white">
-            {/* These are slighly off ie name input and select mood slighlty deff padding on container */}{" "}
-            Name This entry
+      <div className="mb-10  ">
+        <label className="label flex items-end justify-start">
+          <span className="label-text capitalize text-white">
+            CBT Journal Entry Title
           </span>
-          <input
-            value={data.name}
-            // TODO
-            onChange={handleChange}
-            type="text"
-            name="name"
-            className="input-bordered input w-full max-w-xs bg-white text-black"
-            // className="focus:shadow-outline block w-full appearance-none rounded-lg border border-gray-300 bg-white py-2 px-4 pl-6 pr-6 leading-normal text-black focus:outline-none md:w-1/2"
-          />
-          {errors?.name && <div className="text-red-500">{errors.name}</div>}
+          <span
+            id="toolTipTitle"
+            className="text-md cursor ml-2 bg-inherit p-0"
+          >
+            <FaInfoCircle />
+          </span>
         </label>
+        <input
+          value={data.name}
+          // TODO
+          onChange={handleChange}
+          placeholder="Feeling moody today"
+          type="text"
+          name="name"
+          className="input-bordered input w-full max-w-xs bg-white text-black"
+        />
+        {errors?.name && <div className="text-red-500">{errors.name}</div>}
       </div>
 
       <div className="child-two">
-        <label className="block">
-          <span className="label-text mb-2 block text-white"> Name Mood:</span>
-
-          <EmojiSelector
-            moodLabel={data.moodLabel}
-            moodName={data.moodName}
-            setData={setData}
-          />
-          {errors?.nameMood && (
-            <div className="text-red-500">{errors.nameMood}</div>
-          )}
-        </label>
-        <label className="text-md mt-4 block font-medium sm:text-lg">
-          <span className="label-text text-white">
-            {" "}
-            How intense is this feeling?
+        <button type="button" className="label flex items-end justify-start">
+          <span className="label-text  capitalize text-white">
+            Select Your intense mood
           </span>
+          <span id="toolTipMood" className="text-md ml-2  bg-inherit p-0">
+            <FaInfoCircle />
+          </span>
+        </button>
+        <EmojiSelector
+          moodLabel={data.moodLabel}
+          moodName={data.moodName}
+          setData={setData}
+        />
+        {errors?.nameMood && (
+          <div className="text-red-500">{errors.nameMood}</div>
+        )}
 
-          <input
-            value={data.moodRating}
-            // TODO
-            onChange={handleRateMood}
-            type="range"
-            min="1"
-            max="100"
-            name="moodRating"
-            className="range range-primary mt-2 block max-w-xs "
-            // className="focus:shadow-outline block w-full rounded-lg border border-gray-300 bg-white py-2 leading-normal sm:w-1/2  md:w-1/3 "
-          />
-          {errors?.rateMood && (
-            <div className="text-red-500">{errors.rateMood}</div>
-          )}
+        <label className="text-md mt-4 block  sm:text-lg">
+          <button
+            type="button"
+            className="label flex max-w-xs items-end justify-start"
+          >
+            <span className="label-text  capitalize text-white">
+              Rate the intensity of the feeling
+            </span>
+            <span id="toolTipRating" className="text-md ml-2  bg-inherit p-0">
+              <FaInfoCircle />
+            </span>
+          </button>
         </label>
+        <input
+          value={data.moodRating}
+          // TODO
+          onChange={handleRateMood}
+          type="range"
+          min="1"
+          max="100"
+          name="moodRating"
+          className="range range-primary mt-2 block max-w-xs "
+        />
+        <div className="flex w-full max-w-xs justify-between px-2 pt-1 text-xs">
+          <span>Low</span>
+          <span>|</span>
+          <span>|</span>
+          <span>|</span>
+          <span>High</span>
+        </div>
+        {errors?.rateMood && (
+          <div className="text-red-500">{errors.rateMood}</div>
+        )}
       </div>
+
+      {[
+        { id: "toolTipTitle", content: "Name the entry" },
+        { id: "toolTipMood", content: "Select mood name" },
+
+        { id: "toolTipRating", content: "Feel your body." },
+      ].map((toolTip) => {
+        return (
+          <Tooltip
+            key={toolTip.id}
+            anchorId={toolTip.id}
+            content={toolTip.content}
+            events={["click", "hover"]}
+            className="bg-primary"
+            variant="light"
+          />
+        );
+      })}
     </div>
   );
 };

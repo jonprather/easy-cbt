@@ -4,8 +4,6 @@ interface CollapseProps {
   title: string;
 }
 const Collapse: React.FC<CollapseProps> = ({ evidence, title }) => {
-  // TODO so errors could be used but they are not cleanly mapped ie the names are diff and the indexs
-  // wont nedd match bc obj
   return (
     <button className="collapse-arrow rounded-box collapse mb-1 w-full border border-gray-500 bg-base-100 shadow peer-checked:border-base-100">
       <input type="checkbox" className="peer" />
@@ -29,9 +27,3 @@ const Collapse: React.FC<CollapseProps> = ({ evidence, title }) => {
 };
 
 export default Collapse;
-
-// TODO if use stepper this way could also pass down errors to show for each label like mark them red
-// and give msg
-
-// TODO continue using daisyui to improve forms i worked on outsides but not all of them
-// also settle bg colors on lg would be nice if worked on light mode as well
