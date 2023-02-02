@@ -1,6 +1,5 @@
 import React from "react";
 import { Tooltip } from "react-tooltip";
-import { InfoButton } from "./InfoButton.tsx";
 import type { RefObject } from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import { FaPlusCircle } from "react-icons/fa";
