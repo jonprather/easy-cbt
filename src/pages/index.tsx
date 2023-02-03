@@ -8,7 +8,7 @@ const Home: NextPage = () => {
       <main className=" min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#0d026d] to-[#15162c]">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 pb-4 ">
           <div className="mx-auto text-center">
-            <h1 className="mb-3 text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
+            <h1 className="mb-3 text-5xl font-extrabold uppercase tracking-tight text-white sm:text-[5rem]">
               EASY<span className="text-[hsl(186,100%,70%)]">CBT</span>
             </h1>
             <p className="text-xl font-medium text-white ">
@@ -31,9 +31,7 @@ const Home: NextPage = () => {
               target="_blank"
             >
               <h3 className="text-2xl font-bold">Guide</h3>
-              <div className="text-lg">
-                Try our tutorial or guide and get the most of of your practice.
-              </div>
+              <div className="text-lg">Learn the basics of CBT.</div>
             </Link>
           </div>
         </div>

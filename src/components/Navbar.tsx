@@ -38,7 +38,15 @@ const Navbar: React.FC = () => {
 
   return (
     <div className="hidden w-full items-center justify-between bg-neutral p-4 text-lg sm:flex ">
-      <div className="flex-1">Logo</div>
+      <div className="flex-1">
+        {" "}
+        <Link
+          href="/"
+          className="mb-3 text-xl font-bold uppercase italic tracking-tight text-white"
+        >
+          <span className="text-[hsl(186,100%,70%)] ">Logo</span>
+        </Link>
+      </div>
       <div className="flex items-center">
         <Link
           className={`btn-ghost active btn mr-6 flex items-center text-white ${

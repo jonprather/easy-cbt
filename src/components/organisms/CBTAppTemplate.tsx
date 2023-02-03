@@ -172,8 +172,8 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   //   TODO zod controls for the boundaries or type guards
 
   return (
-    <div className="sticky top-0">
-      <div className="mb-6 pt-6 text-center  sm:mb-16 sm:pt-16 lg:mb-20 lg:pt-24 ">
+    <div className="">
+      <div className="mb-6 pt-8 text-center  sm:mb-16 sm:pt-16 lg:mb-20 lg:pt-24 ">
         <h1 className="text-md font-medium text-primary sm:text-xl">{title}</h1>
       </div>
       <FormNavSteps
@@ -186,7 +186,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
         <form
           onKeyDown={handleKeyDown}
           onSubmit={handleSubmit}
-          className=" min-h-70 mx-auto flex w-full flex-col justify-between rounded pl-2 pr-2 xs:p-4 sm:mt-4   sm:max-w-3xl sm:bg-slate-700 md:mt-10"
+          className=" min-h-70 mx-auto flex w-full flex-col justify-between rounded pl-3 pr-3 xs:p-4 sm:mt-4   sm:max-w-3xl sm:bg-slate-700 md:mt-10"
         >
           <div>
             <NameAndRateMood

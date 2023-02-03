@@ -45,7 +45,7 @@ const NameAndRateMood: React.FC<Props> = ({
           placeholder="Feeling moody today"
           type="text"
           name="name"
-          className="input-bordered input w-full max-w-xs bg-white text-black"
+          className="input-bordered input w-full bg-white text-black xs:max-w-xs"
         />
         {/* {errors?.name && <div className="text-red-500">{errors.name}</div>} */}
       </div>
@@ -89,9 +89,9 @@ const NameAndRateMood: React.FC<Props> = ({
           min="1"
           max="100"
           name="moodRating"
-          className="range range-primary mt-2 block max-w-xs "
+          className="range range-primary mt-2 block xs:max-w-xs "
         />
-        <div className="flex w-full max-w-xs justify-between px-2 pt-1 text-xs">
+        <div className="flex w-full justify-between px-2 pt-1 text-xs xs:max-w-xs">
           <span>Low</span>
           <span>|</span>
           <span>|</span>

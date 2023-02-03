@@ -34,7 +34,7 @@ const EmojiSelector: React.FC<AutomaticThoughtsProps> = ({
   return (
     <div>
       <Select
-        className={" w-full max-w-xs rounded-full "}
+        className={" w-full rounded-full xs:max-w-xs "}
         styles={{
           control: (baseStyles, state) => ({
             ...baseStyles,
