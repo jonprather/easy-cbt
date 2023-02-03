@@ -9,7 +9,7 @@ export const CBT_FormSchema = z.object({
   name: z.string().optional(),
   moodName: z.string().optional(),
   moodLabel: z.string().optional(),
-  moodRating: z.number().positive().optional(),
+  moodRating: z.number().optional(),
   automaticThoughts: z.array(
     z
       .object({
@@ -27,8 +27,8 @@ export const CBT_FormSchema = z.object({
   evidenceFor: z.string().optional(),
   evidenceAgainst: z.string().optional(),
   newThought: z.string().optional(),
-  rateBelief: z.number().positive().optional(),
-  rerateEmotion: z.number().positive().optional(),
+  rateBelief: z.number().optional(),
+  rerateEmotion: z.number().optional(),
 });
 const CBT_FormSchemaWithId = CBT_FormSchema.extend({
   id: z.string(),

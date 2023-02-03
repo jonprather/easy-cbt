@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import type { CBT_FormDataType } from "../types/CBTFormTypes";
+import React from "react";
 import Link from "next/link";
 import { api } from "../utils/api";
 import dayjs from "dayjs";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
 import PuffLoader from "react-spinners/PuffLoader";
-import { cBT_FormDataType } from "@prisma/client";
+import type { cBT_FormDataType } from "@prisma/client";
+import { CBTData } from "src/types/CBTFormTypes";
 const Table = () => {
   const utils = api.useContext();
 
@@ -15,11 +15,11 @@ const Table = () => {
       await utils.CBT.invalidate();
       toast.success("Succesfully deleted post!");
     },
-    onError: (err, updatedCartData, context) => {
+    onError: (err) => {
       toast.error(err.message, { toastId: err.message });
     },
   });
-  const { data, isLoading, isError } = api.CBT.getAll.useQuery();
+  const { data, isLoading } = api.CBT.getAll.useQuery();
 
   const formatString = (str: string, maxLength: number) => {
     const words = str.split(" ");
@@ -30,8 +30,9 @@ const Table = () => {
     }
     return shortString;
   };
-  const formatDate = (date: Date) => {
-    const dayjsDate = dayjs(date);
+  const formatDate = (entry: cBT_FormDataType) => {
+    if (typeof entry.updatedAt !== "object") return;
+    const dayjsDate = dayjs(entry.updatedAt as Date);
     const now = dayjs();
 
     let formattedDate;
@@ -74,14 +75,14 @@ const Table = () => {
           Past Entries
         </h2>
 
-        {data?.map((entry: cBT_FormDataType, i) => (
+        {data.map((entry: cBT_FormDataType, i) => (
           <div
             key={entry.id}
             className="card mb-4 min-h-[8rem] flex-row bg-primary  pr-0 pl-6 text-primary-content max-[375px]:w-80  xs:min-w-[20rem] sm:mb-10"
           >
             <div className=" flex flex-col justify-center ">
               <p className=" min-w-full items-center justify-center text-5xl ">
-                {entry?.moodLabel?.slice(0, 2) || "NA"}
+                {entry?.moodLabel?.slice(0, 2) || "😕"}
               </p>
             </div>
 
@@ -93,7 +94,8 @@ const Table = () => {
                 {/* TODO not sure why this is getting the type from prisma wrong
                 i mean oh prob bc on Trpc
                 */}
-                {formatDate(entry?.updatedAt as Date)}
+                {/* UNSAFE ANY IDK YET WHY HOW TO FIX>>>>> */}
+                {formatDate(entry)}
               </p>
             </div>
             <div className="flex flex-row items-end justify-end gap-0 pb-2">
