@@ -1,6 +1,15 @@
 import React from "react";
 import { FaArrowLeft, FaArrowRight, FaQuestionCircle } from "react-icons/fa";
-const PreviousAndNextButtons = ({ setCurrentStep, currentStep, columns }) => {
+type Props = {
+  currentStep: number;
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  columns: string[];
+};
+const PreviousAndNextButtons: React.FC<Props> = ({
+  setCurrentStep,
+  currentStep,
+  columns,
+}) => {
   return (
     <div className=" m-auto flex flex-row justify-between xs:justify-between sm:max-w-3xl">
       <div>

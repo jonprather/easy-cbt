@@ -8,8 +8,8 @@ import { FaInfoCircle } from "react-icons/fa";
 type RerateProps = {
   data: CBT_FormDataType;
   currentStep: number;
+  setData: React.Dispatch<React.SetStateAction<CBT_FormDataType>>;
   errors: any;
-  handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
   columns: ["Name", "ANTS", "For", "against", "New", "Rerate"];
 };
 const TOOLTIP_RATEBELIEF_ID = "toolTipRateBelief";
@@ -22,8 +22,8 @@ const Rerate: React.FC<RerateProps> = ({
   setData,
   columns,
 }) => {
-  const handleRateMood = (e) => {
-    setData((prev) => {
+  const handleRateMood = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setData((prev: CBT_FormDataType): CBT_FormDataType => {
       return {
         ...prev,
         [e.target.name]: +e.target.value,
@@ -66,9 +66,9 @@ const Rerate: React.FC<RerateProps> = ({
         {/* TODO implement autoSaves when person rests for a few secods and stuff has changed
 will need state for that i can access the data.rateMood etc and set it that way
 */}
-        {errors?.rateBelief && (
+        {/* {errors?.rateBelief && (
           <div className="text-red-500">{errors.rateBelief}</div>
-        )}
+        )} */}
 
         <label className="label mt-4 flex justify-start  ">
           <span className="label-text capitalize text-white">
@@ -97,9 +97,9 @@ will need state for that i can access the data.rateMood etc and set it that way
           <span>|</span>
           <span>High</span>
         </div>
-        {errors?.rerateEmotion && (
+        {/* {errors?.rerateEmotion && (
           <div className="text-red-500">{errors.rerateEmotion}</div>
-        )}
+        )} */}
       </div>
       <div className="mt-4 mb-2">
         <Collapse

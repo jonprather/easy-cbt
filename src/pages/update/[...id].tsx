@@ -11,7 +11,7 @@ const UpdateNote = () => {
   useEffect(() => {
     const ids = router?.query?.id as string;
     if (Array.isArray(ids)) {
-      setId(ids[0]);
+      setId(ids[0] as string);
     } else {
       setId(ids);
     }
@@ -20,9 +20,7 @@ const UpdateNote = () => {
 
   return (
     <Layout>
-      <div>
-        <CBTAppTemplate title="Update CBT Journal" initialData={getPost.data} />
-      </div>
+      <CBTAppTemplate title="Update CBT Journal" initialData={getPost?.data} />
     </Layout>
   );
 };

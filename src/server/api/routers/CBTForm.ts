@@ -1,8 +1,10 @@
 import { z } from "zod";
 // import { CBT_FormSchema } from "../../../types/CBTFormTypes";
 // TODO this import broke not sure why it was working... broke after discord set upIDK why
-
+import { cBT_FormDataType } from "@prisma/client";
 // So i have
+import { CBTData } from "src/types/CBTFormTypes";
+
 export const CBT_FormSchema = z.object({
   name: z.string().optional(),
   moodName: z.string().optional(),
@@ -37,12 +39,16 @@ import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
 export const CBTFormRouter = createTRPCRouter({
   postMessage: protectedProcedure
     .input(CBT_FormSchema)
+    // Replace this with the correct zod schema use the CBTDATA type back to zod
     .mutation(async ({ ctx, input }) => {
       try {
         const userId = ctx.session.user?.id;
         const thoughts = input.automaticThoughts
           .filter((element) => element?.thought)
-          .map(({ thought, isHot }) => ({ thought, isHot }));
+          .map((ele) => ({
+            thought: ele?.thought ?? "",
+            isHot: ele?.isHot ?? false,
+          }));
         await ctx.prisma.cBT_FormDataType.create({
           data: {
             name: input.name,
@@ -68,7 +74,9 @@ export const CBTFormRouter = createTRPCRouter({
         console.log(error);
       }
     }),
-
+  // NOT sure why this isnt returning the type with updatedAt on it...
+  // so it comes from the prisma schema
+  // TODO get to the bottom of this to fix TABLE TS errors that use data.entry.updatedAt
   getAll: protectedProcedure.query(({ ctx }) => {
     return ctx.prisma.cBT_FormDataType.findMany({
       include: {
@@ -84,7 +92,7 @@ export const CBTFormRouter = createTRPCRouter({
 
       const post = await prisma?.cBT_FormDataType.findUnique({
         where: {
-          id: input.id,
+          id: input?.id,
         },
         include: {
           automaticThoughts: true,
@@ -139,11 +147,11 @@ export const CBTFormRouter = createTRPCRouter({
           });
 
         const antPrismaCreateObj = input.automaticThoughts
-          .filter((ele) => !ele.id)
+          .filter((ele) => !ele?.id)
           .map((ele) => {
             return {
-              thought: ele.thought,
-              isHot: ele.isHot,
+              thought: ele?.thought ?? "",
+              isHot: ele?.isHot ?? false,
             };
           });
 
@@ -170,9 +178,9 @@ export const CBTFormRouter = createTRPCRouter({
           },
         });
 
-        const addNewThoughts = await prisma?.cBT_FormDataType.update({
+        await prisma?.cBT_FormDataType.update({
           where: {
-            id: input.id,
+            id: input?.id ?? "",
           },
           data: {
             automaticThoughts: {
@@ -218,14 +226,3 @@ export const CBTFormRouter = createTRPCRouter({
       }
     }),
 });
-
-// TODO set up queries and mutaitons here
-//  I started but not right yet
-// IDK check veresion of prisma etc check more tuts
-//maybe woudl be easier to do ti sepretely ie call auto model and update it manually
-
-// can take the hook logic extract it and add the normal error handler logic in central location etc and loading spinners liek normal
-
-// also
-// TODO make sure deletes happen on cascade or if not delete manually
-// Can add a you have shown improvement etc celebration

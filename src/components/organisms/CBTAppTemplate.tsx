@@ -1,27 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { ChangeEvent } from "react";
-import Link from "next/link";
-import FormNavSteps from "../FormNavSteps.tsx";
-import type { CBT_FormDataType, CBT_FormSchema } from "../types/CBTFormTypes";
-import NameAndRateMood from "../NameAndRateMood.tsx";
-import AutomaticThoughts from "../AutomaticThoughts.tsx";
-import PreviousAndNextButtons from "../PreviousAndNextButtons.tsx";
-import Rerate from "../Rerate.tsx";
+import type { ChangeEvent } from "react";
+import FormNavSteps from "../FormNavSteps";
+import type { CBT_FormDataType } from "../../types/CBTFormTypes";
+import NameAndRateMood from "../NameAndRateMood";
+import AutomaticThoughts from "../AutomaticThoughts";
+import PreviousAndNextButtons from "../PreviousAndNextButtons";
+import Rerate from "../Rerate";
 import { api } from "../../utils/api";
-import Layout from "../Layout";
 import NewBalancedThought from "src/components/NewBalancedThought";
 import Evidence from "src/components/Evidence";
 
+import type { CBTData } from "../../types/CBTFormTypes";
 import { toast } from "react-toastify";
 
+// TODO get the combo of types here ie cBt with the automatic thoughts
 // import { cBT_FormDataType } from "@prisma/client";
 
 // TODO on update make it clear feilds...
 // TODO make sure add accessible buttons even for the tool tips
-const columns = ["Name", "ANTS", "For", "against", "New", "Rerate"];
+const columns: ["Name", "ANTS", "For", "against", "New", "Rerate"] = [
+  "Name",
+  "ANTS",
+  "For",
+  "against",
+  "New",
+  "Rerate",
+];
 // TODO
 // could reuse the columns from nav steps here as well
-const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData, title }) => {
+interface CBTPROPS {
+  initialData?: CBTData | undefined;
+  title: string;
+}
+const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const [currentStep, setCurrentStep] = useState(0);
 
   const { mutate: updatePost } = api.CBT.update.useMutation({
@@ -52,31 +63,36 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData, title }) => {
     newThought: "",
     rateBelief: 1,
     rerateEmotion: 1,
+    id: "",
   });
 
   useEffect(() => {
-    setData(
-      initialData || {
-        name: "",
-        moodName: "",
-        moodLabel: "",
-        moodRating: 1,
-        automaticThoughts: [],
-        evidenceFor: "",
-        evidenceAgainst: "",
-        newThought: "",
-        rateBelief: 1,
-        rerateEmotion: 1,
-      }
-    );
+    const setFormData = (data: CBTData | undefined) => {
+      setData({
+        name: data?.name || "",
+        moodName: data?.moodName || "",
+        moodLabel: data?.moodLabel || "",
+        moodRating: data?.moodRating || 0,
+        evidenceFor: data?.evidenceFor || "",
+        evidenceAgainst: data?.evidenceAgainst || "",
+        newThought: data?.newThought || "",
+        rateBelief: data?.rateBelief || 0,
+        rerateEmotion: data?.rerateEmotion || 0,
+        id: data?.id || "",
+        automaticThoughts: data?.automaticThoughts || [],
+      });
+    };
+
+    setFormData(initialData);
   }, [initialData]);
 
-  const handleHotThoughtClick = (index) => {
+  const handleHotThoughtClick = (index: number) => {
     setData((prev) => {
       const newThoughts = [...prev.automaticThoughts];
       newThoughts[index] = {
         ...newThoughts[index],
-        isHot: !newThoughts[index].isHot,
+        isHot: newThoughts[index]?.isHot ?? false,
+        thought: "",
       };
       return {
         ...prev,
@@ -85,7 +101,9 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData, title }) => {
     });
   };
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = event.target;
     setData((prevState) => ({ ...prevState, [name]: value }));
   };
@@ -98,13 +116,13 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData, title }) => {
     try {
       //   CBT_Schema.parse(formValues);
 
-      if (data.id) {
+      if (data?.id) {
         updatePost(data);
       } else {
         postMessage(data);
       }
 
-      setErrors({});
+      //   setErrors({});
       setData((_) => {
         return {
           name: "",
@@ -117,9 +135,10 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData, title }) => {
           newThought: "",
           rateBelief: 1,
           rerateEmotion: 1,
+          id: "",
         };
       });
-    } catch (err: Error) {
+    } catch (err) {
       // const validationError = String(fromZodError(err));
       // // the error now is readable by the user
 
@@ -134,7 +153,7 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData, title }) => {
       console.log(JSON.stringify(err));
     }
   };
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
       if (currentStep !== columns.length - 1) {
         // event.preventDefault();
@@ -153,7 +172,6 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData, title }) => {
       <FormNavSteps
         currentStep={currentStep}
         setCurrentStep={setCurrentStep}
-        errors={errors}
         columns={columns}
       />
 
@@ -166,7 +184,6 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData, title }) => {
           <div>
             <NameAndRateMood
               currentStep={currentStep}
-              errors={errors}
               setData={setData}
               handleChange={handleChange}
               data={data}
@@ -178,13 +195,12 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData, title }) => {
               data={data}
               currentStep={currentStep}
               errors={errors}
-              handleChange={handleChange}
             />
 
             <Evidence
               data={data}
               handleChange={handleChange}
-              evidence={data.evidenceFor}
+              evidence={data.evidenceFor ?? ""}
               currentStep={currentStep}
               targetStep={2}
               errors={errors}
@@ -193,7 +209,7 @@ const CBTAppTemplate: React.FC<CBT_FormDataType> = ({ initialData, title }) => {
             />
             <Evidence
               data={data}
-              evidence={data.evidenceAgainst}
+              evidence={data.evidenceAgainst ?? ""}
               handleChange={handleChange}
               currentStep={currentStep}
               targetStep={3}

@@ -1,6 +1,6 @@
 import React from "react";
 import Select from "react-select";
-
+import type { CBT_FormDataType } from "src/types/CBTFormTypes";
 const options = [
   { value: "angry", label: "😠 Angry" },
   { value: "anxious", label: "😰 Anxious" },
@@ -20,7 +20,17 @@ const options = [
   { value: "worried", label: "😟 Worried" },
 ];
 
-const EmojiSelector = ({ moodName, moodLabel, setData }) => {
+type AutomaticThoughtsProps = {
+  moodName: string;
+  moodLabel: string;
+  setData: React.Dispatch<React.SetStateAction<CBT_FormDataType>>;
+};
+
+const EmojiSelector: React.FC<AutomaticThoughtsProps> = ({
+  moodName,
+  moodLabel,
+  setData,
+}) => {
   return (
     <div>
       <Select
@@ -40,8 +50,8 @@ const EmojiSelector = ({ moodName, moodLabel, setData }) => {
           setData((prev) => {
             return {
               ...prev,
-              moodLabel: opt.label,
-              moodName: opt.value,
+              moodLabel: opt?.label ?? "",
+              moodName: opt?.value ?? "",
             };
           })
         }

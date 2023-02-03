@@ -4,7 +4,7 @@ import type { RefObject } from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import { FaPlusCircle } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
-
+import type { ChangeEventHandler } from "react";
 import "react-tooltip/dist/react-tooltip.css";
 
 type AutomaticThoughtsProps = {
@@ -12,7 +12,8 @@ type AutomaticThoughtsProps = {
   currentStep: number;
   errors: any;
   handleHotThoughtClick: (index: number) => void;
-  setData: (data: CBT_FormDataType) => CBT_FormDataType;
+  handleChange: ChangeEventHandler<HTMLInputElement>;
+  setData: React.Dispatch<React.SetStateAction<CBT_FormDataType>>;
 };
 
 const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
@@ -23,12 +24,12 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
   setData,
   handleChange,
 }) => {
-  const handleClick = (e) => {
+  const handleClick = () => {
     const newThought = textInput?.current?.value || "";
     if (!newThought) return;
     // TODO i have no idea why the same type wouldnt match here
     // data is the prev CBT_FormDataType and so is this param idk
-    setData((data: CBT_FormDataType): CBT_FormDataType => {
+    setData((data) => {
       return {
         ...data,
         automaticThoughts: [
@@ -135,9 +136,9 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
           />
         </div>
 
-        {errors?.automaticThoughts && (
+        {/* {errors?.automaticThoughts && (
           <div className="text-red-500">{errors.automaticThoughts}</div>
-        )}
+        )} */}
       </div>
     </>
   );

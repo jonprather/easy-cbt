@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
 import PuffLoader from "react-spinners/PuffLoader";
-
+import { cBT_FormDataType } from "@prisma/client";
 const Table = () => {
   const utils = api.useContext();
 
@@ -30,7 +30,7 @@ const Table = () => {
     }
     return shortString;
   };
-  const formatDate = (date) => {
+  const formatDate = (date: Date) => {
     const dayjsDate = dayjs(date);
     const now = dayjs();
 
@@ -74,7 +74,7 @@ const Table = () => {
           Past Entries
         </h2>
 
-        {data?.map((entry, i) => (
+        {data?.map((entry: cBT_FormDataType, i) => (
           <div
             key={entry.id}
             className="card mb-4 min-h-[8rem] flex-row bg-primary  pr-0 pl-6 text-primary-content max-[375px]:w-80  xs:min-w-[20rem] sm:mb-10"
@@ -87,10 +87,13 @@ const Table = () => {
 
             <div className="card-body my-auto gap-0 justify-self-center  pr-0 pt-0 pl-4 pb-0">
               <h2 className="card-title text-ellipsis  text-left text-sm">
-                {formatString(entry?.name, 5)}
+                {formatString(entry?.name ?? "", 5)}
               </h2>
               <p className="text-left text-sm">
-                {formatDate(entry?.updatedAt)}
+                {/* TODO not sure why this is getting the type from prisma wrong
+                i mean oh prob bc on Trpc
+                */}
+                {formatDate(entry?.updatedAt as Date)}
               </p>
             </div>
             <div className="flex flex-row items-end justify-end gap-0 pb-2">

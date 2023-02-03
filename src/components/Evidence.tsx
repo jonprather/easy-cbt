@@ -57,14 +57,14 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
           name={evidenceName}
           onChange={handleChange}
         ></textarea>
-        {errors?.evidenceName && (
+        {/* {errors?.evidenceName && (
           <div className="text-red-500">{errors.evidenceName}</div>
-        )}
+        )} */}
       </div>
       <Collapse
         evidence={data.automaticThoughts
           .filter((thought) => thought?.isHot)
-          .map((ele) => ele.thought)
+          .map((ele) => ele?.thought)
           .join("\n")}
         title={"Hot Thoughts"}
       />

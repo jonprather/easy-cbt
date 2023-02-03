@@ -1,7 +1,7 @@
 import * as z from "zod";
 
 export const CBT_FormSchema = z.object({
-  id: z.string().optional(),
+  id: z.string(),
   name: z.string().optional(),
   moodName: z.string().optional(),
   moodLabel: z.string().optional(),
@@ -28,6 +28,11 @@ export const CBT_FormSchema = z.object({
 
 export type CBT_FormDataType = z.infer<typeof CBT_FormSchema>;
 
+import type { cBT_FormDataType, AutomaticThoughts } from "@prisma/client";
+
+export interface CBTData extends cBT_FormDataType {
+  automaticThoughts: AutomaticThoughts[];
+}
 // automaticThoughts: z.array(
 //   z
 //     .object({

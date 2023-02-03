@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-
-const FormNavigation = ({ currentStep, setCurrentStep, errors, columns }) => {
+type Props = {
+  currentStep: number;
+  setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
+  columns: string[];
+};
+const FormNavigation: React.FC<Props> = ({
+  currentStep,
+  setCurrentStep,
+  columns,
+}) => {
   return (
     <div className="btn-group mx-auto flex max-w-4xl justify-center sm:pb-2  ">
       {columns.map((columnName, index) => (

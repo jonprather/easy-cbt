@@ -3,12 +3,18 @@ import Navbar from "./Navbar";
 import Head from "next/head";
 
 import BottomNav from "./BottomNav";
-export default function Layout({
+interface Props {
+  title?: string;
+  keywords?: string;
+  description?: string;
+  children: JSX.Element;
+}
+const Layout: React.FC<Props> = ({
   title = "EasyCBT",
   keywords = "CBT, Mental Health, App",
   description = "CBT Training app and diary",
   children,
-}) {
+}) => {
   return (
     <>
       <Head>
@@ -23,4 +29,5 @@ export default function Layout({
       </div>
     </>
   );
-}
+};
+export default Layout;

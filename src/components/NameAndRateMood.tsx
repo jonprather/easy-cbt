@@ -1,22 +1,28 @@
-import EmojiSelector from "./EmojiSelector.tsx";
+import EmojiSelector from "./EmojiSelector";
 import { Tooltip } from "react-tooltip";
 import { FaInfoCircle } from "react-icons/fa";
-const NameAndRateMood = ({
+import type { CBT_FormDataType } from "src/types/CBTFormTypes";
+type Props = {
+  currentStep: number;
+  handleChange: React.ChangeEventHandler<HTMLInputElement>;
+  data: CBT_FormDataType;
+  setData: React.Dispatch<React.SetStateAction<CBT_FormDataType>>;
+};
+const NameAndRateMood: React.FC<Props> = ({
   currentStep,
-  errors,
   handleChange,
   setData,
   data,
 }) => {
-  const handleRateMood = (e) => {
-    setData((prev) => {
+  const handleRateMood = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setData((prev: CBT_FormDataType) => {
       return {
         ...prev,
         moodRating: +e.target.value,
       };
     });
   };
-  if (currentStep !== 0) return;
+  if (currentStep !== 0) return null;
   return (
     <div className="form-control mt-4 ">
       {/* Child one for flex */}
@@ -33,7 +39,7 @@ const NameAndRateMood = ({
           </span>
         </label>
         <input
-          value={data.name}
+          value={data?.name ?? ""}
           // TODO
           onChange={handleChange}
           placeholder="Feeling moody today"
@@ -41,7 +47,7 @@ const NameAndRateMood = ({
           name="name"
           className="input-bordered input w-full max-w-xs bg-white text-black"
         />
-        {errors?.name && <div className="text-red-500">{errors.name}</div>}
+        {/* {errors?.name && <div className="text-red-500">{errors.name}</div>} */}
       </div>
 
       <div className="child-two">
@@ -54,13 +60,13 @@ const NameAndRateMood = ({
           </span>
         </button>
         <EmojiSelector
-          moodLabel={data.moodLabel}
-          moodName={data.moodName}
+          moodLabel={data?.moodLabel ?? ""}
+          moodName={data.moodName ?? ""}
           setData={setData}
         />
-        {errors?.nameMood && (
+        {/* {errors?.nameMood && (
           <div className="text-red-500">{errors.nameMood}</div>
-        )}
+        )} */}
 
         <label className="text-md mt-4 block  sm:text-lg">
           <button
@@ -92,9 +98,9 @@ const NameAndRateMood = ({
           <span>|</span>
           <span>High</span>
         </div>
-        {errors?.rateMood && (
+        {/* {errors?.rateMood && (
           <div className="text-red-500">{errors.rateMood}</div>
-        )}
+        )} */}
       </div>
 
       {[
