@@ -44,9 +44,9 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
           onChange={handleChange}
           name="newThought"
         ></textarea>
-        {errors?.newThought && (
+        {/* {errors?.newThought && (
           <div className="text-red-500">{errors.newThought}</div>
-        )}
+        )} */}
       </div>
       <Collapse evidence={data?.evidenceAgainst} title={"Evidence Against"} />
       <Collapse evidence={data?.evidenceFor} title={"Evidence For"} />
