@@ -9,6 +9,7 @@ import Rerate from "../Rerate";
 import { api } from "../../utils/api";
 import NewBalancedThought from "src/components/NewBalancedThought";
 import Evidence from "src/components/Evidence";
+import { useSession } from "next-auth/react";
 
 import type { CBTData } from "../../types/CBTFormTypes";
 import { toast } from "react-toastify";
@@ -34,11 +35,12 @@ interface CBTPROPS {
 }
 const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const [currentStep, setCurrentStep] = useState(0);
+  const { data: sessionData } = useSession();
 
   const { mutate: updatePost } = api.CBT.update.useMutation({
     onSettled: async () => {
       await utils.CBT.invalidate();
-      toast.success("Succesfully updated post!");
+      toast.success("Succesfully updated journal!");
     },
   });
   const utils = api?.useContext();
@@ -46,7 +48,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const { mutate: postMessage } = api.CBT.postMessage.useMutation({
     onSettled: async () => {
       await utils.CBT.invalidate();
-      toast.success("Succesfully created post!");
+      toast.success("Succesfully created journal!");
     },
   });
 
@@ -91,8 +93,8 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
       const newThoughts = [...prev.automaticThoughts];
       newThoughts[index] = {
         ...newThoughts[index],
-        isHot: newThoughts[index]?.isHot ?? false,
-        thought: "",
+        isHot: !newThoughts[index]?.isHot ?? false,
+        thought: newThoughts[index]?.thought ?? "",
       };
       return {
         ...prev,
@@ -115,7 +117,12 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
 
     try {
       //   CBT_Schema.parse(formValues);
-
+      if (!sessionData) {
+        //TODO  So local data gets lost if they go to sign up which is annoying...
+        // would be nice if somehow kept it?
+        // maybe use jotai or something to keep app level state and with loc stor
+        return toast.info("You must log in to save your journal!");
+      }
       if (data?.id) {
         updatePost(data);
       } else {

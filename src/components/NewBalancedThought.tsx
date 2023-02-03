@@ -48,8 +48,9 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
           <div className="text-red-500">{errors.newThought}</div>
         )} */}
       </div>
-      <Collapse evidence={data?.evidenceAgainst} title={"Evidence Against"} />
       <Collapse evidence={data?.evidenceFor} title={"Evidence For"} />
+
+      <Collapse evidence={data?.evidenceAgainst} title={"Evidence Against"} />
 
       {[
         {

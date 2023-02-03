@@ -90,7 +90,7 @@ export const CBTFormRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user?.id;
 
-      const post = await prisma?.cBT_FormDataType.findUnique({
+      const post = await ctx.prisma?.cBT_FormDataType.findUnique({
         where: {
           id: input?.id,
         },
@@ -118,7 +118,7 @@ export const CBTFormRouter = createTRPCRouter({
       try {
         const userId = ctx.session.user?.id;
 
-        const post = await prisma?.cBT_FormDataType.findUnique({
+        const post = await ctx.prisma?.cBT_FormDataType.findUnique({
           where: {
             id: input.id,
           },
@@ -157,7 +157,7 @@ export const CBTFormRouter = createTRPCRouter({
 
         // how do i handle the id here? i mean if its new it doesnt have and id?? where: {id: ele.id}}})
 
-        const updatedPost = await prisma?.cBT_FormDataType.update({
+        const updatedPost = await ctx.prisma?.cBT_FormDataType.update({
           where: {
             id: input.id,
           },
@@ -178,7 +178,7 @@ export const CBTFormRouter = createTRPCRouter({
           },
         });
 
-        await prisma?.cBT_FormDataType.update({
+        await ctx.prisma?.cBT_FormDataType.update({
           where: {
             id: input?.id ?? "",
           },
@@ -201,7 +201,7 @@ export const CBTFormRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       try {
         const userId = ctx.session.user?.id;
-        const post = await prisma?.cBT_FormDataType.findUnique({
+        const post = await ctx.prisma?.cBT_FormDataType.findUnique({
           where: {
             id: input.id,
           },
@@ -215,7 +215,7 @@ export const CBTFormRouter = createTRPCRouter({
           );
         }
         // TODO for update and delete make sure it also updates or deletes the AT related to it
-        const deletePost = await prisma?.cBT_FormDataType.delete({
+        const deletePost = await ctx.prisma?.cBT_FormDataType.delete({
           where: {
             id: input.id,
           },

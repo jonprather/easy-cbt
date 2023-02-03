@@ -7,8 +7,11 @@ import { toast } from "react-toastify";
 import PuffLoader from "react-spinners/PuffLoader";
 import type { cBT_FormDataType } from "@prisma/client";
 import { CBTData } from "src/types/CBTFormTypes";
+import { useSession } from "next-auth/react";
+
 const Table = () => {
   const utils = api.useContext();
+  const { data: sessionData } = useSession();
 
   const { mutate: deletePost } = api.CBT.delete.useMutation({
     onSettled: async () => {
@@ -48,7 +51,19 @@ const Table = () => {
   };
 
   // if (isError) return <p>Error</p>;
-
+  if (!sessionData) {
+    return (
+      <div className="mb-6 mt-20 min-h-[16rem] text-center xs:p-2">
+        {" "}
+        <h2 className="mb-4 text-3xl font-medium text-white sm:mb-6 ">
+          Past Entries
+        </h2>
+        <p className="mb-4 text-xl  text-white sm:mb-6 ">
+          Sign in to save your posts!
+        </p>
+      </div>
+    );
+  }
   if (isLoading) {
     return (
       <div className="mb-6 mt-20 min-h-[16rem] text-center xs:p-2">
