@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "./trpc";
 import { exampleRouter } from "./routers/example";
 import { CBTFormRouter } from "./routers/CBTForm";
+import { chatbotRouter } from "./routers/openai";
 
 /**
  * This is the primary router for your server.
@@ -10,6 +11,7 @@ import { CBTFormRouter } from "./routers/CBTForm";
 export const appRouter = createTRPCRouter({
   example: exampleRouter,
   CBT: CBTFormRouter,
+  chatbot: chatbotRouter,
 });
 
 // export type definition of API

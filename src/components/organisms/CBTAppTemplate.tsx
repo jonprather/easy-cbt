@@ -10,16 +10,16 @@ import { api } from "../../utils/api";
 import NewBalancedThought from "src/components/NewBalancedThought";
 import Evidence from "src/components/Evidence";
 import { useSession } from "next-auth/react";
-
+import useChat from "../hooks/useChat";
 import type { CBTData } from "../../types/CBTFormTypes";
 import { toast } from "react-toastify";
-
+import Chat from "../molecules/Chat";
 // TODO get the combo of types here ie cBt with the automatic thoughts
 // import { cBT_FormDataType } from "@prisma/client";
 
 // TODO on update make it clear feilds...
 // TODO make sure add accessible buttons even for the tool tips
-const columns: ["Name", "ANTS", "For", "against", "New", "Rerate"] = [
+export const columns: ["Name", "ANTS", "For", "against", "New", "Rerate"] = [
   "Name",
   "ANTS",
   "For",
@@ -36,7 +36,6 @@ interface CBTPROPS {
 const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const { data: sessionData } = useSession();
-
   const { mutate: updatePost } = api.CBT.update.useMutation({
     onSettled: async () => {
       await utils.CBT.invalidate();
@@ -53,6 +52,8 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   });
 
   const [errors, setErrors] = React.useState(null);
+  const [userQuery, setUserQuery] = React.useState("");
+
   // TODO now that types are diff update ares that use old types ie setting nameMood obj
   const [data, setData] = useState<CBT_FormDataType>({
     name: "",
@@ -169,6 +170,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
       }
     }
   };
+
   //   TODO zod controls for the boundaries or type guards
 
   return (
@@ -181,7 +183,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
         setCurrentStep={setCurrentStep}
         columns={columns}
       />
-
       <div className="min-h-60 mx-auto flex flex-col justify-between p-0 pb-6  xs:p-4 sm:bg-slate-800 sm:p-6  sm:pt-6 md:max-w-5xl md:rounded-b md:rounded-tl md:shadow-lg ">
         <form
           onKeyDown={handleKeyDown}
@@ -255,10 +256,12 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
           <PreviousAndNextButtons
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}
+            setUserQuery={setUserQuery}
             columns={columns}
           />
         </div>
       </div>
+      <Chat currentStep={currentStep} data={data} />
     </div>
   );
 };
@@ -266,3 +269,8 @@ export default CBTAppTemplate;
 
 // TODO so what if autosave didnt use validation but final submit does... that way can have the ease of use
 // and in the final get the final form correct
+
+// ok so userQuery becomes part of the chatHistory right?
+// i can make it like chatHistory .push ({userQuery:'hi', chatBot:'hello dude'}, )
+// or could do it just strings in an array and assume that the back and forth indicates the different
+// also prob should disable text input while the response is loading
