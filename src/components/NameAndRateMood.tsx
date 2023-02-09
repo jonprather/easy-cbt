@@ -2,6 +2,9 @@ import EmojiSelector from "./EmojiSelector";
 import { Tooltip } from "react-tooltip";
 import { FaInfoCircle } from "react-icons/fa";
 import type { CBT_FormDataType } from "src/types/CBTFormTypes";
+
+import Modal from "./molecules/Modal";
+// TODO implement the modals get rid of the tool tips
 type Props = {
   currentStep: number;
   handleChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -26,23 +29,24 @@ const NameAndRateMood: React.FC<Props> = ({
   return (
     <div className="form-control mt-4 ">
       {/* Child one for flex */}
-      <div className="mb-10  ">
-        <label className="label flex items-end justify-start">
-          <span className="label-text capitalize text-white">
-            CBT Journal Entry Title
-          </span>
-          <span
-            id="toolTipTitle"
-            className="text-md cursor ml-2 bg-inherit p-0"
-          >
-            <FaInfoCircle />
-          </span>
-        </label>
+      <div className="mb-8  ">
+        <div className="flex items-end justify-between">
+          <label className="label">
+            <Modal
+              id={"journal-title"}
+              labelText={"CBT Journal Title"}
+              title="Choose a title for your jounal entry"
+              content={
+                "Name it whatever you want. Naming it someting memorable will allow you to easily refer to this entry later."
+              }
+            />
+          </label>
+        </div>
         <input
           value={data?.name ?? ""}
           // TODO
           onChange={handleChange}
-          placeholder="Feeling moody today"
+          placeholder="Some Title"
           type="text"
           name="name"
           className="input-bordered input w-full bg-white text-black xs:max-w-xs"
@@ -51,14 +55,18 @@ const NameAndRateMood: React.FC<Props> = ({
       </div>
 
       <div className="child-two">
-        <button type="button" className="label flex items-end justify-start">
-          <span className="label-text  capitalize text-white">
-            Select Your intense mood
-          </span>
-          <span id="toolTipMood" className="text-md ml-2  bg-inherit p-0">
-            <FaInfoCircle />
-          </span>
-        </button>
+        <div className="flex items-end justify-between">
+          <label className="label">
+            <Modal
+              id={"selectMood"}
+              labelText={"Select Your Mood"}
+              title="Choose the Strong Mood"
+              content={
+                "Usually you will choose the strongest mood that you currently feel. You can also work on any other mood you are feeling."
+              }
+            />
+          </label>
+        </div>
         <EmojiSelector
           moodLabel={data?.moodLabel ?? ""}
           moodName={data.moodName ?? ""}
@@ -68,19 +76,18 @@ const NameAndRateMood: React.FC<Props> = ({
           <div className="text-red-500">{errors.nameMood}</div>
         )} */}
 
-        <label className="text-md mt-4 block  sm:text-lg">
-          <button
-            type="button"
-            className="label flex max-w-xs items-end justify-start"
-          >
-            <span className="label-text  capitalize text-white">
-              Rate the intensity of the feeling
-            </span>
-            <span id="toolTipRating" className="text-md ml-2  bg-inherit p-0">
-              <FaInfoCircle />
-            </span>
-          </button>
-        </label>
+        <div className="mt-4 flex items-end justify-between">
+          <label className="label">
+            <Modal
+              id={"rateMood"}
+              labelText={"Rate your mood Intensity"}
+              title="Rate Your moods intensity"
+              content={
+                "Focus on how your body feels. Then try to feel how intense that feeling is and give it a number between 1-100."
+              }
+            />
+          </label>
+        </div>
         <input
           value={data.moodRating}
           // TODO
@@ -102,24 +109,6 @@ const NameAndRateMood: React.FC<Props> = ({
           <div className="text-red-500">{errors.rateMood}</div>
         )} */}
       </div>
-
-      {[
-        { id: "toolTipTitle", content: "Name the entry" },
-        { id: "toolTipMood", content: "Select mood name" },
-
-        { id: "toolTipRating", content: "Feel your body." },
-      ].map((toolTip) => {
-        return (
-          <Tooltip
-            key={toolTip.id}
-            anchorId={toolTip.id}
-            content={toolTip.content}
-            events={["click", "hover"]}
-            className="bg-primary"
-            variant="light"
-          />
-        );
-      })}
     </div>
   );
 };

@@ -22,7 +22,7 @@ const Layout: React.FC<Props> = ({
         <meta name="description" content={description} />
         <meta name="keywords" content={keywords} />
       </Head>
-      <div className=" bg-base-100 sm:pb-20">
+      <div className="layout bg-base-300  xs:min-h-screen">
         <Navbar />
         {children}
         <BottomNav />

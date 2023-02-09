@@ -5,13 +5,13 @@ import Table from "../components/Table";
 const Home: NextPage = () => {
   return (
     <Layout>
-      <main className=" min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#0d026d] to-[#15162c]">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 pb-4 ">
+      <main className=" min-h-screen flex-col items-center justify-center bg-gradient-to-br from-[#000709] to-[#022f42]">
+        <div className=" flex flex-col items-center justify-center gap-12 px-4 py-16 pb-4 ">
           <div className="mx-auto text-center">
             <h1 className="mb-3 text-5xl font-extrabold uppercase tracking-tight text-white sm:text-[5rem]">
               EASY<span className="text-[hsl(186,100%,70%)]">CBT</span>
             </h1>
-            <p className="text-xl font-medium text-white ">
+            <p className="max-w-xs text-xl font-medium text-white xs:max-w-sm sm:max-w-lg ">
               {/*  */}
               Track your thoughts, moods and progress with CBT
             </p>
@@ -23,7 +23,7 @@ const Home: NextPage = () => {
               href="/create"
             >
               <h3 className="text-2xl font-bold">New CBT Journal</h3>
-              <div className="text-lg">Open the CBT to create a new entry </div>
+              <div className="text-lg">Open the CBT App. </div>
             </Link>
             <Link
               className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"

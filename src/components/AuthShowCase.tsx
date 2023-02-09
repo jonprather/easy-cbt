@@ -11,7 +11,7 @@ const AuthShowcase: React.FC = () => {
     >
       <span className="flex flex-col items-center justify-around gap-1 sm:flex-row  sm:text-lg">
         <span
-          className=" text-lg sm:hidden
+          className=" text-lg xs:hidden
         "
           key="mobile"
         >

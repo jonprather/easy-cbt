@@ -6,7 +6,7 @@ import { FaPlusCircle } from "react-icons/fa";
 import { FaInfoCircle } from "react-icons/fa";
 import type { ChangeEventHandler } from "react";
 import "react-tooltip/dist/react-tooltip.css";
-
+import Modal from "./molecules/Modal";
 type AutomaticThoughtsProps = {
   data: CBT_FormDataType;
   currentStep: number;
@@ -49,13 +49,26 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
   return (
     <>
       <div className="form-control mt-4">
-        <label className=" label flex items-end justify-start">
-          <span className="label-text  capitalize text-white">
-            Automatic Negative Thoughts
-          </span>
-          <span id="ANT" className="text-md ml-2  bg-inherit p-0">
-            <FaInfoCircle />
-          </span>
+        <label className="label flex  justify-start">
+          <Modal
+            id="ANT"
+            title="Automatic Negative Thoughts"
+            labelText="Automatic Thoughts"
+            content={
+              <>
+                <p>
+                  List one at a time your Automatic Negative Thoughts. Automatic
+                  Negative thoughts are thoughts which pop into your head and
+                  have a negative tone.
+                </p>
+
+                <p className="pt-2">
+                  An example for Anxiety might be: This is too intense I cannot
+                  handle it.
+                </p>
+              </>
+            }
+          />
         </label>
 
         <label className="input-group">
@@ -70,11 +83,8 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
         </label>
       </div>
       <div className={" sm:h-2/3"}>
-        <div className="flex justify-between ">
-          <div
-            className=" text-white"
-            data-tip="This will add thoughts to the below box from which you will be able to select the hot thought."
-          >
+        <div className="flex justify-end ">
+          <div className=" text-white">
             <button
               type="button"
               onClick={handleClick}
@@ -90,14 +100,16 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
       </div>
       {/*  */}
       <div className={" "}>
-        <div className="flex items-end justify-start">
-          <label htmlFor="" className="label">
-            <span className="label-text  block bg-none capitalize text-white">
-              choose the hot thought
-            </span>
-            <span id="hotThought" className="text-md ml-2  bg-inherit p-0">
-              <FaInfoCircle />
-            </span>
+        <div className="flex items-end justify-between">
+          <label className="label">
+            <Modal
+              id={"hot-thought"}
+              labelText={"Choose the hot thought"}
+              title="Choose the Hot Thought"
+              content={
+                "Please choose the thought that is most closely related to your choosen strong mood. It is useful to consider each thought and listen to your body and see the reaction."
+              }
+            />
           </label>
         </div>
 
@@ -120,20 +132,6 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
               </li>
             ))}
           </ul>
-          <Tooltip
-            anchorId="ANT"
-            content="List thoughts which relate to your mood."
-            events={["click", "hover"]}
-            className="bg-primary"
-            variant="light"
-          />
-          <Tooltip
-            anchorId="hotThought"
-            content="Please select a hot thought to work on."
-            events={["click", "hover"]}
-            className="bg-primary"
-            variant="light"
-          />
         </div>
 
         {/* {errors?.automaticThoughts && (

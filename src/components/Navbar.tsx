@@ -37,7 +37,7 @@ const Navbar: React.FC = () => {
   }, [router.pathname]);
 
   return (
-    <div className="hidden w-full items-center justify-between bg-neutral p-4 text-lg sm:flex ">
+    <div className="hidden w-full items-center justify-between bg-neutral p-4 text-lg xs:flex ">
       <div className="flex-1">
         {" "}
         <Link

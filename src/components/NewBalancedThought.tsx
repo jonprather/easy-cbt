@@ -2,7 +2,7 @@ import React from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import { ChangeEventHandler } from "react";
 import Collapse from "./Collapse";
-
+import Modal from "./molecules/Modal";
 import { Tooltip } from "react-tooltip";
 import { FaInfoCircle } from "react-icons/fa";
 // TODO should i be using prisma type is this type updated...?
@@ -18,7 +18,8 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
   errors,
   handleChange,
 }) => {
-  const content = "New evidence based belief.";
+  const content =
+    "New evidence based belief after considering the evidence for and against your thought. Allow yourself to consider a rational point of view on this issue.";
   const TOOLTIP_NEWTHOUGHT_ID = "TOOLTIP_NEWTHOUGHT_ID";
 
   if (currentStep !== 4) return null;
@@ -26,17 +27,16 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
   return (
     <>
       <div className="form-control mt-4 mb-10">
-        <label className="label flex items-end justify-start">
-          <span className="label-text  capitalize text-white">
-            New Balanced Thought
-          </span>
-          <span
-            id={TOOLTIP_NEWTHOUGHT_ID}
-            className="text-md ml-2  bg-inherit p-0"
-          >
-            <FaInfoCircle />
-          </span>
-        </label>
+        <div className=" flex items-end justify-between">
+          <label className="label">
+            <Modal
+              id={"newThought-modal"}
+              labelText={"New Balanced Thought"}
+              title={"New Balanced Thought"}
+              content={content}
+            />
+          </label>
+        </div>
         <textarea
           className="textarea-bordered textarea h-24 bg-white text-black"
           placeholder="So while that may be partially true ..."
@@ -49,7 +49,6 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
         )} */}
       </div>
       <Collapse evidence={data?.evidenceFor} title={"Evidence For"} />
-
       <Collapse evidence={data?.evidenceAgainst} title={"Evidence Against"} />
 
       {[

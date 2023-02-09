@@ -1,6 +1,6 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 
 import { SessionProvider } from "next-auth/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";

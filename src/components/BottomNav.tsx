@@ -37,7 +37,7 @@ const BottomNav = () => {
   }, [router.pathname]);
 
   return (
-    <div className="btm-nav sm:hidden">
+    <div className="btm-nav xs:hidden">
       <Link href="/" className={` ${isHomeActive ? "active" : ""} `}>
         <svg
           xmlns="http://www.w3.org/2000/svg"

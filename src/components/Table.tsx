@@ -8,7 +8,7 @@ import PuffLoader from "react-spinners/PuffLoader";
 import type { cBT_FormDataType } from "@prisma/client";
 import { CBTData } from "src/types/CBTFormTypes";
 import { useSession } from "next-auth/react";
-
+import Modal from "./molecules/Modal";
 const Table = () => {
   const utils = api.useContext();
   const { data: sessionData } = useSession();
@@ -95,7 +95,7 @@ const Table = () => {
         {data.map((entry: cBT_FormDataType, i) => (
           <div
             key={entry.id}
-            className="card mb-4 min-h-[8rem] flex-row bg-primary  pr-0 pl-6 text-primary-content max-[375px]:w-80  xs:min-w-[20rem] sm:mb-10"
+            className="card mb-4 min-h-[8rem] flex-row bg-primary pr-0 pl-6  text-primary-content shadow max-[375px]:w-80 xs:min-w-[20rem]  sm:mb-10 sm:hover:bg-primary-focus"
           >
             <div className=" flex flex-col justify-center ">
               <p className=" min-w-full items-center justify-center text-5xl ">
@@ -122,45 +122,24 @@ const Table = () => {
               >
                 <FaEdit />
               </Link>
-
-              <label
-                htmlFor={`my-modal-${i}`}
-                className="btn-ghost btn-sm btn text-lg"
-              >
-                <FaTrash />
-              </label>
-
-              <input
-                type="checkbox"
-                id={`my-modal-${i}`}
-                className="modal-toggle"
-              />
-              <div className="modal">
-                <div className="modal-box relative">
-                  <label
-                    htmlFor={`my-modal-${i}`}
-                    className="btn-sm btn-circle btn absolute right-2 top-2"
+              <Modal
+                title={"Are you sure you want to delete this entry?"}
+                id={`delete-btn${i}`}
+                content={
+                  <button
+                    className="btn-accent  btn text-lg"
+                    onClick={() => {
+                      deletePost({ id: entry.id });
+                    }}
                   >
-                    ✕
-                  </label>
-                  <h3 className="text-lg font-bold text-white">
-                    Are you sure you want to delete this entry?
-                  </h3>
-                  <p className="py-5 text-white">
-                    <button
-                      className="btn-accent  btn text-lg"
-                      onClick={() => {
-                        deletePost({ id: entry.id });
-                      }}
-                    >
-                      <span className="mr-2">
-                        <FaTrash />
-                      </span>
-                      Delete
-                    </button>
-                  </p>
-                </div>
-              </div>
+                    <span className="mr-2">
+                      <FaTrash />
+                    </span>
+                    Delete
+                  </button>
+                }
+                icon={<FaTrash />}
+              />
             </div>
           </div>
         ))}

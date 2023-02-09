@@ -1,8 +1,7 @@
 import React from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import type { ChangeEventHandler } from "react";
-import { Tooltip } from "react-tooltip";
-import { FaInfoCircle } from "react-icons/fa";
+import Modal from "./molecules/Modal";
 
 import Collapse from "./Collapse";
 // TODO should i be usign prisma type is this type updated...
@@ -29,26 +28,30 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
   // TODO so errors could be used but they are not cleanly mapped ie the names are diff and the indexs
 
   let content = "";
+  const arg =
+    " using facts and evidence from your past as well. You can also consider what an honest friend might tell you. Finally Statistics and logic can also help. ";
   if (evidenceName == "evidenceFor") {
     content = "Argue to support the thought";
   } else {
     content = "Argue against the thought";
   }
-  const TOOLTIP_EVIDENCE_ID = "toolTipEvidenceId";
+  content = content + arg;
+
   if (currentStep !== targetStep) return null;
 
   return (
     <>
       <div className="form-control mt-4 mb-10">
-        <label className="label flex items-end justify-start">
-          <span className="label-text  capitalize text-white">{title}</span>
-          <span
-            id={TOOLTIP_EVIDENCE_ID}
-            className="text-md ml-2  bg-inherit p-0"
-          >
-            <FaInfoCircle />
-          </span>
-        </label>
+        <div className="flex items-end justify-between">
+          <label className="label">
+            <Modal
+              id={evidenceName}
+              labelText={title}
+              title={title}
+              content={content}
+            />
+          </label>
+        </div>
 
         <textarea
           className="textarea-bordered textarea h-24 bg-white text-black"
@@ -68,24 +71,6 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
           .join("\n")}
         title={"Hot Thoughts"}
       />
-
-      {[
-        {
-          id: TOOLTIP_EVIDENCE_ID,
-          content,
-        },
-      ].map((toolTip) => {
-        return (
-          <Tooltip
-            key={toolTip.id}
-            anchorId={toolTip.id}
-            content={toolTip.content}
-            events={["click", "hover"]}
-            className="bg-primary"
-            variant="light"
-          />
-        );
-      })}
     </>
   );
 };

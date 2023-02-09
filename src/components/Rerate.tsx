@@ -1,6 +1,6 @@
 import React from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
-import type { ChangeEvent } from "react";
+import Modal from "./molecules/Modal";
 import Collapse from "src/components/Collapse";
 import { Tooltip } from "react-tooltip";
 
@@ -34,29 +34,30 @@ const Rerate: React.FC<RerateProps> = ({
   return (
     <div className=" min-h-16 mt-4 flex flex-col justify-between">
       <div className="child-one">
-        <label className="label flex justify-start ">
-          <span className="label-text capitalize text-white">
-            Rate Belief in New Thought:
-          </span>
-          <span
-            id={TOOLTIP_RATEBELIEF_ID}
-            className="text-md ml-2  bg-inherit p-0"
-          >
-            <FaInfoCircle />
-          </span>
-        </label>
+        <div className=" flex items-end justify-between">
+          <label className="label">
+            <Modal
+              id={"newThoughtBelieft-modal"}
+              labelText={"Rate belief"}
+              title={"Rate belief in the New Thought"}
+              content={
+                "Notice how reasonable the new balanced thought sounds to you. Next give your beleif in this new thought a number between 1-100."
+              }
+            />
+          </label>
+        </div>
         <input
           type="range"
           name="rateBelief"
           value={data.rateBelief}
           min="1"
           max="100"
-          className="range range-secondary mt-2 block max-w-xs"
+          className="range range-primary mt-2 block xs:max-w-xs"
           onBlur={() => console.log()}
           // (errors.rateBelief = "")
           onChange={handleRateMood}
         />
-        <div className="flex w-full max-w-xs justify-between px-2 pt-1 text-xs">
+        <div className="flex w-full justify-between px-2 pt-1 text-xs xs:max-w-xs">
           <span>Low</span>
           <span>|</span>
           <span>|</span>
@@ -70,17 +71,18 @@ will need state for that i can access the data.rateMood etc and set it that way
           <div className="text-red-500">{errors.rateBelief}</div>
         )} */}
 
-        <label className="label mt-4 flex justify-start  ">
-          <span className="label-text capitalize text-white">
-            Rerate mood intensity: {data?.moodLabel}
-          </span>
-          <span
-            id={TOOLTIP_RERATE_MOOD_ID}
-            className="text-md ml-2  bg-inherit p-0"
-          >
-            <FaInfoCircle />
-          </span>
-        </label>
+        <div className="mt-4 flex items-end justify-between">
+          <label className="label">
+            <Modal
+              id={"rerateMood-modal"}
+              labelText={"Rerate Mood Intensity"}
+              title={"Rerate Mood Intensity"}
+              content={
+                "Pay attention to your mood once again. Notice if your mood has now changed from this work and give it a new rating here."
+              }
+            />
+          </label>
+        </div>
         <input
           onChange={handleRateMood}
           value={data.rerateEmotion}
@@ -88,9 +90,9 @@ will need state for that i can access the data.rateMood etc and set it that way
           min="1"
           max="100"
           name="rerateEmotion"
-          className="range range-primary mt-2 block max-w-xs"
+          className="range range-primary mt-2 block xs:max-w-xs"
         />
-        <div className="flex w-full max-w-xs justify-between px-2 pt-1 text-xs">
+        <div className="flex w-full justify-between px-2 pt-1 text-xs xs:max-w-xs">
           <span>Low</span>
           <span>|</span>
           <span>|</span>
@@ -101,7 +103,7 @@ will need state for that i can access the data.rateMood etc and set it that way
           <div className="text-red-500">{errors.rerateEmotion}</div>
         )} */}
       </div>
-      <div className="mt-4 mb-2">
+      <div className="mt-11 ">
         <Collapse
           evidence={data.newThought}
           title="Balanced Thought"
