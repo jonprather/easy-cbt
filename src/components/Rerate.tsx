@@ -2,7 +2,6 @@ import React from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import Modal from "./molecules/Modal";
 import Collapse from "src/components/Collapse";
-import { Tooltip } from "react-tooltip";
 
 import { FaInfoCircle } from "react-icons/fa";
 type RerateProps = {
@@ -12,8 +11,6 @@ type RerateProps = {
   errors: any;
   columns: ["Name", "ANTS", "For", "against", "New", "Rerate"];
 };
-const TOOLTIP_RATEBELIEF_ID = "toolTipRateBelief";
-const TOOLTIP_RERATE_MOOD_ID = "toolTipRerateMood";
 
 const Rerate: React.FC<RerateProps> = ({
   data,
@@ -109,28 +106,6 @@ will need state for that i can access the data.rateMood etc and set it that way
           title="Balanced Thought"
         ></Collapse>
       </div>
-
-      {[
-        {
-          id: TOOLTIP_RATEBELIEF_ID,
-          content: "Notice how reasonable it sounds to you.",
-        },
-        {
-          id: TOOLTIP_RERATE_MOOD_ID,
-          content: "Notice how your mood has changed.",
-        },
-      ].map((toolTip) => {
-        return (
-          <Tooltip
-            key={toolTip.id}
-            anchorId={toolTip.id}
-            content={toolTip.content}
-            events={["click", "hover"]}
-            className="bg-primary"
-            variant="light"
-          />
-        );
-      })}
     </div>
   );
 };

@@ -37,8 +37,14 @@ const BottomNav = () => {
   }, [router.pathname]);
 
   return (
-    <div className="btm-nav xs:hidden">
-      <Link href="/" className={` ${isHomeActive ? "active" : ""} `}>
+    // TODO i dont want this to override show up over the chat window
+    // So i think it def has to do with stacking context ie when i move it it doesn have same effect
+
+    <div className=" btm-nav z-0 xs:hidden">
+      <Link
+        href="/"
+        className={`relative z-0  ${isHomeActive ? "active" : ""} `}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-5 w-5"
@@ -57,9 +63,13 @@ const BottomNav = () => {
       </Link>
       <Link
         href="/create"
-        className={isCreateActive || isUpdateActive ? "active" : ""}
+        className={
+          isCreateActive || isUpdateActive
+            ? "active relative z-0 "
+            : "relative z-0 "
+        }
       >
-        <span className="text-lg">
+        <span className="relative z-0 text-lg ">
           <FaPlusCircle />
         </span>
         <span className={"btm-nav-label"}>

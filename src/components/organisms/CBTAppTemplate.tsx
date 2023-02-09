@@ -14,6 +14,7 @@ import useChat from "../hooks/useChat";
 import type { CBTData } from "../../types/CBTFormTypes";
 import { toast } from "react-toastify";
 import Chat from "../molecules/Chat";
+import BottomNav from "../BottomNav";
 // TODO get the combo of types here ie cBt with the automatic thoughts
 // import { cBT_FormDataType } from "@prisma/client";
 
@@ -261,6 +262,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
           />
         </div>
       </div>
+      <BottomNav />
       <Chat currentStep={currentStep} data={data} />
     </div>
   );

@@ -3,7 +3,6 @@ import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import { ChangeEventHandler } from "react";
 import Collapse from "./Collapse";
 import Modal from "./molecules/Modal";
-import { Tooltip } from "react-tooltip";
 import { FaInfoCircle } from "react-icons/fa";
 // TODO should i be using prisma type is this type updated...?
 type newThoughtPropsI = {
@@ -20,12 +19,12 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
 }) => {
   const content =
     "New evidence based belief after considering the evidence for and against your thought. Allow yourself to consider a rational point of view on this issue.";
-  const TOOLTIP_NEWTHOUGHT_ID = "TOOLTIP_NEWTHOUGHT_ID";
 
   if (currentStep !== 4) return null;
 
   return (
     <>
+      {/* TODO something in here is causing wierd overflow glitch */}
       <div className="form-control mt-4 mb-10">
         <div className=" flex items-end justify-between">
           <label className="label">
@@ -50,24 +49,6 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
       </div>
       <Collapse evidence={data?.evidenceFor} title={"Evidence For"} />
       <Collapse evidence={data?.evidenceAgainst} title={"Evidence Against"} />
-
-      {[
-        {
-          id: TOOLTIP_NEWTHOUGHT_ID,
-          content,
-        },
-      ].map((toolTip) => {
-        return (
-          <Tooltip
-            key={toolTip.id}
-            anchorId={toolTip.id}
-            content={toolTip.content}
-            events={["click", "hover"]}
-            className="bg-primary"
-            variant="light"
-          />
-        );
-      })}
     </>
   );
 };

@@ -1,11 +1,8 @@
 import React from "react";
-import { Tooltip } from "react-tooltip";
 import type { RefObject } from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import { FaPlusCircle } from "react-icons/fa";
-import { FaInfoCircle } from "react-icons/fa";
 import type { ChangeEventHandler } from "react";
-import "react-tooltip/dist/react-tooltip.css";
 import Modal from "./molecules/Modal";
 type AutomaticThoughtsProps = {
   data: CBT_FormDataType;
@@ -71,7 +68,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
           />
         </label>
 
-        <label className="input-group">
+        <label className="">
           <input
             type="text"
             placeholder="Im having the thought that..."

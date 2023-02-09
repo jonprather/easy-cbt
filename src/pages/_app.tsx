@@ -7,7 +7,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { api } from "../utils/api";
 import "react-toastify/dist/ReactToastify.css";
 import "../styles/globals.css";
-import "react-tooltip/dist/react-tooltip.css";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

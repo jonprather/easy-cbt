@@ -1,10 +1,7 @@
 import EmojiSelector from "./EmojiSelector";
-import { Tooltip } from "react-tooltip";
-import { FaInfoCircle } from "react-icons/fa";
 import type { CBT_FormDataType } from "src/types/CBTFormTypes";
 
 import Modal from "./molecules/Modal";
-// TODO implement the modals get rid of the tool tips
 type Props = {
   currentStep: number;
   handleChange: React.ChangeEventHandler<HTMLInputElement>;

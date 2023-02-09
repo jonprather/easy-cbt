@@ -25,7 +25,6 @@ const Layout: React.FC<Props> = ({
       <div className="layout bg-base-300  xs:min-h-screen">
         <Navbar />
         {children}
-        <BottomNav />
       </div>
     </>
   );

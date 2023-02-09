@@ -69,7 +69,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
         {showChat ? <FaWindowClose /> : <SiChatbot className="text-2xl" />}
       </button>
       {showChat && (
-        <div className="rounded-box fixed bottom-20 right-0 flex h-[80%] max-h-[80rem] w-full min-w-[20rem] max-w-sm  flex-col overflow-hidden bg-white shadow-xl xs:bottom-24 xs:right-4 sm:w-2/3">
+        <div className=" rounded-box fixed bottom-0 right-0  z-50 flex h-[100%] max-h-[80rem] w-full min-w-[20rem] max-w-sm  flex-col overflow-hidden bg-white shadow-xl xs:bottom-24 xs:right-4 sm:w-2/3">
           <div className=" justify left-0 flex justify-between  bg-secondary p-4 text-white">
             <span className="text-md flex items-center ">
               <SiChatbot className="mr-3 text-lg" />
@@ -92,7 +92,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
               </button>
             </div>
           </div>
-          <div className="flex-grow overflow-y-scroll">
+          <div className="flex-grow overflow-y-scroll overscroll-contain">
             {chatHistory.map((message, index) => (
               <div
                 key={index}
@@ -130,7 +130,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
               </div>
             )}
           </div>
-          <div className="  bg-secondary p-4 text-white xs:right-6 ">
+          <div className="relative z-50  bg-secondary p-4 text-white xs:right-6 ">
             <form onSubmit={handleSubmit}>
               <div className="mb-1">
                 <textarea
@@ -164,3 +164,5 @@ export default Chat;
 // TODO yes just better UX like the scroll to bottom and
 // Yeah and handle errors and stuff
 // This would be a good time to save work for this basic draft...
+// TODO on mobile the chat interface is a bit cramped plus the chat exp is bad have to scroll yet hard to scroll bc tiny scroll bar which is so close to outer
+// would be nice if could scroll by touch as a user without having to touch the scrollbar

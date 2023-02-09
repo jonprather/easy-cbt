@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import Link from "next/link";
 import Layout from "../components/Layout";
 import Table from "../components/Table";
+import BottomNav from "src/components/BottomNav";
 const Home: NextPage = () => {
   return (
     <Layout>
@@ -41,6 +42,7 @@ const Home: NextPage = () => {
           </div>
         </div>
       </main>
+      <BottomNav></BottomNav>
     </Layout>
   );
 };
