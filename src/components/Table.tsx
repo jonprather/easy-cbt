@@ -115,16 +115,18 @@ const Table = () => {
                 {formatDate(entry)}
               </p>
             </div>
-            <div className="flex flex-row items-end justify-end gap-0 pb-2">
+            <div className="flex flex-row items-end justify-between gap-0 pb-2">
               <Link
-                className="btn-ghost btn-sm btn text-xl"
+                className="btn-ghost btn-sm btn mr-0 text-2xl"
                 href={`/update/${entry.id}`}
               >
                 <FaEdit />
               </Link>
+              {/* TODO this modal isnt quite right the buttons are off */}
               <Modal
                 title={"Are you sure you want to delete this entry?"}
                 id={`delete-btn${i}`}
+                labelText=""
                 content={
                   <button
                     className="btn-accent  btn text-lg"
@@ -138,7 +140,11 @@ const Table = () => {
                     Delete
                   </button>
                 }
-                icon={<FaTrash />}
+                icon={
+                  <span className=" btn-ghost btn-sm btn mr-1 bg-transparent text-xl">
+                    <FaTrash />
+                  </span>
+                }
               />
             </div>
           </div>

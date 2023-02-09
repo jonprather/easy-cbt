@@ -29,7 +29,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
 
   let content = "";
   const arg =
-    " using facts and evidence from your past as well. You can also consider what an honest friend might tell you. Finally Statistics and logic can also help. ";
+    " using facts and evidence from your past. You can also consider what an honest friend might tell you. Finally Statistics and logic can also help. ";
   if (evidenceName == "evidenceFor") {
     content = "Argue to support the thought";
   } else {

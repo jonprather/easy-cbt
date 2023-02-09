@@ -25,9 +25,12 @@ const Modal: React.FC<ModalProps> = ({
         htmlFor={id}
         className="flex items-center justify-end text-lg hover:cursor-pointer"
       >
-        <span className="label-text  mr-2 capitalize text-white">
-          {labelText}
-        </span>{" "}
+        {!!{ labelText } && (
+          <span className="label-text  mr-2 capitalize text-white">
+            {labelText}
+          </span>
+        )}
+
         {icon}
       </label>
 
