@@ -15,7 +15,7 @@ const input = z.object({
   ),
 });
 import { Configuration, OpenAIApi } from "openai";
-import { CBTData, CBT_FormDataType } from "src/types/CBTFormTypes";
+import { CBTData, CBT_FormIdOptionalDataType } from "src/types/CBTFormTypes";
 
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
@@ -35,7 +35,7 @@ export const chatbotRouter = createTRPCRouter({
       //   handle adding Form Data to prompt
       // type THought = {isHot:boolean,thought:string}[]
 
-      const extractData = (formData: CBT_FormDataType) => {
+      const extractData = (formData: CBT_FormIdOptionalDataType) => {
         const extractedData: string[] = [];
         for (const [key, value] of Object.entries(formData)) {
           if (key === "automaticThoughts" && Array.isArray(value)) {

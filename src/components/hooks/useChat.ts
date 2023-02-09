@@ -1,10 +1,10 @@
 import { api } from "../../utils/api";
-import type { CBT_FormDataType } from "src/types/CBTFormTypes";
+import type { CBT_FormIdOptionalDataType } from "src/types/CBTFormTypes";
 import type { Message } from "../molecules/Chat";
 import { chatBotName } from "../molecules/Chat";
 interface ChatProps {
   currentStep: number;
-  formData: CBT_FormDataType;
+  formData: CBT_FormIdOptionalDataType;
   chatHistory: Message[];
   setChatHistory: React.Dispatch<Message[]>;
 }
