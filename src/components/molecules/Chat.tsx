@@ -50,6 +50,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
     },
     { enabled: formSubmitted, onSettled: () => setformSubmitted(false) }
   );
+  // TODO refactor- can move the setChatHistory logic inside useChat and pass just the data out
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -69,7 +70,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
         {showChat ? <FaWindowClose /> : <SiChatbot className="text-2xl" />}
       </button>
       {showChat && (
-        <div className=" rounded-box fixed bottom-0 right-0  z-50 flex h-[100%] max-h-[80rem] w-full min-w-[20rem] max-w-sm  flex-col overflow-hidden bg-white shadow-xl xs:bottom-24 xs:right-4 sm:w-2/3">
+        <div className=" rounded-box fixed bottom-0 right-0  z-50 flex h-[100%] max-h-[80rem] w-full min-w-[20rem] max-w-sm flex-col  overflow-hidden bg-white shadow-xl xs:bottom-24 xs:right-4 xs:h-[80%] sm:w-2/3">
           <div className=" justify left-0 flex justify-between  bg-secondary p-4 text-white">
             <span className="text-md flex items-center ">
               <SiChatbot className="mr-3 text-lg" />
@@ -130,7 +131,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
               </div>
             )}
           </div>
-          <div className="relative z-50  bg-secondary p-4 text-white xs:right-6 ">
+          <div className="relative z-50  bg-secondary p-4 text-white  ">
             <form onSubmit={handleSubmit}>
               <div className="mb-1">
                 <textarea
@@ -166,3 +167,6 @@ export default Chat;
 // This would be a good time to save work for this basic draft...
 // TODO on mobile the chat interface is a bit cramped plus the chat exp is bad have to scroll yet hard to scroll bc tiny scroll bar which is so close to outer
 // would be nice if could scroll by touch as a user without having to touch the scrollbar
+// EG when a user types same thing again it doesnt work - add some notice to user or
+//  let them ask it and just send the previous message instead... at useChat hook level
+// TODO chat display is jank on desktop now...
