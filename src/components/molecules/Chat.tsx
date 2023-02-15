@@ -55,7 +55,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
   const initBotConversation = () => {
     setChatHistory([...chatHistory, { author: "user", text: currentMessage }]);
     setCurrentMessage("");
-    // setformSubmitted(true);
+    setformSubmitted(true);
   };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
