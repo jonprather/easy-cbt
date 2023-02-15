@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaWindowClose } from "react-icons/fa";
+import { FaWindowClose, FaTelegramPlane } from "react-icons/fa";
 import { GrPowerReset } from "react-icons/gr";
 import { SiChatbot } from "react-icons/si";
 import type { CBT_FormDataType } from "src/types/CBTFormTypes";
@@ -52,14 +52,24 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
   );
   // TODO refactor- can move the setChatHistory logic inside useChat and pass just the data out
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const initBotConversation = () => {
     setChatHistory([...chatHistory, { author: "user", text: currentMessage }]);
     setCurrentMessage("");
-    setformSubmitted(true);
+    // setformSubmitted(true);
   };
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    initBotConversation();
+  };
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    console.log("IN HANDLEKEY", e, e.key);
+    if (currentMessage.trim() === "") return;
+    if (e.code === "Enter" && !e.shiftKey) {
+      e.preventDefault();
 
+      initBotConversation();
+    }
+  };
   return (
     <div className="fixed right-8 top-10 flex flex-col xs:max-w-7xl ">
       <button
@@ -70,7 +80,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
         {showChat ? <FaWindowClose /> : <SiChatbot className="text-2xl" />}
       </button>
       {showChat && (
-        <div className=" rounded-box fixed bottom-0 right-0  z-50 flex h-[100%] max-h-[80rem] w-full min-w-[20rem] max-w-sm flex-col  overflow-hidden bg-white shadow-xl xs:bottom-24 xs:right-4 xs:h-[80%] sm:w-2/3">
+        <div className=" rounded-box fixed bottom-0 right-0  z-50 flex h-[100%] max-h-[80rem] w-full min-w-[20rem] max-w-sm flex-col  overflow-hidden bg-neutral shadow-xl xs:bottom-24 xs:right-4 xs:h-[80%] sm:w-2/3">
           <div className=" justify left-0 flex justify-between  bg-secondary p-4 text-white">
             <span className="text-md flex items-center ">
               <SiChatbot className="mr-3 text-lg" />
@@ -93,7 +103,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
               </button>
             </div>
           </div>
-          <div className="flex-grow overflow-y-scroll overscroll-contain">
+          <div className="flex-grow overflow-auto overflow-y-auto overflow-x-hidden overscroll-contain">
             {chatHistory.map((message, index) => (
               <div
                 key={index}
@@ -131,24 +141,25 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
               </div>
             )}
           </div>
-          <div className="relative z-50  bg-secondary p-4 text-white  ">
+          <div className="relative z-10 bg-secondary p-4 text-white  ">
             <form onSubmit={handleSubmit}>
-              <div className="mb-1">
+              <div className="relative mb-1">
                 <textarea
-                  className="textarea h-12 w-full bg-white  text-black"
+                  className="textarea h-12 w-full  resize-none bg-neutral text-white"
                   placeholder="Ask the chatbot something..."
                   value={currentMessage}
                   onChange={(e) => setCurrentMessage(e.target.value)}
+                  onKeyDown={handleKeyDown}
                 />
+                <button
+                  className="btn-square btn-sm btn absolute bottom-3 right-4 z-50 border-none bg-transparent text-lg  text-gray-500 hover:bg-transparent disabled:bg-transparent disabled:text-gray-300"
+                  type="submit"
+                  disabled={!currentMessage}
+                >
+                  <FaTelegramPlane />
+                </button>
               </div>
               {/* TODO Could make this work on enter... */}
-              <button
-                className="btn-accent btn"
-                type="submit"
-                disabled={!currentMessage}
-              >
-                Submit
-              </button>
             </form>
           </div>
         </div>
@@ -158,15 +169,3 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
 };
 
 export default Chat;
-
-// TODO better validation ie when they are blocked or when error etc
-// when loading if do it this way
-//streaming might be cool to do...
-// TODO yes just better UX like the scroll to bottom and
-// Yeah and handle errors and stuff
-// This would be a good time to save work for this basic draft...
-// TODO on mobile the chat interface is a bit cramped plus the chat exp is bad have to scroll yet hard to scroll bc tiny scroll bar which is so close to outer
-// would be nice if could scroll by touch as a user without having to touch the scrollbar
-// EG when a user types same thing again it doesnt work - add some notice to user or
-//  let them ask it and just send the previous message instead... at useChat hook level
-// TODO chat display is jank on desktop now...
