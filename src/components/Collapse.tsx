@@ -7,10 +7,10 @@ const Collapse: React.FC<CollapseProps> = ({ evidence, title }) => {
   return (
     <button className="collapse-arrow rounded-box collapse mb-1 w-full border border-gray-500 bg-base-100 shadow peer-checked:border-base-100">
       <input type="checkbox" className="peer" />
-      <div className="collapse-title bg-neutral text-white  peer-checked:bg-primary peer-checked:text-primary-content md:bg-slate-700">
+      <div className="collapse-title bg-neutral text-white  peer-checked:bg-secondary peer-checked:text-secondary-content md:bg-slate-700">
         {title}
       </div>
-      <div className="collapse-content overflow-hidden text-ellipsis whitespace-nowrap bg-neutral  text-white peer-checked:bg-primary peer-checked:text-secondary-content  md:bg-slate-700">
+      <div className="collapse-content overflow-hidden text-ellipsis whitespace-nowrap bg-neutral  text-white peer-checked:bg-secondary peer-checked:text-secondary-content  md:bg-slate-700">
         <ul>
           {evidence?.split("\n").map((evidence, i) => (
             <li

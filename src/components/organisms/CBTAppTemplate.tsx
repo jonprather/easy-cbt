@@ -16,11 +16,7 @@ import { toast } from "react-toastify";
 import Chat from "../molecules/Chat";
 import BottomNav from "../BottomNav";
 import { useRouter } from "next/router";
-// TODO get the combo of types here ie cBt with the automatic thoughts
-// import { cBT_FormDataType } from "@prisma/client";
 
-// TODO on update make it clear feilds...
-// TODO make sure add accessible buttons even for the tool tips
 export const columns: ["Name", "ANTS", "For", "against", "New", "Rerate"] = [
   "Name",
   "ANTS",
@@ -40,7 +36,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const { data: sessionData } = useSession();
   const router = useRouter();
   const { mutate: updatePost } = api.CBT.update.useMutation({
-    onSettled: async () => {
+    onSuccess: async () => {
       await utils.CBT.invalidate();
       toast.success("Succesfully updated journal!");
     },
@@ -48,7 +44,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const utils = api?.useContext();
 
   const { mutate: postMessage } = api.CBT.postMessage.useMutation({
-    onSettled: async () => {
+    onSuccess: async () => {
       await utils.CBT.invalidate();
       toast.success("Succesfully created journal!");
     },
@@ -57,7 +53,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const [errors, setErrors] = React.useState(null);
   const [userQuery, setUserQuery] = React.useState("");
 
-  // TODO now that types are diff update ares that use old types ie setting nameMood obj
+  //  TODO make the modal text better
   const [data, setData] = useState<CBT_FormDataType>({
     name: "",
     moodName: "",
@@ -92,21 +88,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
     setFormData(initialData);
   }, [initialData]);
 
-  const handleHotThoughtClick = (index: number) => {
-    setData((prev) => {
-      const newThoughts = [...prev.automaticThoughts];
-      newThoughts[index] = {
-        ...newThoughts[index],
-        isHot: !newThoughts[index]?.isHot ?? false,
-        thought: newThoughts[index]?.thought ?? "",
-      };
-      return {
-        ...prev,
-        automaticThoughts: newThoughts,
-      };
-    });
-  };
-
   const handleChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -116,9 +97,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
 
   // TODO fix the submit on enter its not pleasant UX when happens at AT ...
   // ALSO put max char counts on all the text feilds...
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handleSubmit = () => {
     try {
       //   CBT_Schema.parse(formValues);
       if (!sessionData) {
@@ -188,11 +167,10 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
         setCurrentStep={setCurrentStep}
         columns={columns}
       />
-      <div className="min-h-60 mx-auto flex flex-col justify-between p-0 pb-6  xs:p-4 sm:bg-slate-800 sm:p-6  sm:pt-6 md:max-w-5xl md:rounded-b md:rounded-tl md:shadow-lg ">
-        <form
+      <div className="min-h-60 relative mx-auto flex flex-col justify-between p-0 pb-6  xs:p-4 sm:bg-slate-900 sm:p-6  sm:pt-6 md:max-w-5xl md:rounded-b md:rounded-tl md:shadow-lg ">
+        <div
           onKeyDown={handleKeyDown}
-          onSubmit={handleSubmit}
-          className=" min-h-70 mx-auto flex w-full flex-col justify-between rounded pl-3 pr-3 xs:p-4 sm:mt-4   sm:max-w-3xl sm:bg-slate-700 md:mt-10"
+          className="min-h-70 mx-auto flex w-full flex-col justify-between rounded pl-3 pr-3 shadow-lg xs:p-4 sm:mt-4   sm:max-w-3xl sm:bg-slate-800 md:mt-10"
         >
           <div>
             <NameAndRateMood
@@ -202,7 +180,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
               data={data}
             />
             <AutomaticThoughts
-              handleHotThoughtClick={handleHotThoughtClick}
               setData={setData}
               handleChange={handleChange}
               data={data}
@@ -240,7 +217,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
 
             <Rerate
               currentStep={currentStep}
-              errors={errors}
               data={data}
               setData={setData}
               columns={columns}
@@ -248,14 +224,14 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
           </div>
           {currentStep === columns.length - 1 && (
             <button
-              type="submit"
+              onClick={handleSubmit}
               disabled={currentStep !== columns.length - 1}
-              className="btn-accent btn   mb-2 min-w-full max-w-sm  xs:min-w-[14rem] sm:mx-auto "
+              className="btn-accent btn absolute bottom-36 left-1/2 mb-4 min-w-[90%]  max-w-xs -translate-x-1/2 animate-none  xs:min-w-[14rem] sm:mx-auto "
             >
               {data.id ? "Update Entry" : "Add Entry"}
             </button>
           )}
-        </form>
+        </div>
 
         <div className="mb-16  ">
           <PreviousAndNextButtons

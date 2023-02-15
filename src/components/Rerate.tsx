@@ -8,14 +8,12 @@ type RerateProps = {
   data: CBT_FormDataType;
   currentStep: number;
   setData: React.Dispatch<React.SetStateAction<CBT_FormDataType>>;
-  errors: any;
   columns: ["Name", "ANTS", "For", "against", "New", "Rerate"];
 };
 
 const Rerate: React.FC<RerateProps> = ({
   data,
   currentStep,
-  errors,
   setData,
   columns,
 }) => {
@@ -29,7 +27,7 @@ const Rerate: React.FC<RerateProps> = ({
   };
   if (currentStep !== columns.length - 1) return null;
   return (
-    <div className=" min-h-16 mt-4 flex flex-col justify-between">
+    <div className=" min-h-16 mt-6 flex flex-col justify-between">
       <div className="child-one">
         <div className=" flex items-end justify-between">
           <label className="label">
@@ -80,6 +78,8 @@ will need state for that i can access the data.rateMood etc and set it that way
             />
           </label>
         </div>
+        <span className="mb-1 ml-2 block">{data.moodLabel}</span>
+
         <input
           onChange={handleRateMood}
           value={data.rerateEmotion}

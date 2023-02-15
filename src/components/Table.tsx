@@ -14,12 +14,16 @@ const Table = () => {
   const { data: sessionData } = useSession();
 
   const { mutate: deletePost } = api.CBT.delete.useMutation({
-    onSettled: async () => {
-      await utils.CBT.invalidate();
-      toast.success("Succesfully deleted post!");
-    },
     onError: (err) => {
-      toast.error(err.message, { toastId: err.message });
+      // TODO IMPORTANT it seems to always succeed even when i throw an error in BE...
+      // Which makes these toasts out to be liars...
+      console.log(err);
+      return toast.error(err.message, { toastId: err.message });
+    },
+    onSuccess: async () => {
+      await utils.CBT.invalidate();
+      // Why does it assume success ?
+      toast.success("Succesfully deleted post!");
     },
   });
   const { data, isLoading } = api.CBT.getAll.useQuery();

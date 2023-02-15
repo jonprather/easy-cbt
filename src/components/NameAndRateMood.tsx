@@ -24,9 +24,9 @@ const NameAndRateMood: React.FC<Props> = ({
   };
   if (currentStep !== 0) return null;
   return (
-    <div className="form-control mt-4 ">
+    <div className="form-control mt-6 ">
       {/* Child one for flex */}
-      <div className="mb-8  ">
+      <div className="mb-10 ">
         <div className="flex items-end justify-between">
           <label className="label">
             <Modal

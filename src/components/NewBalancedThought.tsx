@@ -25,7 +25,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
   return (
     <>
       {/* TODO something in here is causing wierd overflow glitch */}
-      <div className="form-control mt-4 mb-10">
+      <div className="form-control mt-6 mb-10">
         <div className=" flex items-end justify-between">
           <label className="label">
             <Modal
@@ -36,8 +36,9 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
             />
           </label>
         </div>
+        {/* TODO consider making height larger and the resize to none */}
         <textarea
-          className="textarea-bordered textarea h-24 bg-white text-black"
+          className="textarea-bordered textarea h-36 resize-none bg-white text-black"
           placeholder="So while that may be partially true ..."
           value={data.newThought}
           onChange={handleChange}
