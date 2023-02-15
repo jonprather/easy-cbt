@@ -4,7 +4,7 @@ import { z } from "zod";
 import { cBT_FormDataType } from "@prisma/client";
 // So i have
 import { CBTData } from "src/types/CBTFormTypes";
-
+import { TRPCError, initTRPC } from "@trpc/server";
 export const CBT_FormSchema = z.object({
   name: z.string().optional(),
   moodName: z.string().optional(),
@@ -71,18 +71,30 @@ export const CBTFormRouter = createTRPCRouter({
           },
         });
       } catch (error) {
-        console.log(error);
+        // console.log(error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "An unexpected error occurred, please try again later.",
+          // optional: pass the original error to retain stack trace
+          cause: error,
+        });
       }
     }),
   // NOT sure why this isnt returning the type with updatedAt on it...
   // so it comes from the prisma schema
   // TODO get to the bottom of this to fix TABLE TS errors that use data.entry.updatedAt
   getAll: protectedProcedure.query(({ ctx }) => {
+    const userId = ctx.session.user?.id;
+
     return ctx.prisma.cBT_FormDataType.findMany({
+      where: {
+        userId: userId,
+      },
       include: {
         automaticThoughts: true,
       },
     });
+    // Need the where clause to make it authorized to one user but if wanted it to be public omit it
   }),
 
   getOne: protectedProcedure
@@ -99,15 +111,25 @@ export const CBTFormRouter = createTRPCRouter({
         },
       });
       if (!post) {
-        throw new Error(`Post with id ${input.id} not found`);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Post with id ${input.id} not found`,
+          // optional: pass the original error to retain stack trace
+          cause: `Post with id ${input.id} not found`,
+        });
       }
       if (post.userId !== userId) {
-        throw new Error(
-          `User ${userId} is not authorized to access post ${input.id}`
-        );
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `User ${userId} is not authorized to view post ${input.id}`,
+          // optional: pass the original error to retain stack trace
+          cause: `User ${userId} is not authorized to view post ${input.id}`,
+        });
       }
       return post;
     }),
+
+  // TODO extract the logic into anothe rlayer of abstraction to help with testing...
 
   // So for this id should be required...
   // Or should i have the id be seperate as something passed to it...
@@ -124,15 +146,41 @@ export const CBTFormRouter = createTRPCRouter({
           },
         });
         if (!post) {
-          throw new Error(`Post with id ${input.id} not found`);
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: `Post with id ${input.id} not found`,
+            // optional: pass the original error to retain stack trace
+            cause: `Post with id ${input.id} not found`,
+          });
         }
         if (post.userId !== userId) {
-          throw new Error(
-            `User ${userId} is not authorized to delete post ${input.id}`
-          );
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: `User ${userId} is not authorized to delete post ${input.id}`,
+            // optional: pass the original error to retain stack trace
+            cause: `User ${userId} is not authorized to update post ${input.id}`,
+          });
         }
         // ok this is returning undefined for id...
         // ok so its adding new ones on top of the
+        //so need to get the difference between db state adn new state for what to delete then
+        // call approapiate methods
+        // input.automaticThoughts
+        //
+        const antList = await prisma?.automaticThoughts.findMany({
+          where: {
+            cBT_FormDataTypeId: input.id,
+          },
+        });
+        console.log("ANTLIST AND INPUT", antList, input.automaticThoughts);
+        const antDifference = antList?.filter(
+          (ele) =>
+            !input.automaticThoughts.some((inputAnt) => inputAnt?.id === ele.id)
+        );
+        const antDeleteArr = antDifference?.map((ele) => ele.id);
+        console.log("ANT DIFF", antDifference);
+        //so if the element is in input.element then remove it
+        // so we are left with the
         const antPrismaUpdateObj = input.automaticThoughts
           .filter((ele) => ele?.id)
           .map((ele) => {
@@ -156,7 +204,13 @@ export const CBTFormRouter = createTRPCRouter({
           });
 
         // how do i handle the id here? i mean if its new it doesnt have and id?? where: {id: ele.id}}})
-
+        const deletedAnts = await ctx.prisma.automaticThoughts.deleteMany({
+          where: {
+            id: {
+              in: antDeleteArr,
+            },
+          },
+        });
         const updatedPost = await ctx.prisma?.cBT_FormDataType.update({
           where: {
             id: input.id,
@@ -199,30 +253,30 @@ export const CBTFormRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      try {
-        const userId = ctx.session.user?.id;
-        const post = await ctx.prisma?.cBT_FormDataType.findUnique({
-          where: {
-            id: input.id,
-          },
-        });
-        if (!post) {
-          throw new Error(`Post with id ${input.id} not found`);
-        }
-        if (post.userId !== userId) {
-          throw new Error(
-            `User ${userId} is not authorized to delete post ${input.id}`
-          );
-        }
-        // TODO for update and delete make sure it also updates or deletes the AT related to it
-        const deletePost = await ctx.prisma?.cBT_FormDataType.delete({
-          where: {
-            id: input.id,
-          },
-        });
-        return deletePost;
-      } catch (error) {
-        console.log(error);
+      const userId = ctx.session.user?.id;
+      const post = await ctx.prisma?.cBT_FormDataType.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+      if (!post) {
+        throw new Error(`Post with id ${input.id} not found`);
       }
+      if (post.userId !== userId) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `User ${userId} is not authorized to delete post ${input.id}`,
+          // optional: pass the original error to retain stack trace
+          cause: `User ${userId} is not authorized to delete post ${input.id}`,
+        });
+      }
+      const deletePost = await ctx.prisma?.cBT_FormDataType.delete({
+        where: {
+          id: input.id,
+        },
+      });
+      return deletePost;
     }),
 });
+
+// TODO check edge cases again for diff errors add TESTING
