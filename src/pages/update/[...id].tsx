@@ -16,7 +16,13 @@ const UpdateNote = () => {
       setId(ids);
     }
   }, [router.query]);
-  const getPost = api.CBT.getOne.useQuery({ id: id });
+  const getPost = api.CBT.getOne.useQuery(
+    { id: id },
+    {
+      enabled: !!id && router?.isReady,
+      staleTime: 60 * 1000, // data can remain stale for 60 seconds
+    }
+  );
 
   return (
     <Layout>
