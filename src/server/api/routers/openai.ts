@@ -117,7 +117,6 @@ export const chatbotRouter = createTRPCRouter({
         });
 
       //   return fakeRequest(userQuery);
-
       const response = await openai.createCompletion({
         model: "text-davinci-003",
         prompt: fullPrompt,
@@ -127,9 +126,7 @@ export const chatbotRouter = createTRPCRouter({
 
       return response?.data?.choices[0]?.text;
     } catch (error) {
-      return {
-        error: error,
-      };
+      return error;
     }
   }),
 });
