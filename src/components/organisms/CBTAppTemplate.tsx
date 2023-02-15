@@ -15,6 +15,7 @@ import type { CBTData } from "../../types/CBTFormTypes";
 import { toast } from "react-toastify";
 import Chat from "../molecules/Chat";
 import BottomNav from "../BottomNav";
+import { useRouter } from "next/router";
 // TODO get the combo of types here ie cBt with the automatic thoughts
 // import { cBT_FormDataType } from "@prisma/client";
 
@@ -37,6 +38,7 @@ interface CBTPROPS {
 const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const { data: sessionData } = useSession();
+  const router = useRouter();
   const { mutate: updatePost } = api.CBT.update.useMutation({
     onSettled: async () => {
       await utils.CBT.invalidate();
@@ -147,6 +149,8 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
           id: "",
         };
       });
+
+      router.push("/").catch((error) => console.error(error));
     } catch (err) {
       // const validationError = String(fromZodError(err));
       // // the error now is readable by the user
@@ -276,3 +280,6 @@ export default CBTAppTemplate;
 // i can make it like chatHistory .push ({userQuery:'hi', chatBot:'hello dude'}, )
 // or could do it just strings in an array and assume that the back and forth indicates the different
 // also prob should disable text input while the response is loading
+// Can do a push to home once you complete a journal
+// If its a create call can also do a congrats modal or popup
+// would be cool if there were a way to track streaks like a calendar...

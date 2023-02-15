@@ -78,3 +78,6 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
+
+// TODO UX when they click to go away from a current entry and it hasnt autosaved warn them to save or to allow to lose data
+// UI would be nice if the form steps were uniform
