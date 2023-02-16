@@ -51,7 +51,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
         </div>
 
         <textarea
-          className="textarea-bordered textarea h-36 resize-none bg-white text-black"
+          className="textarea-bordered textarea h-44 resize-none bg-white text-black"
           placeholder="The following Evidence suggests..."
           value={evidence}
           name={evidenceName}

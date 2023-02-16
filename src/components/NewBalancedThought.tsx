@@ -38,7 +38,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
         </div>
         {/* TODO consider making height larger and the resize to none */}
         <textarea
-          className="textarea-bordered textarea h-36 resize-none bg-white text-black"
+          className="textarea-bordered textarea h-44 resize-none bg-white text-black"
           placeholder="So while that may be partially true ..."
           value={data.newThought}
           onChange={handleChange}

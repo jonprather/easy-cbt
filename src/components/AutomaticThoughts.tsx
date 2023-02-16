@@ -1,7 +1,8 @@
 import React from "react";
 import type { RefObject } from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
-import { FaPlusCircle, FaTrash } from "react-icons/fa";
+import { FaPlusCircle, FaTrash, FaFire, FaCircle } from "react-icons/fa";
+import { MdLocalFireDepartment, MdSentimentNeutral } from "react-icons/md";
 import type { ChangeEventHandler } from "react";
 import Modal from "./molecules/Modal";
 import DialogDemo from "./RadixDialog";
@@ -126,7 +127,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
             <button
               type="button"
               onClick={handleClick}
-              className="btn-accent btn-square btn  text-lg"
+              className="btn btn-accent btn-square  text-lg"
             >
               <FaPlusCircle />
             </button>
@@ -150,7 +151,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
         </div>
         {/* Might be cool to add ability to remove a ANT ie undo */}
         {/* TODO fix undo its not deleting first elemnt and delteing wrong element at times... */}
-        <div className=" over h-36 w-full overflow-y-auto overscroll-contain rounded-lg bg-slate-300 p-2 ">
+        <div className=" over h-48 w-full overflow-y-auto overscroll-contain rounded-lg bg-slate-300 p-2 ">
           <ul>
             {/* This sort of advice could be conditional on being a new user */}
             {/* {!data?.automaticThoughts[0] && (
@@ -165,25 +166,33 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
               <li
                 key={index}
                 className={`relative mb-2 block min-h-[100%] w-[100%] overflow-clip overflow-ellipsis rounded-xl bg-white p-2 pr-0 ${
-                  thoughts?.isHot === true
-                    ? " border-red-500 bg-secondary "
-                    : ""
+                  thoughts?.isHot ? " border-red-500 bg-secondary " : ""
                 }`}
               >
                 <button
-                  className={`text-md mr-4 w-[90%]  cursor-pointer p-1 text-left ${
-                    thoughts?.isHot === true ? "text-gray-900" : "text-gray-900"
+                  className={`text-md mr-4 flex  w-[90%] cursor-pointer items-center p-1 text-left ${
+                    thoughts?.isHot ? "text-gray-900" : "text-gray-900"
                   }`}
                   onClick={() => handleHotThoughtClick(index)}
                 >
-                  <span className=" pr-2">
-                    {`${thoughts?.isHot ? "🔥 " : "😐"}`}
+                  <span className="absolute top-3 left-4   ">
+                    {/* TODO HMMM this extra space looks jank on modal how can i make this even? */}
+                    {/* IDK nto totally into the icons placement its close maybe good enough for abs pos */}
+                    {thoughts?.isHot ? (
+                      <FaFire className="min-h-[20px] text-xs text-accent" />
+                    ) : (
+                      <FaFire className="min-h-[20px] text-xs text-gray-300" />
+                    )}
                   </span>
-                  <span>{thoughts?.thought}</span>
+                  <span className="ml-8 mr-4 overflow-clip text-sm xs:mr-2">
+                    {thoughts?.thought}
+                  </span>
                 </button>
 
                 <button
-                  className=" absolute bottom-0 right-0 p-4  text-slate-600"
+                  className={`absolute bottom-0 right-0 p-4 text-sm  ${
+                    thoughts?.isHot ? "text-slate-600" : "text-slate-400"
+                  }`}
                   onClick={(e) => {
                     e.preventDefault();
                     handleDelete(index);

@@ -10,7 +10,8 @@ const FormNavigation: React.FC<Props> = ({
   columns,
 }) => {
   return (
-    <div className="btn-group mx-auto flex max-w-4xl justify-center sm:pb-2  ">
+    // TODO fix on mobile the scrollbar goes over looks a bit jank so maybe have a tiny bit of paddign on the
+    <div className="btn-group mx-auto flex max-w-4xl justify-center pl-2 pr-2 sm:pb-2  ">
       {columns.map((columnName, index) => (
         <button
           key={columnName}
