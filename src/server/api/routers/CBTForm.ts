@@ -74,7 +74,9 @@ export const CBTFormRouter = createTRPCRouter({
         // console.log(error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "An unexpected error occurred, please try again later.",
+          message: `An unexpected error occurred, please try again later. ERROR: ${String(
+            error
+          )}`,
           // optional: pass the original error to retain stack trace
           cause: error,
         });
@@ -84,22 +86,39 @@ export const CBTFormRouter = createTRPCRouter({
   // so it comes from the prisma schema
   // TODO get to the bottom of this to fix TABLE TS errors that use data.entry.updatedAt
   getAll: protectedProcedure.query(({ ctx }) => {
-    const userId = ctx.session.user?.id;
+    try {
+      const userId = ctx.session.user?.id;
 
-    return ctx.prisma.cBT_FormDataType.findMany({
-      where: {
-        userId: userId,
-      },
-      include: {
-        automaticThoughts: true,
-      },
-    });
+      return ctx.prisma.cBT_FormDataType.findMany({
+        where: {
+          userId: userId,
+        },
+        include: {
+          automaticThoughts: true,
+        },
+      });
+    } catch (error) {
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
+        message: `Error getting post ${String(error)}`,
+        cause: error,
+      });
+    }
+
     // Need the where clause to make it authorized to one user but if wanted it to be public omit it
   }),
 
   getOne: protectedProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
+      try {
+      } catch (error) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Error getting post ${String(error)}`,
+          cause: error,
+        });
+      }
       const userId = ctx.session.user?.id;
 
       const post = await ctx.prisma?.cBT_FormDataType.findUnique({
@@ -163,7 +182,7 @@ export const CBTFormRouter = createTRPCRouter({
         }
         //  Ok in production not sure why this doesnt update correctly anymore...
         //  it doesnt seem to have an effect...
-        const antList = await prisma?.automaticThoughts.findMany({
+        const antList = await ctx.prisma?.automaticThoughts.findMany({
           where: {
             cBT_FormDataTypeId: input.id,
           },
@@ -254,29 +273,37 @@ export const CBTFormRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.session.user?.id;
-      const post = await ctx.prisma?.cBT_FormDataType.findUnique({
-        where: {
-          id: input.id,
-        },
-      });
-      if (!post) {
-        throw new Error(`Post with id ${input.id} not found`);
-      }
-      if (post.userId !== userId) {
+      try {
+        const userId = ctx.session.user?.id;
+        const post = await ctx.prisma?.cBT_FormDataType.findUnique({
+          where: {
+            id: input.id,
+          },
+        });
+        if (!post) {
+          throw new Error(`Post with id ${input.id} not found`);
+        }
+        if (post.userId !== userId) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: `User ${userId} is not authorized to delete post ${input.id}`,
+            // optional: pass the original error to retain stack trace
+            cause: `User ${userId} is not authorized to delete post ${input.id}`,
+          });
+        }
+        const deletePost = await ctx.prisma?.cBT_FormDataType.delete({
+          where: {
+            id: input.id,
+          },
+        });
+        return deletePost;
+      } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: `User ${userId} is not authorized to delete post ${input.id}`,
-          // optional: pass the original error to retain stack trace
-          cause: `User ${userId} is not authorized to delete post ${input.id}`,
+          message: `Error deleting post ${String(error)}`,
+          cause: error,
         });
       }
-      const deletePost = await ctx.prisma?.cBT_FormDataType.delete({
-        where: {
-          id: input.id,
-        },
-      });
-      return deletePost;
     }),
 });
 
