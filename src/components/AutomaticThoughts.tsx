@@ -179,18 +179,18 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
                     {/* TODO HMMM this extra space looks jank on modal how can i make this even? */}
                     {/* IDK nto totally into the icons placement its close maybe good enough for abs pos */}
                     {thoughts?.isHot ? (
-                      <FaFire className="min-h-[20px] text-xs text-accent" />
+                      <FaFire className="min-h-[24px] text-sm text-accent" />
                     ) : (
-                      <FaFire className="min-h-[20px] text-xs text-gray-300" />
+                      <FaFire className="min-h-[24px] text-sm text-gray-300" />
                     )}
                   </span>
-                  <span className="ml-8 mr-4 overflow-clip text-sm xs:mr-2">
+                  <span className="text-md ml-8 mr-4 overflow-clip xs:mr-2">
                     {thoughts?.thought}
                   </span>
                 </button>
 
                 <button
-                  className={`absolute bottom-0 right-0 p-4 text-sm  ${
+                  className={`text-md absolute bottom-0 right-0 p-4  ${
                     thoughts?.isHot ? "text-slate-600" : "text-slate-400"
                   }`}
                   onClick={(e) => {
