@@ -1,4 +1,4 @@
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import { CBT_FormSchema } from "./CBTForm";
 import { z } from "zod";
 import { colNamesLongForm } from "src/components/hooks/useChat";
@@ -23,11 +23,11 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export const chatbotRouter = createTRPCRouter({
-  askGPT: protectedProcedure.input(input).query(async ({ ctx, input }) => {
+  askGPT: publicProcedure.input(input).query(async ({ ctx, input }) => {
     try {
-      if (!ctx.session) {
-        throw new Error(`You are not authorized to access post This feature.`);
-      }
+      // if (!ctx.session) {
+      //   throw new Error(`You are not authorized to access post This feature.`);
+      // }
 
       // Extract the prompt, contextual information, and user's query from the request
       const { cbtTableColumn, formData, chatHistory } = input;
@@ -121,7 +121,7 @@ export const chatbotRouter = createTRPCRouter({
         model: "text-davinci-003",
         prompt: fullPrompt,
         temperature: 0.4,
-        max_tokens: 260,
+        max_tokens: 1000,
       });
 
       return response?.data?.choices[0]?.text;

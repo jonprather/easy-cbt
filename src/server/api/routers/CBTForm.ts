@@ -1,6 +1,9 @@
 import { z } from "zod";
 // import { CBT_FormSchema } from "../../../types/CBTFormTypes";
 // TODO this import broke not sure why it was working... broke after discord set upIDK why
+// TODO refactor into own controllers
+// also can refactor throws to be more concise ie dont have to build TRPC error in multiple spots just in catch
+//  and throw in the prior locaitons
 import { cBT_FormDataType } from "@prisma/client";
 // So i have
 import { CBTData } from "src/types/CBTFormTypes";

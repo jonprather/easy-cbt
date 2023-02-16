@@ -158,7 +158,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   //   TODO zod controls for the boundaries or type guards
 
   return (
-    <div className="">
+    <div className=" bg-gradient-to-br from-[#000709] to-[#022534]">
       <div className="mb-6 pt-8 text-center  sm:mb-16 sm:pt-16 lg:mb-20 lg:pt-24 ">
         <h1 className="text-md font-medium text-primary sm:text-xl">{title}</h1>
       </div>
