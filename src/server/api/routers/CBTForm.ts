@@ -161,12 +161,8 @@ export const CBTFormRouter = createTRPCRouter({
             cause: `User ${userId} is not authorized to update post ${input.id}`,
           });
         }
-        // ok this is returning undefined for id...
-        // ok so its adding new ones on top of the
-        //so need to get the difference between db state adn new state for what to delete then
-        // call approapiate methods
-        // input.automaticThoughts
-        //
+        //  Ok in production not sure why this doesnt update correctly anymore...
+        //  it doesnt seem to have an effect...
         const antList = await prisma?.automaticThoughts.findMany({
           where: {
             cBT_FormDataTypeId: input.id,
@@ -246,6 +242,11 @@ export const CBTFormRouter = createTRPCRouter({
         return updatedPost;
       } catch (error) {
         console.log(error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: `Error updating post ${String(error)}`,
+          cause: error,
+        });
       }
     }),
   // Ok so this one is a mess not sure how to update the nested field of automatic thoughts...
