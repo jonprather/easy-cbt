@@ -153,14 +153,16 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
         {/* TODO fix undo its not deleting first elemnt and delteing wrong element at times... */}
         <div className=" over h-48 w-full overflow-y-auto overscroll-contain rounded-lg bg-slate-300 p-2 ">
           <ul>
+            {/* Well apparently yeah its needed could  */}
             {/* This sort of advice could be conditional on being a new user */}
-            {/* {!data?.automaticThoughts[0] && (
+            {!data?.automaticThoughts[0] && (
               <li className="relative mb-2 rounded bg-gray-100 p-2">
                 <span className="p-2 italic text-gray-800">
-                  Add a thought above and then choose the hot thought here!
+                  Add a thought above and then choose the hot thought here by
+                  clicking on it- it will turn blue once you do!
                 </span>
               </li>
-            )} */}
+            )}
 
             {data?.automaticThoughts.map((thoughts, index) => (
               <li
@@ -170,7 +172,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
                 }`}
               >
                 <button
-                  className={`text-md mr-4 flex  w-[90%] cursor-pointer items-center p-1 text-left ${
+                  className={`text-md mr-4 flex w-[90%]  cursor-pointer items-center p-2 p-1 text-left ${
                     thoughts?.isHot ? "text-gray-900" : "text-gray-900"
                   }`}
                   onClick={() => handleHotThoughtClick(index)}

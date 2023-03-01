@@ -115,6 +115,33 @@ export const CBTFormRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       try {
+        const userId = ctx.session.user?.id;
+
+        const post = await ctx.prisma?.cBT_FormDataType.findUnique({
+          where: {
+            id: input?.id,
+          },
+          include: {
+            automaticThoughts: true,
+          },
+        });
+        if (!post) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: `Post with id ${input.id} not found`,
+            // optional: pass the original error to retain stack trace
+            cause: `Post with id ${input.id} not found`,
+          });
+        }
+        if (post.userId !== userId) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: `User ${userId} is not authorized to view post ${input.id}`,
+            // optional: pass the original error to retain stack trace
+            cause: `User ${userId} is not authorized to view post ${input.id}`,
+          });
+        }
+        return post;
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -122,33 +149,6 @@ export const CBTFormRouter = createTRPCRouter({
           cause: error,
         });
       }
-      const userId = ctx.session.user?.id;
-
-      const post = await ctx.prisma?.cBT_FormDataType.findUnique({
-        where: {
-          id: input?.id,
-        },
-        include: {
-          automaticThoughts: true,
-        },
-      });
-      if (!post) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `Post with id ${input.id} not found`,
-          // optional: pass the original error to retain stack trace
-          cause: `Post with id ${input.id} not found`,
-        });
-      }
-      if (post.userId !== userId) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: `User ${userId} is not authorized to view post ${input.id}`,
-          // optional: pass the original error to retain stack trace
-          cause: `User ${userId} is not authorized to view post ${input.id}`,
-        });
-      }
-      return post;
     }),
 
   // TODO extract the logic into anothe rlayer of abstraction to help with testing...
