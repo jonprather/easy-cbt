@@ -9,6 +9,7 @@ import type { cBT_FormDataType } from "@prisma/client";
 import { CBTData } from "src/types/CBTFormTypes";
 import { useSession } from "next-auth/react";
 import Modal from "./molecules/Modal";
+
 const Table = () => {
   const utils = api.useContext();
   const { data: sessionData } = useSession();
@@ -26,7 +27,9 @@ const Table = () => {
       toast.success("Succesfully deleted post!");
     },
   });
-  const { data, isLoading } = api.CBT.getAll.useQuery();
+  const { data, isLoading } = api.CBT.getAll.useQuery(undefined, {
+    enabled: sessionData?.user !== undefined,
+  });
 
   const formatString = (str: string, maxLength: number) => {
     const words = str.split(" ");
@@ -121,7 +124,7 @@ const Table = () => {
             </div>
             <div className="flex flex-row items-end justify-between gap-0 pb-2">
               <Link
-                className="btn-ghost btn-sm btn mr-0 text-2xl"
+                className="btn btn-ghost btn-sm mr-0 text-2xl"
                 href={`/update/${entry.id}`}
               >
                 <FaEdit />
@@ -133,7 +136,7 @@ const Table = () => {
                 labelText=""
                 content={
                   <button
-                    className="btn-accent  btn text-lg"
+                    className="btn  btn-accent text-lg"
                     onClick={() => {
                       deletePost({ id: entry.id });
                     }}
@@ -145,7 +148,7 @@ const Table = () => {
                   </button>
                 }
                 icon={
-                  <span className=" btn-ghost btn-sm btn mr-1 bg-transparent text-xl">
+                  <span className=" btn btn-ghost btn-sm mr-1 bg-transparent text-xl">
                     <FaTrash />
                   </span>
                 }
