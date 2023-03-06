@@ -1,4 +1,4 @@
-# CBT Learning Simplified
+# EasyCBT CBT Learning Simplified
 
 A full-stack application built to simplify learning CBT (Cognitive Behavioral Therapy) by allowing users to complete, save and update CBT journals. This project was built using Next.js, Typescript, Trpc, Tailwind, and Prisma. The app also features social logins for authentication using Next-auth and an OpenAI GPT-3 chatbot for better user experience.
 
@@ -18,11 +18,11 @@ A full-stack application built to simplify learning CBT (Cognitive Behavioral Th
 - Prisma
 - Next-auth
 
-### Development
+## Development
 
 The project was built using the T3 stack (Typescript, Trpc, and Tailwind) in a Next.js application. Next.js was chosen for its SPA (single-page application) feel and the need for a backend for CRUD (create, read, update, delete) operations. Trpc was used for its end-to-end type safety, and Tailwind was used as a component library along with Daisy UI for increased development speed. However, accessibility concerns with Daisy UI were addressed by using Radix, which made having accessible components easy and had a convenient declarative component structure.
 
-### Future Development
+## Future Development
 
 The app's intuitiveness was tested with users and was found to be lacking in some areas. To address this, future development plans include better AI and a walk-thru guide. The OpenAI GPT-3 chatbot will be improved with more contextual information about the app and its state to provide a better user experience.
 
