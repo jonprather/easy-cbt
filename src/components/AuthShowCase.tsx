@@ -6,6 +6,7 @@ const AuthShowcase: React.FC = () => {
 
   return (
     <button
+      data-test-id="auth-btn"
       className="btm-nav-label sm:uppercase sm:btn-ghost sm:btn"
       onClick={sessionData ? () => void signOut() : () => void signIn()}
     >

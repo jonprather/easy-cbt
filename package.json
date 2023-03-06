@@ -39,6 +39,7 @@
     "zod-validation-error": "^0.3.0"
   },
   "devDependencies": {
+    "@testing-library/cypress": "^9.0.0",
     "@types/node": "^18.11.18",
     "@types/prettier": "^2.7.2",
     "@types/react": "^18.0.26",
@@ -46,6 +47,8 @@
     "@typescript-eslint/eslint-plugin": "^5.47.1",
     "@typescript-eslint/parser": "^5.47.1",
     "autoprefixer": "^10.4.7",
+    "cypress": "^12.7.0",
+    "cypress-social-logins": "^1.14.0",
     "eslint": "^8.30.0",
     "eslint-config-next": "13.1.1",
     "postcss": "^8.4.14",

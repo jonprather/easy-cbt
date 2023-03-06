@@ -4,6 +4,7 @@ interface Props {
   icon?: JSX.Element;
   labelText: string;
 }
+import { ANTDataAtributes } from "./AutomaticThoughts";
 import { FaInfoCircle } from "react-icons/fa";
 import React from "react";
 import * as Dialog from "@radix-ui/react-dialog";

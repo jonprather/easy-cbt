@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-
+import Logo from "public/logo.png";
 import AuthShowCase from "./AuthShowCase";
 import Link from "next/link";
 import { FaHome } from "react-icons/fa";
+import Image from "next/image";
 const Navbar: React.FC = () => {
   const router = useRouter();
   const [isHomeActive, setIsHomeActive] = useState(false);
@@ -44,7 +45,14 @@ const Navbar: React.FC = () => {
           href="/"
           className="mb-3 text-xl font-bold uppercase italic tracking-tight text-white"
         >
-          <span className="text-[hsl(186,100%,70%)] ">Logo</span>
+          <div className=" relative flex">
+            <div className="relative h-8 w-8">
+              {/* TODO fix this logo */}
+              <Image alt="logo" src="/logo.svg" fill className="  w-12 " />
+            </div>
+
+            {/* <span className="ml-2 text-[hsl(186,100%,70%)]">EasyCBT</span> */}
+          </div>
         </Link>
       </div>
       <div className="flex items-center">

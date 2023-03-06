@@ -6,6 +6,16 @@ import { MdLocalFireDepartment, MdSentimentNeutral } from "react-icons/md";
 import type { ChangeEventHandler } from "react";
 import Modal from "./molecules/Modal";
 import DialogDemo from "./RadixDialog";
+
+export const ANTDataAtributes = {
+  addAntLabel: "addAntLabel",
+  addAntInput: "addAntInput",
+  addAntBtn: "addAntBtn",
+
+  toggleHotAntBtn: "toggleHotAntBtn",
+
+  deleteAntBtn: "deleteAntBtn",
+};
 type AutomaticThoughtsProps = {
   data: CBT_FormDataType;
   currentStep: number;
@@ -116,6 +126,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
         <div className="form-control">
           <div className="input-group ">
             <input
+              data-testid={ANTDataAtributes.addAntInput}
               type="text"
               placeholder="Im having the thought that..."
               onChange={handleChange}
@@ -125,9 +136,10 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
               className="sm:max-w-x-lg input-bordered input w-full bg-white text-black"
             />
             <button
+              data-testid={ANTDataAtributes.addAntBtn}
               type="button"
               onClick={handleClick}
-              className="btn btn-accent btn-square  text-lg"
+              className="btn-accent btn-square btn  text-lg"
             >
               <FaPlusCircle />
             </button>
@@ -172,6 +184,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
                 }`}
               >
                 <button
+                  data-testid={ANTDataAtributes.toggleHotAntBtn}
                   className={`text-md mr-4 flex w-[90%]  cursor-pointer items-center p-2 p-1 text-left ${
                     thoughts?.isHot ? "text-gray-900" : "text-gray-900"
                   }`}
@@ -192,6 +205,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
                 </button>
 
                 <button
+                  data-testid={ANTDataAtributes.deleteAntBtn}
                   className={`text-md absolute bottom-0 right-0 p-4  ${
                     thoughts?.isHot ? "text-slate-600" : "text-slate-400"
                   }`}

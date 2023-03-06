@@ -34,6 +34,8 @@ const EmojiSelector: React.FC<AutomaticThoughtsProps> = ({
   return (
     <div>
       <Select
+        // TODO not sure how to test this... as cypress cant find it
+        data-testid="emojiSelector"
         className={" w-full rounded-full xs:max-w-xs "}
         styles={{
           control: (baseStyles, state) => ({

@@ -3,6 +3,10 @@ import { FaWindowClose, FaTelegramPlane } from "react-icons/fa";
 import { GrPowerReset } from "react-icons/gr";
 import { SiChatbot } from "react-icons/si";
 import type { CBT_FormDataType } from "src/types/CBTFormTypes";
+
+import * as Dialog from '@radix-ui/react-dialog';
+
+
 export const chatBotName = "Chaddie";
 export interface Message {
   author: "user" | typeof chatBotName;
@@ -70,7 +74,9 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
       initBotConversation();
     }
   };
+  // Hmm seems like i want a collapseable component on large and a dialog on modal to take up full screen hmm
   return (
+    
     <div className="fixed right-8 top-10 flex flex-col xs:max-w-7xl ">
       <button
         onClick={toggleChat}

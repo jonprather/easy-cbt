@@ -16,7 +16,11 @@ import { toast } from "react-toastify";
 import Chat from "../molecules/Chat";
 import BottomNav from "../BottomNav";
 import { useRouter } from "next/router";
-
+export const submitBtnDataAttribute = "submit-btn";
+export const evidenceDataAttributes = {
+  evidenceFor: "evidenceFor",
+  evidenceAgainst: "evidenceAgainst",
+};
 export const columns: ["Name", "ANTS", "For", "against", "New", "Rerate"] = [
   "Name",
   "ANTS",
@@ -195,7 +199,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
               targetStep={2}
               errors={errors}
               title="Evidence Supporting the Thought"
-              evidenceName={"evidenceFor"}
+              evidenceName={evidenceDataAttributes.evidenceFor}
             />
             <Evidence
               data={data}
@@ -205,7 +209,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
               targetStep={3}
               errors={errors}
               title="Evidence against the thought"
-              evidenceName={"evidenceAgainst"}
+              evidenceName={evidenceDataAttributes.evidenceAgainst}
             />
 
             <NewBalancedThought
@@ -224,9 +228,10 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
           </div>
           {currentStep === columns.length - 1 && (
             <button
+              data-testid={submitBtnDataAttribute}
               onClick={handleSubmit}
               disabled={currentStep !== columns.length - 1}
-              className="btn btn-accent mx-auto mt-8 mb-4  w-full max-w-sm  animate-none md:max-w-xs  "
+              className="btn-accent btn mx-auto mt-8 mb-4  w-full max-w-sm  animate-none md:max-w-xs  "
             >
               {data.id ? "Update Entry" : "Add Entry"}
             </button>

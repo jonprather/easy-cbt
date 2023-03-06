@@ -40,6 +40,8 @@ const NameAndRateMood: React.FC<Props> = ({
           </label>
         </div>
         <input
+          data-testid="name"
+
           value={data?.name ?? ""}
           // TODO
           onChange={handleChange}
@@ -77,7 +79,7 @@ const NameAndRateMood: React.FC<Props> = ({
           <label className="label">
             <Modal
               id={"rateMood"}
-              labelText={"Rate your mood Intensity"}
+              labelText={"Rate Your Mood Intensity"}
               title="Rate Your moods intensity"
               content={
                 "Focus on how your body feels. Then try to feel how intense that feeling is and give it a number between 1-100."
@@ -87,6 +89,7 @@ const NameAndRateMood: React.FC<Props> = ({
         </div>
         <input
           value={data.moodRating}
+          data-testid="moodRating"
           // TODO
           onChange={handleRateMood}
           type="range"

@@ -42,6 +42,7 @@ const Rerate: React.FC<RerateProps> = ({
           </label>
         </div>
         <input
+          data-testid="rateBeliefInput"
           type="range"
           name="rateBelief"
           value={data.rateBelief}
@@ -81,6 +82,7 @@ will need state for that i can access the data.rateMood etc and set it that way
         <span className="mb-1 ml-2 block">{data.moodLabel}</span>
 
         <input
+          data-testid="rerateMoodInput"
           onChange={handleRateMood}
           value={data.rerateEmotion}
           type="range"
