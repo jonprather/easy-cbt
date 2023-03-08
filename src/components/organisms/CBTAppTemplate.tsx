@@ -188,7 +188,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
               handleChange={handleChange}
               data={data}
               currentStep={currentStep}
-              errors={errors}
             />
 
             <Evidence
