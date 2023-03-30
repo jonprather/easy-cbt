@@ -16,14 +16,11 @@ const Table = () => {
 
   const { mutate: deletePost } = api.CBT.delete.useMutation({
     onError: (err) => {
-      // TODO IMPORTANT it seems to always succeed even when i throw an error in BE...
-      // Which makes these toasts out to be liars...
       console.log(err);
       return toast.error(err.message, { toastId: err.message });
     },
     onSuccess: async () => {
       await utils.CBT.invalidate();
-      // Why does it assume success ?
       toast.success("Succesfully deleted post!");
     },
   });
@@ -114,17 +111,11 @@ const Table = () => {
               <h2 className="card-title text-ellipsis  text-left text-sm">
                 {formatString(entry?.name ?? "", 5)}
               </h2>
-              <p className="text-left text-sm">
-                {/* TODO not sure why this is getting the type from prisma wrong
-                i mean oh prob bc on Trpc
-                */}
-                {/* UNSAFE ANY IDK YET WHY HOW TO FIX>>>>> */}
-                {formatDate(entry)}
-              </p>
+              <p className="text-left text-sm">{formatDate(entry)}</p>
             </div>
             <div className="flex flex-row items-end justify-between gap-0 pb-2">
               <Link
-                className="btn btn-ghost btn-sm mr-0 text-2xl"
+                className="btn-ghost btn-sm btn mr-0 text-2xl"
                 href={`/update/${entry.id}`}
               >
                 <FaEdit />
@@ -136,7 +127,7 @@ const Table = () => {
                 labelText=""
                 content={
                   <button
-                    className="btn  btn-accent text-lg"
+                    className="btn-accent  btn text-lg"
                     onClick={() => {
                       deletePost({ id: entry.id });
                     }}
@@ -148,7 +139,7 @@ const Table = () => {
                   </button>
                 }
                 icon={
-                  <span className=" btn btn-ghost btn-sm mr-1 bg-transparent text-xl">
+                  <span className=" btn-ghost btn-sm btn mr-1 bg-transparent text-xl">
                     <FaTrash />
                   </span>
                 }
