@@ -50,7 +50,12 @@ export const CBTFormRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       try {
         const userId = ctx.session.user?.id;
-        await createJournalEntry({ input, userId, prisma: ctx.prisma });
+        const data = await createJournalEntry({
+          input,
+          userId,
+          prisma: ctx.prisma,
+        });
+        return data;
       } catch (error) {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
