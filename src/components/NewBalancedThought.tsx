@@ -1,9 +1,8 @@
 import React from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
-import { ChangeEventHandler } from "react";
+import type { ChangeEventHandler } from "react";
 import Collapse from "./Collapse";
 import Modal from "./molecules/Modal";
-import { FaInfoCircle } from "react-icons/fa";
 // TODO should i be using prisma type is this type updated...?
 type newThoughtPropsI = {
   data: CBT_FormDataType;

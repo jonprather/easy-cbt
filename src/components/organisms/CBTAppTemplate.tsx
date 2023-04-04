@@ -1,21 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+
+import { api } from "../../utils/api";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+
+import { toast } from "react-toastify";
+import { debounce } from "lodash";
+
 import type { ChangeEvent } from "react";
-import FormNavSteps from "../FormNavSteps";
+
 import type { CBT_FormDataType } from "../../types/CBTFormTypes";
+import type { CBTData } from "../../types/CBTFormTypes";
+
+import FormNavSteps from "../FormNavSteps";
 import NameAndRateMood from "../NameAndRateMood";
 import AutomaticThoughts from "../AutomaticThoughts";
 import PreviousAndNextButtons from "../PreviousAndNextButtons";
 import Rerate from "../Rerate";
-import { api } from "../../utils/api";
 import NewBalancedThought from "src/components/NewBalancedThought";
 import Evidence from "src/components/Evidence";
-import { useSession } from "next-auth/react";
-import useChat from "../hooks/useChat";
-import type { CBTData } from "../../types/CBTFormTypes";
-import { toast } from "react-toastify";
 import Chat from "../molecules/Chat";
 import BottomNav from "../BottomNav";
-import { useRouter } from "next/router";
+
 export const submitBtnDataAttribute = "submit-btn";
 export const evidenceDataAttributes = {
   evidenceFor: "evidenceFor",
@@ -35,6 +41,7 @@ interface CBTPROPS {
   initialData?: CBTData | undefined;
   title: string;
 }
+
 const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const { data: sessionData } = useSession();
@@ -48,15 +55,17 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const utils = api?.useContext();
 
   const { mutate: postMessage } = api.CBT.postMessage.useMutation({
-    onSuccess: async () => {
+    onSuccess: async (responseData) => {
       await utils.CBT.invalidate();
+      setData((prev) => {
+        return { ...prev, id: responseData.id };
+      });
       toast.success("Succesfully created journal!");
     },
   });
 
   const [errors, setErrors] = React.useState(null);
-  const [userQuery, setUserQuery] = React.useState("");
-
+  const hasChanged = useRef(false);
   //  TODO make the modal text better
   const [data, setData] = useState<CBT_FormDataType>({
     name: "",
@@ -71,24 +80,23 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
     rerateEmotion: 1,
     id: "",
   });
+  const setFormData = (data: CBTData | undefined) => {
+    setData({
+      name: data?.name || "",
+      moodName: data?.moodName || "",
+      moodLabel: data?.moodLabel || "",
+      moodRating: data?.moodRating || 0,
+      evidenceFor: data?.evidenceFor || "",
+      evidenceAgainst: data?.evidenceAgainst || "",
+      newThought: data?.newThought || "",
+      rateBelief: data?.rateBelief || 0,
+      rerateEmotion: data?.rerateEmotion || 0,
+      id: data?.id || "",
+      automaticThoughts: data?.automaticThoughts || [],
+    });
+  };
 
   useEffect(() => {
-    const setFormData = (data: CBTData | undefined) => {
-      setData({
-        name: data?.name || "",
-        moodName: data?.moodName || "",
-        moodLabel: data?.moodLabel || "",
-        moodRating: data?.moodRating || 0,
-        evidenceFor: data?.evidenceFor || "",
-        evidenceAgainst: data?.evidenceAgainst || "",
-        newThought: data?.newThought || "",
-        rateBelief: data?.rateBelief || 0,
-        rerateEmotion: data?.rerateEmotion || 0,
-        id: data?.id || "",
-        automaticThoughts: data?.automaticThoughts || [],
-      });
-    };
-
     setFormData(initialData);
   }, [initialData]);
 
@@ -96,7 +104,15 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target;
-    setData((prevState) => ({ ...prevState, [name]: value }));
+    let altValue: undefined | number;
+    if (
+      name.toLowerCase().includes("rate") ||
+      name.toLowerCase().includes("rating")
+    ) {
+      altValue = +value;
+    }
+    setData((prevState) => ({ ...prevState, [name]: altValue || value }));
+    hasChanged.current = true;
   };
 
   // TODO fix the submit on enter its not pleasant UX when happens at AT ...
@@ -117,7 +133,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
       }
 
       //   setErrors({});
-      setData((_) => {
+      setData(() => {
         return {
           name: "",
           moodName: "",
@@ -149,6 +165,28 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
       console.log(JSON.stringify(err));
     }
   };
+
+  useEffect(() => {
+    const debouncedSave = debounce(() => {
+      if (hasChanged.current) {
+        console.log("DEBOUNCED SAVE data", data);
+        if (data?.id) {
+          updatePost(data);
+        } else {
+          postMessage(data);
+        }
+
+        hasChanged.current = false;
+      }
+    }, 5000);
+
+    debouncedSave();
+
+    return () => {
+      debouncedSave.cancel();
+    };
+  }, [data, postMessage, updatePost]);
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
       if (currentStep !== columns.length - 1) {
@@ -221,9 +259,10 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
             <Rerate
               currentStep={currentStep}
               data={data}
-              setData={setData}
+              handleChange={handleChange}
               columns={columns}
             />
+            {/* TODO ok autosave doesnt work when setData is used...  */}
           </div>
           {currentStep === columns.length - 1 && (
             <button
@@ -241,7 +280,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
           <PreviousAndNextButtons
             currentStep={currentStep}
             setCurrentStep={setCurrentStep}
-            setUserQuery={setUserQuery}
             columns={columns}
           />
         </div>

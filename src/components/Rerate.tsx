@@ -3,27 +3,24 @@ import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import Modal from "./molecules/Modal";
 import Collapse from "src/components/Collapse";
 
-import { FaInfoCircle } from "react-icons/fa";
+import type { ChangeEventHandler } from "react";
+
 type RerateProps = {
   data: CBT_FormDataType;
   currentStep: number;
-  setData: React.Dispatch<React.SetStateAction<CBT_FormDataType>>;
   columns: ["Name", "ANTS", "For", "against", "New", "Rerate"];
+  handleChange: ChangeEventHandler<HTMLInputElement>;
 };
 
 const Rerate: React.FC<RerateProps> = ({
   data,
   currentStep,
-  setData,
+  handleChange,
+
   columns,
 }) => {
   const handleRateMood = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData((prev: CBT_FormDataType): CBT_FormDataType => {
-      return {
-        ...prev,
-        [e.target.name]: +e.target.value,
-      };
-    });
+    handleChange(e);
   };
   if (currentStep !== columns.length - 1) return null;
   return (

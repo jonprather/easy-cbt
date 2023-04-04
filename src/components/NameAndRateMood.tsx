@@ -14,14 +14,6 @@ const NameAndRateMood: React.FC<Props> = ({
   setData,
   data,
 }) => {
-  const handleRateMood = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData((prev: CBT_FormDataType) => {
-      return {
-        ...prev,
-        moodRating: +e.target.value,
-      };
-    });
-  };
   if (currentStep !== 0) return null;
   return (
     <div className="form-control mt-6 ">
@@ -41,7 +33,6 @@ const NameAndRateMood: React.FC<Props> = ({
         </div>
         <input
           data-testid="name"
-
           value={data?.name ?? ""}
           // TODO
           onChange={handleChange}
@@ -91,7 +82,7 @@ const NameAndRateMood: React.FC<Props> = ({
           value={data.moodRating}
           data-testid="moodRating"
           // TODO
-          onChange={handleRateMood}
+          onChange={handleChange}
           type="range"
           min="1"
           max="100"

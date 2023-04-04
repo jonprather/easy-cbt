@@ -5,13 +5,11 @@ import Chat from "./molecules/Chat";
 type Props = {
   currentStep: number;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
-  setUserQuery: React.Dispatch<React.SetStateAction<string>>;
 
   columns: string[];
 };
 const PreviousAndNextButtons: React.FC<Props> = ({
   setCurrentStep,
-  setUserQuery,
   currentStep,
   columns,
 }) => {
