@@ -166,6 +166,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
     }
   };
 
+  // handle the auto save functionality id is also set in on Success of the post message
   useEffect(() => {
     const debouncedSave = debounce(() => {
       if (hasChanged.current) {

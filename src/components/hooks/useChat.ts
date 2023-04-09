@@ -1,12 +1,12 @@
 import { api } from "../../utils/api";
 import type { CBT_FormIdOptionalDataType } from "src/types/CBTFormTypes";
-import type { Message } from "../molecules/Chat";
 import { chatBotName } from "../molecules/Chat";
+import type { ChatMessageI } from "src/server/api/services/getOpenAIChat";
 interface ChatProps {
   currentStep: number;
   formData: CBT_FormIdOptionalDataType;
-  chatHistory: Message[];
-  setChatHistory: React.Dispatch<Message[]>;
+  chatHistory: ChatMessageI[];
+  setChatHistory: React.Dispatch<ChatMessageI[]>;
 }
 export const colNamesLongForm = [
   "select mood and rate the intensity of the mood",
@@ -17,9 +17,6 @@ export const colNamesLongForm = [
   "Rate belief in thought and rerate the strong mood.",
 ];
 function getColumn(currentStep: number) {
-  // Would be better to colocate with columns maybe make it an object with a long name and a short name
-  // will have to fix code tho where its used
-
   if (colNamesLongForm[currentStep]) {
     return colNamesLongForm[currentStep] ?? "";
   }
@@ -30,10 +27,10 @@ const useChat = (
   { enabled, onSettled }: { enabled: boolean; onSettled: () => void }
 ) => {
   const queryIsAcceptable = () => {
-    const userQueries: Message[] =
-      chatHistory?.filter((ele) => ele.author === "user") ?? [];
+    const userQueries: ChatMessageI[] =
+      chatHistory?.filter((ele) => ele.role === "user") ?? [];
 
-    if (userQueries[userQueries?.length - 1]?.text === "") return false;
+    if (userQueries[userQueries?.length - 1]?.content === "") return false;
     // if (userQueries.length > 1) {
     //   if (
     //     userQueries[userQueries?.length - 1]?.text ===
@@ -57,10 +54,11 @@ const useChat = (
       {
         enabled: enabled && queryIsAcceptable(),
         onSettled,
-        onSuccess: (data: string) => {
+        onSuccess: (data: { message: string; messageId: string }) => {
+          console.log("DATA RESPONSE ", data);
           setChatHistory([
             ...chatHistory,
-            { author: chatBotName ?? "Chaddie", text: String(data) },
+            { role: "assistant", content: data.message },
           ]);
         },
       }

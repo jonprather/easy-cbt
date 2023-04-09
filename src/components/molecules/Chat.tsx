@@ -3,15 +3,10 @@ import { FaWindowClose, FaTelegramPlane } from "react-icons/fa";
 import { GrPowerReset } from "react-icons/gr";
 import { SiChatbot } from "react-icons/si";
 import type { CBT_FormDataType } from "src/types/CBTFormTypes";
-
-import * as Dialog from '@radix-ui/react-dialog';
-
+import type { ChatMessageI } from "src/server/api/services/getOpenAIChat";
+// import * as Dialog from "@radix-ui/react-dialog";
 
 export const chatBotName = "Chaddie";
-export interface Message {
-  author: "user" | typeof chatBotName;
-  text: string;
-}
 
 const introChat =
   "Hi I'm Chaddie I am here to help you with any questions related to this CBT process.";
@@ -24,10 +19,10 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
   const [showChat, setShowChat] = useState(false);
   const [formSubmitted, setformSubmitted] = useState(false);
 
-  const [chatHistory, setChatHistory] = useState<Message[]>([
+  const [chatHistory, setChatHistory] = useState<ChatMessageI[]>([
     {
-      author: chatBotName,
-      text: introChat,
+      role: "assistant",
+      content: introChat,
     },
   ]);
 
@@ -39,8 +34,8 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
   const resetChatHistory = () => {
     setChatHistory([
       {
-        author: chatBotName,
-        text: introChat,
+        role: "assistant",
+        content: introChat,
       },
     ]);
   };
@@ -56,8 +51,10 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
   );
   // TODO refactor- can move the setChatHistory logic inside useChat and pass just the data out
 
+  // TODO make breaks in the comments either based on the response or at a certain limit just break it up.
+
   const initBotConversation = () => {
-    setChatHistory([...chatHistory, { author: "user", text: currentMessage }]);
+    setChatHistory([...chatHistory, { role: "user", content: currentMessage }]);
     setCurrentMessage("");
     setformSubmitted(true);
   };
@@ -74,13 +71,11 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
       initBotConversation();
     }
   };
-  // Hmm seems like i want a collapseable component on large and a dialog on modal to take up full screen hmm
   return (
-    
     <div className="fixed right-8 top-10 flex flex-col xs:max-w-7xl ">
       <button
         onClick={toggleChat}
-        className="btn btn-secondary btn-circle btn-lg fixed bottom-20 right-4  max-w-xs text-2xl xs:bottom-4 xs:right-4 xs:ml-0"
+        className="btn-secondary btn-circle btn-lg btn fixed bottom-20 right-4  max-w-xs text-2xl xs:bottom-4 xs:right-4 xs:ml-0"
       >
         {/* <FaQuestionCircle /> */}
         {showChat ? <FaWindowClose /> : <SiChatbot className="text-2xl" />}
@@ -114,19 +109,19 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
               <div
                 key={index}
                 className={`chat ${
-                  message.author === "user" ? "chat-end" : "chat-start"
+                  message.role === "user" ? "chat-end" : "chat-start"
                 } xs:pl-2 xs:pr-2`}
               >
                 <div
                   className={`chat-bubble ${
-                    message.author === "user"
+                    message.role === "user"
                       ? "chat-bubble-primary"
                       : "chat-bubble-secondary"
                   }`}
                 >
                   {/* <p>{message.author}:</p> */}
                   <p className="text overflow-clip overflow-ellipsis">
-                    {message.text}
+                    {message.content}
                   </p>
                 </div>
               </div>
@@ -158,7 +153,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
                   onKeyDown={handleKeyDown}
                 />
                 <button
-                  className="btn btn-square btn-sm absolute bottom-3 right-2 z-50 border-none bg-transparent text-lg  text-gray-300 hover:bg-transparent disabled:bg-transparent disabled:text-gray-500"
+                  className="btn-square btn-sm btn absolute bottom-3 right-2 z-50 border-none bg-transparent text-lg  text-gray-300 hover:bg-transparent disabled:bg-transparent disabled:text-gray-500"
                   type="submit"
                   disabled={!currentMessage}
                 >

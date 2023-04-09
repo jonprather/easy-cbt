@@ -10,8 +10,12 @@ const input = z.object({
   formData: CBT_FormSchema,
   chatHistory: z.array(
     z.object({
-      author: z.union([z.literal("Chaddie"), z.literal("user")]),
-      text: z.string(),
+      role: z.union([
+        z.literal("assistant"),
+        z.literal("user"),
+        z.literal("system"),
+      ]),
+      content: z.string(),
     })
   ),
 });
@@ -22,12 +26,12 @@ export const chatbotRouter = createTRPCRouter({
       // if (!ctx.session) {
       //   throw new Error(`You are not authorized to access This feature.`);
       // }
-      const prompt = buildFullPrompt(input);
+      const messageArray = buildFullPrompt(input);
 
       // for testing
       // return fakeRequest(prompt);
 
-      return getOpenAIChat(prompt);
+      return getOpenAIChat(messageArray);
     } catch (error) {
       return error;
     }
