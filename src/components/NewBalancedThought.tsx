@@ -24,7 +24,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
   return (
     <>
       {/* TODO something in here is causing wierd overflow glitch */}
-      <div className="form-control mt-6 mb-10">
+      <div className="form-control mb-10">
         <div className=" flex items-end justify-between">
           <label className="label">
             <Modal

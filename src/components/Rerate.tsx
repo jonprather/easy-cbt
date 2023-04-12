@@ -24,7 +24,7 @@ const Rerate: React.FC<RerateProps> = ({
   };
   if (currentStep !== columns.length - 1) return null;
   return (
-    <div className=" min-h-16 mt-6 flex flex-col justify-between">
+    <div className=" min-h-16 flex flex-col justify-between">
       <div className="child-one">
         <div className=" flex items-end justify-between">
           <label className="label">

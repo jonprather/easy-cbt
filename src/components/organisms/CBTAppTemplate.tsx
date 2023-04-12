@@ -21,7 +21,7 @@ import NewBalancedThought from "src/components/NewBalancedThought";
 import Evidence from "src/components/Evidence";
 import Chat from "../molecules/Chat";
 import BottomNav from "../BottomNav";
-
+import SaveStatusIndicator from "../atoms/AutoSaveStatus";
 export const submitBtnDataAttribute = "submit-btn";
 export const evidenceDataAttributes = {
   evidenceFor: "evidenceFor",
@@ -45,13 +45,33 @@ interface CBTPROPS {
 const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const { data: sessionData } = useSession();
+  const [saveStatus, setSaveStatus] = useState<
+    "unsaved" | "saving" | "saved" | "error"
+  >("unsaved");
   const router = useRouter();
   const { mutate: updatePost } = api.CBT.update.useMutation({
+    onMutate: () => {
+      setSaveStatus("saving");
+    },
+
     onSuccess: async () => {
       await utils.CBT.invalidate();
-      toast.success("Succesfully updated journal!");
+      // TODO Only want to show the toast if its a final submit perhaps ie from the button...
+      // toast.success("Succesfully updated journal!");
+      setSaveStatus("saved");
+    },
+    onError: () => {
+      setSaveStatus("error");
+      // Handle error accordingly.
     },
   });
+  // Had idea that i could move  detials of autosave into a hook that takes the data to save and state about hasChanged
+  // and has a useEffect react to that change and then trigger the call .. can leave another call here in non hook for when the
+  // default submit button is hit the useffect should close ove rthe data nd the hasChanged
+  //
+  // TODO big issue all of these should first of all not be enabled if not logged in
+  // second should return an error if an error instead of assuming success
+  // weird that its sort of working ... ie getting correct response...
   const utils = api?.useContext();
 
   const { mutate: postMessage } = api.CBT.postMessage.useMutation({
@@ -60,7 +80,16 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
       setData((prev) => {
         return { ...prev, id: responseData.id };
       });
-      toast.success("Succesfully created journal!");
+      setSaveStatus("saved");
+      // toast.success("Succesfully created journal!");
+    },
+    onMutate: () => {
+      setSaveStatus("saving");
+    },
+
+    onError: () => {
+      setSaveStatus("error");
+      // Handle error accordingly.
     },
   });
 
@@ -113,6 +142,8 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
     }
     setData((prevState) => ({ ...prevState, [name]: altValue || value }));
     hasChanged.current = true;
+    // sort of duplicate state here for unsavedStatus... and hasChanged
+    setSaveStatus("unsaved");
   };
 
   // TODO fix the submit on enter its not pleasant UX when happens at AT ...
@@ -210,12 +241,15 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
         setCurrentStep={setCurrentStep}
         columns={columns}
       />
+
       <div className="min-h-60 relative mx-auto flex flex-col justify-between p-0 pb-6  xs:p-4 sm:bg-slate-900 sm:p-6  sm:pt-6 md:max-w-5xl md:rounded-b md:rounded-tl md:shadow-lg ">
+        <SaveStatusIndicator status={saveStatus} />
+        {/*  TODO figure out exactly how this fits into UI not sure margin wise as it is or position */}
         <div
           onKeyDown={handleKeyDown}
           className="min-h-70 mx-auto flex w-full flex-col justify-between rounded pl-3 pr-3 shadow-lg xs:p-4 sm:mt-4   sm:max-w-3xl sm:bg-slate-800 md:mt-10"
         >
-          <div>
+          <div className=" mt-3  ">
             <NameAndRateMood
               currentStep={currentStep}
               setData={setData}

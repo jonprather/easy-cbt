@@ -12,21 +12,19 @@ const Home: NextPage = () => {
           <div className=" flex flex-col items-center justify-center gap-12 px-4 py-16 pb-4 ">
             <div className="mx-auto text-center">
               <div className=" flex items-center justify-center">
-              
-
                 {/* TODO finsih adding this check edge cases on sizes make srue its vertically centered as well etc just added this here as img and to nav but also make NExt IMG */}
                 <h1
                   id="home-title"
                   className="mb-3 ml-2  text-5xl font-extrabold uppercase tracking-tight text-white sm:text-[5rem]"
                 >
-                    <div className=" absolute top-4 left-4 h-10 w-10">
-                  <Image
-                    alt="logo"
-                    src="/logo.svg"
-                    fill
-                    className="relative w-12  xs:hidden"
-                  />
-                </div>
+                  <div className=" absolute top-4 left-4 h-10 w-10">
+                    <Image
+                      alt="logo"
+                      src="/logo.svg"
+                      fill
+                      className="relative w-12  xs:hidden"
+                    />
+                  </div>
                   <span className="">EASY</span>
                   <span className=" text-[hsl(186,100%,70%)]">CBT</span>
                 </h1>
@@ -70,3 +68,6 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+// TODO would be cool to add search filter and sort to the prev journals...
+// can search based on name, filter by date or mood, sort by date mood etc, or alpha by name

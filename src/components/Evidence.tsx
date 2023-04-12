@@ -38,7 +38,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
 
   return (
     <>
-      <div className="form-control mt-6 mb-10">
+      <div className="form-control mb-10">
         <div className="flex items-end justify-between">
           <label className="label">
             <Modal

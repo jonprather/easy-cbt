@@ -79,7 +79,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
   if (currentStep !== 1) return null;
   return (
     <>
-      <div className="form-control mt-6 mb-10">
+      <div className="form-control  mb-10">
         <label className="label flex  justify-start">
           <DialogDemo
             title="Automatic Negative Thoughts"
