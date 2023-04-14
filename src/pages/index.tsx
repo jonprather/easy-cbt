@@ -4,6 +4,7 @@ import Layout from "../components/Layout";
 import Table from "../components/Table";
 import BottomNav from "src/components/BottomNav";
 import Image from "next/image";
+
 const Home: NextPage = () => {
   return (
     <Layout>
@@ -56,7 +57,7 @@ const Home: NextPage = () => {
             </div>
           </div>
           <div className=" flex flex-col items-center gap-2">
-            <div className=" mx-auto mb-16 flex max-w-full justify-center">
+            <div className="w-[100%] xs:max-w-lg">
               <Table />
             </div>
           </div>

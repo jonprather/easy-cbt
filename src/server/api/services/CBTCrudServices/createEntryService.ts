@@ -53,7 +53,7 @@ const createJournalEntry = async function ({
 
   const message = await prisma.cBT_FormDataType.create({
     data: {
-      name: input.name,
+      name: input.name || "untitled",
       moodLabel: input.moodLabel,
       moodName: input.moodName,
       moodRating: input.moodRating,

@@ -23,42 +23,32 @@ const options = [
 type AutomaticThoughtsProps = {
   moodName: string;
   moodLabel: string;
-  setData: React.Dispatch<React.SetStateAction<CBT_FormDataType>>;
+  onChange: (moodName: string, moodLabel: string) => void;
 };
 
 const EmojiSelector: React.FC<AutomaticThoughtsProps> = ({
   moodName,
   moodLabel,
-  setData,
+  onChange,
 }) => {
   return (
-    <div>
-      <Select
-        // TODO not sure how to test this... as cypress cant find it
-        data-testid="emojiSelector"
-        className={" w-full rounded-full xs:max-w-xs "}
-        styles={{
-          control: (baseStyles, state) => ({
-            ...baseStyles,
-            background: state.isFocused ? "grey" : "bg-primary",
-            borderRadius: "6px",
-            padding: "4px",
-          }),
-        }}
-        options={options}
-        value={{ label: moodLabel, value: moodName }}
-        // isMulti
-        onChange={(opt) =>
-          setData((prev) => {
-            return {
-              ...prev,
-              moodLabel: opt?.label ?? "",
-              moodName: opt?.value ?? "",
-            };
-          })
-        }
-      />
-    </div>
+    <Select
+      // TODO not sure how to test this... as cypress cant find it
+      data-testid="emojiSelector"
+      className={" w-full rounded-full xs:max-w-xs "}
+      styles={{
+        control: (baseStyles, state) => ({
+          ...baseStyles,
+          background: state.isFocused ? "grey" : "bg-primary",
+          borderRadius: "6px",
+          padding: "4px",
+        }),
+      }}
+      options={options}
+      value={{ label: moodLabel, value: moodName }}
+      // isMulti
+      onChange={(opt) => onChange(opt?.value ?? "", opt?.label ?? "")}
+    />
   );
 };
 

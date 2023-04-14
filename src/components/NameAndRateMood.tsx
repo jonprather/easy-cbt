@@ -14,6 +14,16 @@ const NameAndRateMood: React.FC<Props> = ({
   setData,
   data,
 }) => {
+  const handleMoodChange = (moodName: string, moodLabel: string) => {
+    setData((prev) => {
+      return {
+        ...prev,
+        moodLabel,
+        moodName,
+      };
+    });
+  };
+
   if (currentStep !== 0) return null;
   return (
     <div className="form-control mb-10">
@@ -60,7 +70,7 @@ const NameAndRateMood: React.FC<Props> = ({
         <EmojiSelector
           moodLabel={data?.moodLabel ?? ""}
           moodName={data.moodName ?? ""}
-          setData={setData}
+          onChange={handleMoodChange}
         />
         {/* {errors?.nameMood && (
           <div className="text-red-500">{errors.nameMood}</div>

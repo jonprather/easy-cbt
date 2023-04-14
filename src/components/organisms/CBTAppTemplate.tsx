@@ -47,7 +47,10 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const { data: sessionData } = useSession();
   const [saveStatus, setSaveStatus] = useState<
     "unsaved" | "saving" | "saved" | "error"
-  >("unsaved");
+  >(title?.toLowerCase()?.includes("update") ? "saved" : "unsaved");
+  // TODO if its an update then should start as saved
+  // if its a new creation than can start as unsaved
+  //
   const router = useRouter();
   const { mutate: updatePost } = api.CBT.update.useMutation({
     onMutate: () => {
@@ -68,7 +71,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   // Had idea that i could move  detials of autosave into a hook that takes the data to save and state about hasChanged
   // and has a useEffect react to that change and then trigger the call .. can leave another call here in non hook for when the
   // default submit button is hit the useffect should close ove rthe data nd the hasChanged
-  //
+  // the only prob is hasChanged ref is needing to be set in the hook and outside of it
   // TODO big issue all of these should first of all not be enabled if not logged in
   // second should return an error if an error instead of assuming success
   // weird that its sort of working ... ie getting correct response...
