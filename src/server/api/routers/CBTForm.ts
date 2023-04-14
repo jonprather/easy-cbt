@@ -11,6 +11,13 @@ import validateJournalEntry from "../services/utils/validateJournalEntry";
 import createJournalEntry from "../services/CBTCrudServices/createEntryService";
 import deleteJournalEntry from "../services/CBTCrudServices/deleteEntryService";
 import updateJournalEntryService from "../services/CBTCrudServices/updateJournalEntryService";
+const sortBySchema = z.union([
+  z.literal("createdAt"),
+  z.literal("updatedAt"),
+  z.literal("id"),
+  z.literal("name"),
+]);
+export type TSortBy = z.infer<typeof sortBySchema>;
 export const CBT_FormSchema = z.object({
   name: z.string().optional(),
   moodName: z.string().optional(),
@@ -80,6 +87,107 @@ export const CBTFormRouter = createTRPCRouter({
       });
     }
   }),
+
+  getBatch: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number(),
+        cursor: z.string().nullish(),
+        skip: z.number().optional(),
+        searchQuery: z.string().optional(),
+        moodName: z.string().optional(),
+        sortBy: z.object({
+          property: z.union([
+            z.literal("createdAt"),
+            z.literal("updatedAt"),
+            z.literal("id"),
+            z.literal("name"),
+          ]),
+          direction: z.union([z.literal("asc"), z.literal("desc")]),
+        }),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session.user?.id;
+
+      // could get the count of of all when i get just some ?
+      // const usersWithCount = await prisma.user.findMany({
+      //   include: {
+      //     _count: {
+      //       select: { posts: true },
+      //     },
+      //   },
+      // })
+      const { limit, skip, cursor, searchQuery, moodName, sortBy } = input;
+      const trimmedSearchQuery = searchQuery?.trim();
+      const trimmedMoodName = moodName?.trim();
+      const { property, direction } = sortBy;
+      const totalCount = await ctx.prisma.cBT_FormDataType.count({
+        where: {
+          userId: userId,
+          // categoryId: categoryId ? categoryId : undefined,
+          name:
+            trimmedSearchQuery && trimmedSearchQuery.length > 0
+              ? {
+                  contains: trimmedSearchQuery,
+                  mode: "insensitive",
+                }
+              : undefined,
+          moodName:
+            trimmedMoodName && trimmedMoodName.length > 0
+              ? {
+                  contains: trimmedMoodName,
+                  mode: "insensitive",
+                }
+              : undefined,
+        },
+      });
+      // const sortObj = sortArr
+      const pageCount = Math.ceil(totalCount / limit);
+      const items = await ctx.prisma.cBT_FormDataType.findMany({
+        take: limit + 1,
+        skip: skip,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy:
+          property && direction
+            ? {
+                [property]: direction,
+              }
+            : undefined,
+        where: {
+          userId: userId,
+          // categoryId: categoryId ? categoryId : undefined,
+          name:
+            trimmedSearchQuery && trimmedSearchQuery.length > 0
+              ? {
+                  contains: trimmedSearchQuery,
+                  mode: "insensitive",
+                }
+              : undefined,
+          moodName:
+            trimmedMoodName && trimmedMoodName.length > 0
+              ? {
+                  contains: trimmedMoodName,
+                  mode: "insensitive",
+                }
+              : undefined,
+        },
+
+        include: {
+          automaticThoughts: true,
+        },
+      });
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (items.length > limit) {
+        const nextItem = items.pop(); // return the last item from the array
+        nextCursor = nextItem?.id;
+      }
+      return {
+        items,
+        nextCursor,
+        pageCount,
+      };
+    }),
 
   getOne: protectedProcedure
     .input(z.object({ id: z.string() }))
