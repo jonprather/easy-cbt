@@ -39,7 +39,7 @@ const SortingComponent: React.FC<TSortingProps> = ({
             <span className="label-text">Property</span>
           </label>
           <select
-            className="input-bordered input"
+            className="select-bordered select"
             value={sortingOptions?.property}
             onChange={(e) =>
               emitSortingData({

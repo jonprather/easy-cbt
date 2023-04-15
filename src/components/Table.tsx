@@ -2,7 +2,19 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { api } from "../utils/api";
 import dayjs from "dayjs";
-import { FaTrash, FaEdit, FaFilter, FaSort, FaSearch } from "react-icons/fa";
+import {
+  FaTrash,
+  FaEdit,
+  FaFilter,
+  FaSort,
+  FaSearch,
+  FaSortUp,
+  FaSortDown,
+  FaSortAlphaUp,
+  FaSortAlphaDown,
+  FaSortNumericDown,
+  FaSortNumericUp,
+} from "react-icons/fa";
 import { toast } from "react-toastify";
 import PuffLoader from "react-spinners/PuffLoader";
 import type { cBT_FormDataType } from "@prisma/client";
@@ -51,6 +63,20 @@ const Table = () => {
   }, [searchQuery, emojiData, sortingOption]);
   // deps need to be the filter and sort statechange
 
+  const getSortIcon = () => {
+    if (sortingOption.property === "name") {
+      if (sortingOption.direction === "asc") {
+        return <FaSortAlphaUp />;
+      } else {
+        return <FaSortAlphaDown />;
+      }
+    }
+    if (sortingOption.direction === "asc") {
+      return <FaSortNumericDown />;
+    } else {
+      return <FaSortNumericUp />;
+    }
+  };
   const { mutate: deletePost } = api.CBT.delete.useMutation({
     onError: (err) => {
       console.log(err);
@@ -76,7 +102,7 @@ const Table = () => {
       sortBy: sortingOption, // Pass the sortingOption state object
     },
     {
-      // enabled: false,
+      enabled: sessionData?.user !== undefined,
       staleTime: Infinity,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
@@ -185,8 +211,8 @@ const Table = () => {
         <h2 className="mb-4 text-3xl font-medium text-white sm:mb-6 ">
           Past Entries
         </h2>
-
-        <div className="nav-utitlies mb-10 flex w-full items-center justify-between rounded-xl  xs:bg-slate-800 xs:p-2">
+        {/* TODO I dont like how squished against the walls this is on smallest I5 sc */}
+        <div className="nav-utitlies mb-10 flex w-full  items-center  justify-between rounded-xl six:pl-2 six:pr-2  xs:max-w-full   xs:bg-slate-800 xs:p-2">
           <div className="btn-group  ">
             <button
               data-testid="next-btn"
@@ -210,7 +236,7 @@ const Table = () => {
                     </span>
                   </>
                 ) : (
-                  "NA"
+                  <span className="inline-block min-w-[1rem]">0 / 0</span>
                 )}
               </span>
             </div>
@@ -219,7 +245,7 @@ const Table = () => {
               data-testid="prev-btn"
               onClick={handleFetchNextPage}
               disabled={!nextCursor}
-              className="btn-neutral btn   text-lg  "
+              className="btn-neutral btn text-lg  "
             >
               <FaArrowRight />
             </button>
@@ -318,9 +344,7 @@ const Table = () => {
               <PopoverTrigger>
                 <div className="btn-rounded btn-neutral btn rounded-full  bg-neutral">
                   {/* <Settings2 className="h-4 w-4" /> */}
-                  <span className="  text-white">
-                    <FaSort />
-                  </span>
+                  <span className="  text-white">{getSortIcon()}</span>
                 </div>
               </PopoverTrigger>
               <PopoverContent className="w-80  bg-slate-900 text-white shadow-sm">
