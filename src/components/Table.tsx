@@ -72,9 +72,9 @@ const Table = () => {
       }
     }
     if (sortingOption.direction === "asc") {
-      return <FaSortNumericDown />;
-    } else {
       return <FaSortNumericUp />;
+    } else {
+      return <FaSortNumericDown />;
     }
   };
   const { mutate: deletePost } = api.CBT.delete.useMutation({
@@ -332,7 +332,7 @@ const Table = () => {
                             setEmojiData({ moodLabel: "", moodName: "" })
                           }
                         >
-                          Reset mood filter
+                          Reset Filter
                         </button>
                       </p>
                     </div>
