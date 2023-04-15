@@ -154,6 +154,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   const handleSubmit = () => {
     try {
       //   CBT_Schema.parse(formValues);
+
       if (!sessionData) {
         //TODO  So local data gets lost if they go to sign up which is annoying...
         // would be nice if somehow kept it?
@@ -203,6 +204,9 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
   // handle the auto save functionality id is also set in on Success of the post message
   useEffect(() => {
     const debouncedSave = debounce(() => {
+      if (!sessionData) {
+        return;
+      }
       if (hasChanged.current) {
         console.log("DEBOUNCED SAVE data", data);
         if (data?.id) {
