@@ -1,25 +1,22 @@
 /** @type {import('tailwindcss').Config} */
 const defaultTheme = require("tailwindcss/defaultTheme");
-// module.exports = {
-//   content: ["./src/**/*.{js,ts,jsx,tsx}"],
-//   theme: {
-//     screens: {
-//       six: "375px",
-//       xs: "475px",
-//       ...defaultTheme.screens,
-//     },
-//     extend: {},
-//   },
-//   plugins: [require("daisyui")],
-// };
-
 const { fontFamily } = require("tailwindcss/defaultTheme");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class", '[data-theme="dark"]'],
-  content: ["app/**/*.{ts,tsx}", "components/**/*.{ts,tsx}"],
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+
+    // Or if using `src` directory:
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
+    fontFamily: {
+      nunito: ["nunito", "sans-serif"],
+    },
     screens: {
       six: "375px",
       xs: "475px",
@@ -45,9 +42,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate", "daisyui")],
+  plugins: [require("daisyui"), require("tailwindcss-animate")],
 };
-
-// ok i went thru sahdcn steps now shits broke...
-// wish i would have committed before doing so
-// the problem is adding the second one it breaks my app
