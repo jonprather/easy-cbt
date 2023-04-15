@@ -186,19 +186,6 @@ const Table = () => {
           Past Entries
         </h2>
 
-        {/* TODO make into larger search component */}
-        {/* <div className="mb-10 max-w-[65%]">
-          <SearchBar onSearch={getSearchQuery} />
-          {searchQuery && (
-            <button
-              className="btn-neutral btn"
-              onClick={() => setSearchQuery("")}
-            >
-              <span className="mr-4">Filtered by: {searchQuery} Undo?</span>
-              <FaTrash />
-            </button>
-          )}
-        </div> */}
         <div className="nav-utitlies mb-10 flex w-full items-center justify-between rounded-xl  xs:bg-slate-800 xs:p-2">
           <div className="btn-group  ">
             <button
@@ -210,16 +197,8 @@ const Table = () => {
               <FaArrowLeft />
             </button>
 
-            <div className="btn-neutral btn text-base-content pointer-events-none font-semibold shadow-md">
+            <div className="btn-neutral btn pointer-events-none font-semibold text-base-content shadow-md">
               <span>
-                {/* <input
-                type="number"
-                className=" w-10 bg-transparent "
-                min={1}
-                max={data?.pages?.length}
-                value={page + 1}
-                onChange={(e) => setPage(Number(e.target.value))}
-              /> */}
                 {pageTotal && pageTotal > 0 ? (
                   <>
                     <span className="inline-block min-w-[.5rem]">
@@ -239,7 +218,7 @@ const Table = () => {
             <button
               data-testid="prev-btn"
               onClick={handleFetchNextPage}
-              disabled={!!!nextCursor}
+              disabled={!nextCursor}
               className="btn-neutral btn   text-lg  "
             >
               <FaArrowRight />
@@ -249,7 +228,7 @@ const Table = () => {
             <Popover>
               <PopoverTrigger>
                 <div
-                  className={`btn btn-rounded btn-neutral rounded-full xs:mr-4 ${
+                  className={`btn-rounded btn-neutral btn rounded-full xs:mr-4 ${
                     searchQuery ? "bg-primary" : "bg-neutral"
                   } `}
                 >
@@ -266,10 +245,12 @@ const Table = () => {
                       Filter By Search
                     </h4>
                     <div className="mb-10  ">
+                      {/* TODO make into larger search component */}
+
                       <SearchBar onSearch={getSearchQuery} />
                       {searchQuery && (
                         <button
-                          className="btn-neutral bg-primary btn text-white"
+                          className="btn-neutral btn bg-primary text-white"
                           disabled={!searchQuery}
                           onClick={() => setSearchQuery("")}
                         >
@@ -294,7 +275,7 @@ const Table = () => {
             <Popover>
               <PopoverTrigger>
                 <div
-                  className={`btn btn-rounded btn-neutral   rounded-full ${
+                  className={`btn-rounded btn-neutral btn   rounded-full ${
                     emojiData?.moodName ? "bg-primary" : "bg-neutral"
                   } `}
                 >
@@ -319,7 +300,7 @@ const Table = () => {
                       />
                       <p>
                         <button
-                          className={`btn   btn-neutral bg-primary mt-4  `}
+                          className={`btn-neutral   btn mt-4 bg-primary  `}
                           disabled={!emojiData.moodName}
                           onClick={() =>
                             setEmojiData({ moodLabel: "", moodName: "" })
@@ -335,14 +316,14 @@ const Table = () => {
             </Popover>
             <Popover>
               <PopoverTrigger>
-                <button className="btn btn-rounded btn-neutral bg-neutral  rounded-full">
+                <div className="btn-rounded btn-neutral btn rounded-full  bg-neutral">
                   {/* <Settings2 className="h-4 w-4" /> */}
                   <span className="  text-white">
                     <FaSort />
                   </span>
-                </button>
+                </div>
               </PopoverTrigger>
-              <PopoverContent className="w-80  bg-slate-900 shadow-sm">
+              <PopoverContent className="w-80  bg-slate-900 text-white shadow-sm">
                 <div className="grid gap-4">
                   <div className="space-y-2">
                     <h4 className="font-medium leading-none">Sort</h4>
@@ -374,7 +355,7 @@ const Table = () => {
           // >
           <div
             key={entry.id}
-            className="card sm:hover:bg-primary-focus mx-auto mb-4 min-h-[8rem]  min-w-[95%] max-w-[95%] flex-row bg-slate-700 pr-0 pl-6  text-white shadow   sm:mb-10 "
+            className="card mx-auto mb-4 min-h-[8rem] min-w-[95%]  max-w-[95%] flex-row bg-slate-700 pr-0 pl-6 text-white  shadow sm:mb-10   sm:hover:bg-primary-focus "
           >
             <div className=" flex flex-col justify-center ">
               <p className=" min-w-full items-center justify-center text-5xl ">
@@ -390,7 +371,7 @@ const Table = () => {
             </div>
             <div className="flex flex-row items-end justify-between gap-0 pb-2">
               <Link
-                className="btn btn-ghost btn-sm mr-0 text-xl text-yellow-200"
+                className="btn-ghost btn-sm btn mr-0 text-xl text-yellow-200"
                 href={`/update/${entry.id}`}
               >
                 <FaEdit />
@@ -402,7 +383,7 @@ const Table = () => {
                 labelText=""
                 content={
                   <button
-                    className="btn  btn-accent text-lg"
+                    className="btn-accent  btn text-lg"
                     onClick={() => {
                       deletePost({ id: entry.id });
                     }}
@@ -414,7 +395,7 @@ const Table = () => {
                   </button>
                 }
                 icon={
-                  <span className=" btn btn-ghost btn-sm mr-1 bg-transparent text-lg text-yellow-200">
+                  <span className=" btn-ghost btn-sm btn mr-1 bg-transparent text-lg text-yellow-200">
                     <FaTrash />
                   </span>
                 }

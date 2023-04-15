@@ -22,7 +22,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           e.preventDefault();
           handleSubmit();
         }}
-        className="input-group input-bordered rounded border-2 border-slate-500"
+        className="input-group input-bordered rounded border-2 border-slate-500 text-white"
       >
         <input
           type="text"
@@ -31,7 +31,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           placeholder="Search…"
           className=" input w-full"
         />
-        <button className=" btn btn-square bg-transparent" type="submit">
+        <button className=" btn-square btn bg-transparent" type="submit">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
