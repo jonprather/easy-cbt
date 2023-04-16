@@ -27,6 +27,7 @@ export const evidenceDataAttributes = {
   evidenceFor: "evidenceFor",
   evidenceAgainst: "evidenceAgainst",
 };
+// TODO I think situation is better fit than name...
 export const columns: ["Name", "ANTS", "For", "against", "New", "Rerate"] = [
   "Name",
   "ANTS",
@@ -40,14 +41,19 @@ export const columns: ["Name", "ANTS", "For", "against", "New", "Rerate"] = [
 interface CBTPROPS {
   initialData?: CBTData | undefined;
   title: string;
+  error?: string;
 }
-
-const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
+const initializeSaveStatus = (isError: boolean, title: string) => {
+  if (isError) return "error";
+  return title?.toLowerCase()?.includes("update") ? "saved" : "unsaved";
+};
+const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const { data: sessionData } = useSession();
   const [saveStatus, setSaveStatus] = useState<
     "unsaved" | "saving" | "saved" | "error"
-  >(title?.toLowerCase()?.includes("update") ? "saved" : "unsaved");
+  >(() => initializeSaveStatus(!!error, title));
+
   // TODO if its an update then should start as saved
   // if its a new creation than can start as unsaved
   //
@@ -65,9 +71,21 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
     },
     onError: () => {
       setSaveStatus("error");
+      toast.error("Error Saving Journal");
+
       // Handle error accordingly.
     },
   });
+
+  useEffect(() => {
+    // TODOWould probably be better to not go to page if there is an error can do that in parent prevent
+    // coming here or if need to check here first then push back to home
+    // is this syncing of states here an antipattern?
+    if (!!error) {
+      setSaveStatus("error");
+    }
+  }, [error]);
+
   // Had idea that i could move  detials of autosave into a hook that takes the data to save and state about hasChanged
   // and has a useEffect react to that change and then trigger the call .. can leave another call here in non hook for when the
   // default submit button is hit the useffect should close ove rthe data nd the hasChanged
@@ -92,6 +110,8 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title }) => {
 
     onError: () => {
       setSaveStatus("error");
+      toast.error("Error Saving Journal");
+
       // Handle error accordingly.
     },
   });
