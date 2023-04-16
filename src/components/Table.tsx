@@ -6,19 +6,16 @@ import {
   FaTrash,
   FaEdit,
   FaFilter,
-  FaSort,
   FaSearch,
-  FaSortUp,
-  FaSortDown,
   FaSortAlphaUp,
   FaSortAlphaDown,
   FaSortNumericDown,
   FaSortNumericUp,
+  FaRegWindowClose,
+  FaWindowClose,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
-import PuffLoader from "react-spinners/PuffLoader";
 import type { cBT_FormDataType } from "@prisma/client";
-import { CBTData } from "src/types/CBTFormTypes";
 import { useSession } from "next-auth/react";
 import Modal from "./molecules/Modal";
 import SearchBar from "./molecules/Searchbar";
@@ -27,8 +24,9 @@ import EmojiSelector from "./EmojiSelector";
 import SortingComponent from "./molecules/SortingComponent";
 import type { SortOption } from "./molecules/SortingComponent";
 import { Popover, PopoverContent, PopoverTrigger } from "./molecules/Popover";
-
-// import { NavigationMenu } from "./molecules/NavigationMenu";
+import { PuffLoader } from "react-spinners";
+import { useIsFetching } from "@tanstack/react-query";
+import ErrorMessage from "./molecules/ErrorMessage";
 
 const Table = () => {
   const utils = api.useContext();
@@ -36,14 +34,16 @@ const Table = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [sortingOption, setSortingOption] = useState<SortOption>({
-    direction: "asc",
-    property: "id",
+    direction: "desc",
+    property: "updatedAt",
   });
 
   const [emojiData, setEmojiData] = useState({
     moodName: "",
     moodLabel: "",
   });
+
+  const isFetching = useIsFetching();
 
   const handleMoodChange = (moodName: string, moodLabel: string) => {
     setEmojiData(() => {
@@ -53,30 +53,13 @@ const Table = () => {
       };
     });
   };
-  {
-  }
 
   // When user filters or sorts reset the page to 0
   React.useEffect(() => {
     setPage(0);
     // Also when user deletes and the total page count changes should update
   }, [searchQuery, emojiData, sortingOption]);
-  // deps need to be the filter and sort statechange
 
-  const getSortIcon = () => {
-    if (sortingOption.property === "name") {
-      if (sortingOption.direction === "asc") {
-        return <FaSortAlphaUp />;
-      } else {
-        return <FaSortAlphaDown />;
-      }
-    }
-    if (sortingOption.direction === "asc") {
-      return <FaSortNumericUp />;
-    } else {
-      return <FaSortNumericDown />;
-    }
-  };
   const { mutate: deletePost } = api.CBT.delete.useMutation({
     onError: (err) => {
       console.log(err);
@@ -87,26 +70,25 @@ const Table = () => {
       toast.success("Succesfully deleted post!");
     },
   });
-  // const { data, isLoading } = api.CBT.getAll.useQuery(undefined, {
-  //   enabled: sessionData?.user !== undefined,
-  // });
+
   const getSearchQuery = (searchQuery: string) => {
     setSearchQuery(searchQuery);
   };
-  const { data, fetchNextPage, isLoading } = api.CBT.getBatch.useInfiniteQuery(
-    {
-      limit: 4,
+  const { data, fetchNextPage, isLoading, error } =
+    api.CBT.getBatch.useInfiniteQuery(
+      {
+        limit: 4,
 
-      searchQuery: searchQuery, // this is optional - remember replace with stuff want to filter by
-      moodName: emojiData?.moodName, // add useState and input for this
-      sortBy: sortingOption, // Pass the sortingOption state object
-    },
-    {
-      enabled: sessionData?.user !== undefined,
-      staleTime: Infinity,
-      getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
-  );
+        searchQuery: searchQuery, // this is optional - remember replace with stuff want to filter by
+        moodName: emojiData?.moodName, // add useState and input for this
+        sortBy: sortingOption, // Pass the sortingOption state object
+      },
+      {
+        enabled: sessionData?.user !== undefined,
+        staleTime: Infinity,
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      }
+    );
   // Can reuse mood selector and this time make it work with a useSte here
   // so pass it the setState for setMoodNameQuery then i think it will work then its up to me how to design UI
   // can also add a sort by proptery and by asc or desc
@@ -163,6 +145,21 @@ const Table = () => {
     setSortingOption(option);
   };
 
+  const getSortIcon = () => {
+    if (sortingOption.property === "name") {
+      if (sortingOption.direction === "asc") {
+        return <FaSortAlphaUp />;
+      } else {
+        return <FaSortAlphaDown />;
+      }
+    }
+    if (sortingOption.direction === "asc") {
+      return <FaSortNumericUp />;
+    } else {
+      return <FaSortNumericDown />;
+    }
+  };
+
   // if (isError) return <p>Error</p>;
   if (!sessionData) {
     return (
@@ -177,41 +174,13 @@ const Table = () => {
       </div>
     );
   }
-  // if (isLoading) {
-  //   return (
-  //     <div className="mb-6 mt-20 min-h-[16rem] text-center xs:p-2">
-  //       <h2 className="mb-4 text-3xl font-medium text-white sm:mb-6 ">
-  //         Past Entries
-  //       </h2>
-  //       <PuffLoader loading color="white" size={150} className="" />
-  //     </div>
-  //   );
-  // }
 
-  // if (!data)
-  //   return (
-  //     <div className="mb-6 mt-20 min-h-[16rem] text-center xs:p-2">
-  //       <h2 className="mb-4 text-3xl font-medium text-white sm:mb-6 ">
-  //         Past Entries
-  //       </h2>
-  //       <p>Nothing to show</p>
-  //     </div>
-  //   );
-
-  // TODO WOULD be cool if i pull this up so it doesnt rest each count change
-  // TODO implement filter and sort
-  // don't show empty categories
-  // if (toShow?.length === 0) return null;
-  // TODO lots of UI jank in terms of not matching widths when cards change when steps change
-  //  also heingth of things are jank when go from having 4 cards to 1
-  // jumpy janky ux
   return (
     <>
-      <div className="width mx-auto mb-6 mt-20 min-h-screen w-full min-w-[100%] max-w-[100%] text-center xs:max-w-[100%] xs:p-2">
+      <div className="mx-auto mb-6 mt-20 min-h-screen w-full min-w-[100%] max-w-[100%] pb-16 text-center xs:max-w-[100%] xs:p-2">
         <h2 className="mb-4 text-3xl font-medium text-white sm:mb-6 ">
           Past Entries
         </h2>
-        {/* TODO I dont like how squished against the walls this is on smallest I5 sc */}
         <div className="nav-utitlies mb-10 flex w-full  items-center  justify-between rounded-xl six:pl-2 six:pr-2  xs:max-w-full   xs:bg-slate-800 xs:p-2">
           <div className="btn-group  ">
             <button
@@ -258,14 +227,13 @@ const Table = () => {
                     searchQuery ? "bg-primary" : "bg-neutral"
                   } `}
                 >
-                  {/* <Settings2 className="h-4 w-4" /> */}
                   <span className={`  text-white`}>
                     <FaSearch />
                   </span>
                 </div>
               </PopoverTrigger>
-              <PopoverContent className="w-80   bg-slate-900 shadow-sm">
-                <div className="grid gap-4 ">
+              <PopoverContent className=" bg-slate-900 shadow-sm xs:w-96">
+                <div className=" ">
                   <div className="space-y-2">
                     <h4 className="font-medium leading-none text-white">
                       Filter By Search
@@ -275,24 +243,37 @@ const Table = () => {
 
                       <SearchBar onSearch={getSearchQuery} />
                       {searchQuery && (
+                        <>
+                          <p className="mb-2">Searched:</p>
+
+                          <button
+                            onClick={() => setSearchQuery("")}
+                            className="alert alert-success bg-neutral p-1 pl-4 text-white shadow-lg"
+                          >
+                            <div className="">
+                              <span
+                                className=" text max-w-[22ch]
+                              overflow-hidden text-ellipsis "
+                              >
+                                {searchQuery.slice(0, 22)}
+                              </span>
+                            </div>
+                            <span className="btn-neutral btn-ghost btn text-white">
+                              <FaWindowClose />
+                            </span>
+                          </button>
+                        </>
+                      )}
+                      {/* {searchQuery && (
                         <button
                           className="btn-neutral btn bg-primary text-white"
                           disabled={!searchQuery}
                           onClick={() => setSearchQuery("")}
                         >
-                          <span className="mr-4 inline-block">
-                            Undo {'"'}
-                            <span
-                              className="inline-block max-w-[7ch] overflow-hidden text-ellipsis lowercase  
-                            "
-                            >
-                              {searchQuery}
-                            </span>
-                            {'"'} ?
-                          </span>
+                          <span className="mr-4 inline-block">Undo</span>
                           <FaTrash />
                         </button>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 </div>
@@ -305,7 +286,6 @@ const Table = () => {
                     emojiData?.moodName ? "bg-primary" : "bg-neutral"
                   } `}
                 >
-                  {/* <Settings2 className="h-4 w-4" /> */}
                   <span className={`  text-white`}>
                     <FaFilter />
                   </span>
@@ -318,7 +298,6 @@ const Table = () => {
                       Filter By Mood
                     </h4>
                     <div className="form-control text-left">
-                      {/* So could instead jus thave prisma search OR like by name OR by mood includes that etc make it more flexible on BE */}
                       <EmojiSelector
                         moodName={emojiData.moodName}
                         moodLabel={emojiData.moodLabel}
@@ -343,7 +322,6 @@ const Table = () => {
             <Popover>
               <PopoverTrigger>
                 <div className="btn-rounded btn-neutral btn rounded-full  bg-neutral">
-                  {/* <Settings2 className="h-4 w-4" /> */}
                   <span className="  text-white">{getSortIcon()}</span>
                 </div>
               </PopoverTrigger>
@@ -351,7 +329,6 @@ const Table = () => {
                 <div className="grid gap-4">
                   <div className="space-y-2">
                     <h4 className="font-medium leading-none">Sort</h4>
-
                     <SortingComponent
                       sortingOptions={sortingOption}
                       emitSortingData={emitSortingData}
@@ -361,22 +338,19 @@ const Table = () => {
               </PopoverContent>
             </Popover>
           </div>
-          {/* TODO flesh this logic out make look better  */}
         </div>
-        {/* TODO fix this type mismatch caused by different setter function types ie diff data
-        i think i coudl use useReducer to help heremove the setLogic to reducers and then just pass action types around
-        */}
-
-        {/* TODO add a way to show the search query and to clear it */}
-
+        <div className="flex justify-center">
+          <PuffLoader
+            loading={!!isFetching && !toShow?.length}
+            color="white"
+            size={150}
+          />
+          <ErrorMessage showMessage={!!error} message={error?.message} />
+        </div>
         {!toShow?.length && (
           <div className="min-h-[38rem] min-w-[20rem]  xs:min-w-[30rem]"></div>
         )}
         {toShow?.map((entry: cBT_FormDataType, i) => (
-          // <div
-          //   key={entry.id}
-          //   className="card sm:hover:bg-primary-focus mx-auto mb-4 min-h-[8rem] min-w-[20rem] max-w-[95%] flex-row bg-slate-700 pr-0  pl-6 text-white shadow max-[375px]:w-80  xs:min-w-[30rem] sm:mb-10"
-          // >
           <div
             key={entry.id}
             className="card mx-auto mb-4 min-h-[8rem] min-w-[95%]  max-w-[95%] flex-row bg-slate-700 pr-0 pl-6 text-white  shadow sm:mb-10   sm:hover:bg-primary-focus "
@@ -395,12 +369,11 @@ const Table = () => {
             </div>
             <div className="flex flex-row items-end justify-between gap-0 pb-2">
               <Link
-                className="btn-ghost btn-sm btn mr-0 text-xl text-yellow-200"
+                className="btn-ghost btn-sm btn mr-0 text-xl text-yellow-100"
                 href={`/update/${entry.id}`}
               >
                 <FaEdit />
               </Link>
-              {/* TODO this modal isnt quite right the buttons are off */}
               <Modal
                 title={"Are you sure you want to delete this entry?"}
                 id={`delete-btn${i}`}
@@ -419,7 +392,7 @@ const Table = () => {
                   </button>
                 }
                 icon={
-                  <span className=" btn-ghost btn-sm btn mr-1 bg-transparent text-lg text-yellow-200">
+                  <span className=" btn-ghost btn-sm btn mr-1 bg-transparent text-lg text-yellow-100">
                     <FaTrash />
                   </span>
                 }
@@ -438,4 +411,4 @@ export default Table;
 // in file out of total
 
 // TODO redo react select with something mroe accessible liek radix
-// TODO break nav utilites into its won component  and its components into components
+// TODO break nav utilites into its one component and its components into components
