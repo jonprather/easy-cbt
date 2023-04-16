@@ -109,15 +109,6 @@ export const CBTFormRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user?.id;
-
-      // could get the count of of all when i get just some ?
-      // const usersWithCount = await prisma.user.findMany({
-      //   include: {
-      //     _count: {
-      //       select: { posts: true },
-      //     },
-      //   },
-      // })
       const { limit, skip, cursor, searchQuery, moodName, sortBy } = input;
       const trimmedSearchQuery = searchQuery?.trim();
       const trimmedMoodName = moodName?.trim();
