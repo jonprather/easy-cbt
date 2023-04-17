@@ -3,6 +3,8 @@ import type { CBT_FormDataType } from "src/types/CBTFormTypes";
 
 import Modal from "./molecules/Modal";
 import CharCountDisplay from "./atoms/CharacterCountDisplay";
+const MAX_LENGTH = 500;
+
 type Props = {
   currentStep: number;
   handleChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -15,8 +17,6 @@ const NameAndRateMood: React.FC<Props> = ({
   setData,
   data,
 }) => {
-  const charLimit = 500;
-
   const handleMoodChange = (moodName: string, moodLabel: string) => {
     setData((prev) => {
       return {
@@ -52,14 +52,14 @@ const NameAndRateMood: React.FC<Props> = ({
           placeholder="Some Title"
           type="text"
           name="name"
-          maxLength={charLimit}
+          maxLength={MAX_LENGTH}
           className="input-bordered input w-full bg-white text-black xs:max-w-xs"
         />
         <label className="label">
           <span className="label-text-alt">
             <CharCountDisplay
               currentCount={data?.name?.length || 0}
-              charLimit={charLimit}
+              charLimit={MAX_LENGTH}
             />
           </span>
         </label>

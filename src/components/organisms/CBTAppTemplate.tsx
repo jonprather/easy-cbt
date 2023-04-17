@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 import { api } from "../../utils/api";
 import { useRouter } from "next/router";
@@ -27,7 +27,7 @@ export const evidenceDataAttributes = {
   evidenceFor: "evidenceFor",
   evidenceAgainst: "evidenceAgainst",
 };
-// TODO I think situation is better fit than name...
+
 export const columns: ["Name", "ANTS", "For", "against", "New", "Rerate"] = [
   "Name",
   "ANTS",
@@ -36,8 +36,7 @@ export const columns: ["Name", "ANTS", "For", "against", "New", "Rerate"] = [
   "New",
   "Rerate",
 ];
-// TODO
-// could reuse the columns from nav steps here as well
+
 interface CBTPROPS {
   initialData?: CBTData | undefined;
   title: string;
@@ -47,16 +46,14 @@ const initializeSaveStatus = (isError: boolean, title: string) => {
   if (isError) return "error";
   return title?.toLowerCase()?.includes("update") ? "saved" : "unsaved";
 };
+export type TSaveStatus = "unsaved" | "saving" | "saved" | "error";
 const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const { data: sessionData } = useSession();
-  const [saveStatus, setSaveStatus] = useState<
-    "unsaved" | "saving" | "saved" | "error"
-  >(() => initializeSaveStatus(!!error, title));
+  const [saveStatus, setSaveStatus] = useState<TSaveStatus>(() =>
+    initializeSaveStatus(!!error, title)
+  );
 
-  // TODO if its an update then should start as saved
-  // if its a new creation than can start as unsaved
-  //
   const router = useRouter();
   const { mutate: updatePost } = api.CBT.update.useMutation({
     onMutate: () => {
@@ -65,8 +62,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
 
     onSuccess: async () => {
       await utils.CBT.invalidate();
-      // TODO Only want to show the toast if its a final submit perhaps ie from the button...
-      // toast.success("Succesfully updated journal!");
       setSaveStatus("saved");
     },
     onError: () => {
@@ -78,21 +73,11 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
   });
 
   useEffect(() => {
-    // TODOWould probably be better to not go to page if there is an error can do that in parent prevent
-    // coming here or if need to check here first then push back to home
-    // is this syncing of states here an antipattern?
     if (!!error) {
       setSaveStatus("error");
     }
   }, [error]);
 
-  // Had idea that i could move  detials of autosave into a hook that takes the data to save and state about hasChanged
-  // and has a useEffect react to that change and then trigger the call .. can leave another call here in non hook for when the
-  // default submit button is hit the useffect should close ove rthe data nd the hasChanged
-  // the only prob is hasChanged ref is needing to be set in the hook and outside of it
-  // TODO big issue all of these should first of all not be enabled if not logged in
-  // second should return an error if an error instead of assuming success
-  // weird that its sort of working ... ie getting correct response...
   const utils = api?.useContext();
 
   const { mutate: postMessage } = api.CBT.postMessage.useMutation({
@@ -111,14 +96,9 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
     onError: () => {
       setSaveStatus("error");
       toast.error("Error Saving Journal");
-
-      // Handle error accordingly.
     },
   });
 
-  const [errors, setErrors] = React.useState(null);
-  const hasChanged = useRef(false);
-  //  TODO make the modal text better
   const [data, setData] = useState<CBT_FormDataType>({
     name: "",
     moodName: "",
@@ -164,21 +144,13 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
       altValue = +value;
     }
     setData((prevState) => ({ ...prevState, [name]: altValue || value }));
-    hasChanged.current = true;
-    // sort of duplicate state here for unsavedStatus... and hasChanged
     setSaveStatus("unsaved");
   };
 
-  // TODO fix the submit on enter its not pleasant UX when happens at AT ...
-  // ALSO put max char counts on all the text feilds...
   const handleSubmit = () => {
     try {
       //   CBT_Schema.parse(formValues);
-
       if (!sessionData) {
-        //TODO  So local data gets lost if they go to sign up which is annoying...
-        // would be nice if somehow kept it?
-        // maybe use jotai or something to keep app level state and with loc stor
         return toast.info("You must log in to save your journal!");
       }
       if (data?.id) {
@@ -187,7 +159,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
         postMessage(data);
       }
 
-      //   setErrors({});
       setData(() => {
         return {
           name: "",
@@ -206,17 +177,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
 
       router.push("/").catch((error) => console.error(error));
     } catch (err) {
-      // const validationError = String(fromZodError(err));
-      // // the error now is readable by the user
-
-      // const errorArray = validationError.split("; ");
-      // const errorObject = {};
-      // errorArray.forEach((error) => {
-      //   const key = error.match(/\"(.*?)\"/)[1];
-      //   const message = error;
-      //   errorObject[key] = message;
-      // });
-      // setErrors(errorObject);
       console.log(JSON.stringify(err));
     }
   };
@@ -227,15 +187,12 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
       if (!sessionData) {
         return;
       }
-      if (hasChanged.current) {
-        console.log("DEBOUNCED SAVE data", data);
+      if (saveStatus === "unsaved") {
         if (data?.id) {
           updatePost(data);
         } else {
           postMessage(data);
         }
-
-        hasChanged.current = false;
       }
     }, 5000);
 
@@ -244,19 +201,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
     return () => {
       debouncedSave.cancel();
     };
-  }, [data, postMessage, updatePost]);
-
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
-      if (currentStep !== columns.length - 1) {
-        // event.preventDefault();
-        // This is way too agressive I just want the form not to submit yet
-        // i still want normal enter stuff to work
-      }
-    }
-  };
-
-  //   TODO zod controls for the boundaries or type guards
+  }, [data, postMessage, updatePost, sessionData, saveStatus]);
 
   return (
     <div className=" bg-gradient-to-br from-[#000709] to-[#022534]">
@@ -271,11 +216,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
 
       <div className="min-h-60 relative mx-auto flex flex-col justify-between p-0 pb-6  xs:p-4 sm:bg-slate-900 sm:p-6  sm:pt-6 md:max-w-5xl md:rounded-b md:rounded-tl md:shadow-lg ">
         <SaveStatusIndicator status={saveStatus} />
-        {/*  TODO figure out exactly how this fits into UI not sure margin wise as it is or position */}
-        <div
-          onKeyDown={handleKeyDown}
-          className="min-h-70 mx-auto flex w-full flex-col justify-between rounded pl-3 pr-3 shadow-lg xs:p-4 sm:mt-4   sm:max-w-3xl sm:bg-slate-800 md:mt-10"
-        >
+        <div className="min-h-70 mx-auto flex w-full flex-col justify-between rounded pl-3 pr-3 shadow-lg xs:p-4 sm:mt-4   sm:max-w-3xl sm:bg-slate-800 md:mt-10">
           <div className=" mt-3  ">
             <NameAndRateMood
               currentStep={currentStep}
@@ -288,6 +229,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
               handleChange={handleChange}
               data={data}
               currentStep={currentStep}
+              setSaveStatus={setSaveStatus}
             />
 
             <Evidence
@@ -296,7 +238,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
               evidence={data.evidenceFor ?? ""}
               currentStep={currentStep}
               targetStep={2}
-              errors={errors}
               title="Evidence Supporting the Thought"
               evidenceName={evidenceDataAttributes.evidenceFor}
             />
@@ -306,7 +247,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
               handleChange={handleChange}
               currentStep={currentStep}
               targetStep={3}
-              errors={errors}
               title="Evidence against the thought"
               evidenceName={evidenceDataAttributes.evidenceAgainst}
             />
@@ -315,7 +255,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
               data={data}
               handleChange={handleChange}
               currentStep={currentStep}
-              errors={errors}
             />
 
             <Rerate
@@ -324,7 +263,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
               handleChange={handleChange}
               columns={columns}
             />
-            {/* TODO ok autosave doesnt work when setData is used...  */}
           </div>
           {currentStep === columns.length - 1 && (
             <button
@@ -352,14 +290,3 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
   );
 };
 export default CBTAppTemplate;
-
-// TODO so what if autosave didnt use validation but final submit does... that way can have the ease of use
-// and in the final get the final form correct
-
-// ok so userQuery becomes part of the chatHistory right?
-// i can make it like chatHistory .push ({userQuery:'hi', chatBot:'hello dude'}, )
-// or could do it just strings in an array and assume that the back and forth indicates the different
-// also prob should disable text input while the response is loading
-// Can do a push to home once you complete a journal
-// If its a create call can also do a congrats modal or popup
-// would be cool if there were a way to track streaks like a calendar...

@@ -3,17 +3,18 @@ import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import type { ChangeEventHandler } from "react";
 import Collapse from "./Collapse";
 import Modal from "./molecules/Modal";
-// TODO should i be using prisma type is this type updated...?
+import CharCountDisplay from "./atoms/CharacterCountDisplay";
+
+const MAX_LENGTH = 500;
+
 type newThoughtPropsI = {
   data: CBT_FormDataType;
   currentStep: number;
-  errors: any;
   handleChange: ChangeEventHandler<HTMLTextAreaElement>;
 };
 const NewBalancedThought: React.FC<newThoughtPropsI> = ({
   data,
   currentStep,
-  errors,
   handleChange,
 }) => {
   const content =
@@ -23,7 +24,6 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
 
   return (
     <>
-      {/* TODO something in here is causing wierd overflow glitch */}
       <div className="form-control mb-10">
         <div className=" flex items-end justify-between">
           <label className="label">
@@ -35,8 +35,9 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
             />
           </label>
         </div>
-        {/* TODO consider making height larger and the resize to none */}
+
         <textarea
+          maxLength={MAX_LENGTH}
           data-testid="newBalancedThoughtInput"
           className="textarea-bordered textarea h-44 resize-none bg-white text-black"
           placeholder="So while that may be partially true ..."
@@ -44,9 +45,14 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
           onChange={handleChange}
           name="newThought"
         ></textarea>
-        {/* {errors?.newThought && (
-          <div className="text-red-500">{errors.newThought}</div>
-        )} */}
+        <label className="label">
+          <span className="label-text-alt">
+            <CharCountDisplay
+              charLimit={MAX_LENGTH}
+              currentCount={Number(data?.newThought?.length ?? 0)}
+            />
+          </span>
+        </label>
       </div>
       <Collapse evidence={data?.evidenceFor} title={"Evidence For"} />
       <Collapse evidence={data?.evidenceAgainst} title={"Evidence Against"} />

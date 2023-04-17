@@ -4,12 +4,14 @@ import type { ChangeEventHandler } from "react";
 import Modal from "./molecules/Modal";
 
 import Collapse from "./Collapse";
+import CharCountDisplay from "./atoms/CharacterCountDisplay";
+
+const MAX_LENGTH = 500;
 type newThoughtPropsI = {
   data: CBT_FormDataType;
   currentStep: number;
   targetStep: number;
   evidence: string;
-  errors: any;
   title: string;
   evidenceName: string;
   handleChange: ChangeEventHandler<HTMLTextAreaElement>;
@@ -17,7 +19,6 @@ type newThoughtPropsI = {
 const NewBalancedThought: React.FC<newThoughtPropsI> = ({
   data,
   currentStep,
-  errors,
   handleChange,
   title,
   targetStep,
@@ -52,6 +53,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
 
         <textarea
           // evidenceName is passed in but is coded from evidenceDataAttributes obj
+          maxLength={MAX_LENGTH}
           data-testid={evidenceName}
           className="textarea-bordered textarea h-44 resize-none bg-white text-black"
           placeholder="The following Evidence suggests..."
@@ -59,9 +61,14 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
           name={evidenceName}
           onChange={handleChange}
         ></textarea>
-        {/* {errors?.evidenceName && (
-          <div className="text-red-500">{errors.evidenceName}</div>
-        )} */}
+        <label className="label">
+          <span className="label-text-alt">
+            <CharCountDisplay
+              charLimit={MAX_LENGTH}
+              currentCount={Number(evidence.length ?? 0)}
+            />
+          </span>
+        </label>
       </div>
       <Collapse
         evidence={data.automaticThoughts
@@ -75,6 +82,3 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
 };
 
 export default NewBalancedThought;
-
-// TODO if use stepper this way could also pass down errors to show for each label like mark them red
-// and give msg

@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import type { RefObject } from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import { FaPlusCircle, FaTrash, FaFire } from "react-icons/fa";
 import type { ChangeEventHandler } from "react";
 import Modal from "./molecules/Modal";
 import DialogDemo from "./RadixDialog";
+import CharCountDisplay from "./atoms/CharacterCountDisplay";
+import type { TSaveStatus } from "./organisms/CBTAppTemplate";
+
+const MAX_LENGTH = 500;
 
 export const ANTDataAtributes = {
   addAntLabel: "addAntLabel",
@@ -13,21 +17,21 @@ export const ANTDataAtributes = {
   toggleHotAntBtn: "toggleHotAntBtn",
   deleteAntBtn: "deleteAntBtn",
 };
+
 type AutomaticThoughtsProps = {
   data: CBT_FormDataType;
   currentStep: number;
-  handleChange: ChangeEventHandler<HTMLInputElement>;
   setData: React.Dispatch<React.SetStateAction<CBT_FormDataType>>;
+  setSaveStatus: React.Dispatch<React.SetStateAction<TSaveStatus>>;
 };
 
 const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
   data,
   currentStep,
   setData,
-  handleChange,
+  setSaveStatus,
 }) => {
-  const textInput: RefObject<HTMLInputElement> = React.createRef();
-
+  const [inputValue, setInputValue] = useState("");
   const handleHotThoughtClick = (index: number) => {
     setData((prev) => {
       const newThoughts = [...prev.automaticThoughts];
@@ -41,6 +45,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
         automaticThoughts: newThoughts,
       };
     });
+    setSaveStatus("unsaved");
   };
 
   const handleDelete = (index: number) => {
@@ -51,31 +56,29 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
       return { ...data, automaticThoughts: newAutomaticThoughts };
     });
   };
-
-  const handleClick = () => {
-    const newThought = textInput?.current?.value || "";
-    if (!newThought) return;
-
-    setData((data) => {
-      return {
-        ...data,
-        automaticThoughts: [
-          ...data.automaticThoughts,
-          { thought: newThought, isHot: false },
-        ],
-      };
-    });
-    if (textInput && textInput.current) {
-      textInput.current.value = "";
-    }
-  };
-
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.code === "Enter") {
       handleClick();
     }
   };
 
+  const handleClick = () => {
+    if (!inputValue) return;
+
+    setData((data) => {
+      return {
+        ...data,
+        automaticThoughts: [
+          ...data.automaticThoughts,
+          { thought: inputValue, isHot: false },
+        ],
+      };
+    });
+    setInputValue("");
+  };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
   if (currentStep !== 1) return null;
   return (
     <>
@@ -103,12 +106,13 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
         <div className="form-control">
           <div className="input-group ">
             <input
+              maxLength={MAX_LENGTH}
               data-testid={ANTDataAtributes.addAntInput}
               type="text"
               placeholder="Im having the thought that..."
-              onChange={handleChange}
+              value={inputValue}
+              onChange={handleInputChange}
               onKeyDown={handleKeyDown}
-              ref={textInput}
               name="AddANT"
               className="sm:max-w-x-lg input-bordered input w-full bg-white text-black"
             />
@@ -121,6 +125,14 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
               <FaPlusCircle />
             </button>
           </div>
+          <label className="label">
+            <span className="label-text-alt">
+              <CharCountDisplay
+                charLimit={MAX_LENGTH}
+                currentCount={Number(inputValue.length ?? 0)}
+              />
+            </span>
+          </label>
         </div>
       </div>
 

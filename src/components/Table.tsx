@@ -11,7 +11,6 @@ import {
   FaSortAlphaDown,
   FaSortNumericDown,
   FaSortNumericUp,
-  FaRegWindowClose,
   FaWindowClose,
 } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -22,7 +21,7 @@ import SearchBar from "./molecules/Searchbar";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import EmojiSelector from "./EmojiSelector";
 import SortingComponent from "./molecules/SortingComponent";
-import type { SortOption } from "./molecules/SortingComponent";
+import type { TSortOptionValues } from "./molecules/SortingComponent";
 import { Popover, PopoverContent, PopoverTrigger } from "./molecules/Popover";
 import { PuffLoader } from "react-spinners";
 import { useIsFetching } from "@tanstack/react-query";
@@ -33,7 +32,7 @@ const Table = () => {
   const { data: sessionData } = useSession();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const [sortingOption, setSortingOption] = useState<SortOption>({
+  const [sortingOption, setSortingOption] = useState<TSortOptionValues>({
     direction: "desc",
     property: "updatedAt",
   });
@@ -57,7 +56,6 @@ const Table = () => {
   // When user filters or sorts reset the page to 0
   React.useEffect(() => {
     setPage(0);
-    // Also when user deletes and the total page count changes should update
   }, [searchQuery, emojiData, sortingOption]);
 
   const { mutate: deletePost } = api.CBT.delete.useMutation({
@@ -74,32 +72,27 @@ const Table = () => {
   const getSearchQuery = (searchQuery: string) => {
     setSearchQuery(searchQuery);
   };
-  const { data, fetchNextPage, isLoading, error } =
-    api.CBT.getBatch.useInfiniteQuery(
-      {
-        limit: 4,
+  const { data, fetchNextPage, error } = api.CBT.getBatch.useInfiniteQuery(
+    {
+      limit: 4,
 
-        searchQuery: searchQuery, // this is optional - remember replace with stuff want to filter by
-        moodName: emojiData?.moodName, // add useState and input for this
-        sortBy: sortingOption, // Pass the sortingOption state object
-      },
-      {
-        enabled: sessionData?.user !== undefined,
-        staleTime: Infinity,
-        getNextPageParam: (lastPage) => lastPage.nextCursor,
-      }
-    );
-  // Can reuse mood selector and this time make it work with a useSte here
-  // so pass it the setState for setMoodNameQuery then i think it will work then its up to me how to design UI
-  // can also add a sort by proptery and by asc or desc
-  // look up UIS for thsi
+      searchQuery: searchQuery, // this is optional - remember replace with stuff want to filter by
+      moodName: emojiData?.moodName, // this is optional - remember replace with stuff want to filter by
+      sortBy: sortingOption, // Pass the sortingOption state object
+    },
+    {
+      enabled: sessionData?.user !== undefined,
+      staleTime: Infinity,
+      getNextPageParam: (lastPage) => lastPage.nextCursor,
+    }
+  );
+
   const [page, setPage] = useState(0);
   const handleFetchNextPage = () => {
     void fetchNextPage();
     setPage((prev) => prev + 1);
   };
   const toShow = data?.pages[page]?.items;
-  // figure out last page
   const nextCursor = data?.pages[page]?.nextCursor;
   const pageTotal = data?.pages[0]?.pageCount;
 
@@ -141,7 +134,7 @@ const Table = () => {
       return formattedDate;
     }
   };
-  const emitSortingData = (option: SortOption) => {
+  const emitSortingData = (option: TSortOptionValues) => {
     setSortingOption(option);
   };
 
@@ -160,7 +153,6 @@ const Table = () => {
     }
   };
 
-  // if (isError) return <p>Error</p>;
   if (!sessionData) {
     return (
       <div className="mb-6 mt-20 min-h-[16rem] text-center xs:p-2">
@@ -264,16 +256,6 @@ const Table = () => {
                           </button>
                         </>
                       )}
-                      {/* {searchQuery && (
-                        <button
-                          className="btn-neutral btn bg-primary text-white"
-                          disabled={!searchQuery}
-                          onClick={() => setSearchQuery("")}
-                        >
-                          <span className="mr-4 inline-block">Undo</span>
-                          <FaTrash />
-                        </button>
-                      )} */}
                     </div>
                   </div>
                 </div>
@@ -361,8 +343,8 @@ const Table = () => {
               </p>
             </div>
 
-            <div className="card-body my-auto gap-0 justify-self-center  pr-0 pt-0 pl-4 pb-0">
-              <h2 className="card-title text-ellipsis  text-left text-sm">
+            <div className="card-body my-auto gap-0 justify-self-center overflow-hidden text-ellipsis  pr-0 pt-0 pl-4 pb-0">
+              <h2 className="card-title text-left text-sm">
                 {formatString(entry?.name ?? "", 5)}
               </h2>
               <p className="text-left text-sm">{formatDate(entry)}</p>
@@ -405,10 +387,3 @@ const Table = () => {
   );
 };
 export default Table;
-
-//
-// TODO have character limits on input so that doesnt get out of hand, and can show how many chars
-// in file out of total
-
-// TODO redo react select with something mroe accessible liek radix
-// TODO break nav utilites into its one component and its components into components
