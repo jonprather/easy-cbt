@@ -1,26 +1,34 @@
 import React from "react";
 import type { TSortBy } from "src/server/api/routers/CBTForm";
 
-export type SortOption = {
+export type TSortOptionValues = {
   property: TSortBy;
   direction: "asc" | "desc";
 };
 
+type Tnames = {
+  name: string;
+  value: TSortBy;
+};
 const sortPropertyOptions = (
-  arr: TSortBy[] = ["name", "id", "createdAt", "updatedAt"]
+  arr: Tnames[] = [
+    { name: "Name", value: "name" },
+    { name: "Created", value: "createdAt" },
+    { name: "Updated", value: "updatedAt" },
+  ]
 ) => {
-  return arr.map((name) => {
+  return arr.map(({ name, value }) => {
     if (!name) return null;
     return (
-      <option key={name} value={name} className="capitalize">
-        {`${name[0]?.toLocaleUpperCase() ?? ""}${name.slice(1)}`}
+      <option key={name} value={value} className="capitalize">
+        {name}
       </option>
     );
   });
 };
 
 interface TSortingProps {
-  emitSortingData: (sortingOption: SortOption) => void;
+  emitSortingData: (sortingOption: TSortOptionValues) => void;
   sortingOptions: {
     direction: "asc" | "desc";
     property: "id" | "createdAt" | "updatedAt" | "name";
@@ -65,8 +73,8 @@ const SortingComponent: React.FC<TSortingProps> = ({
               })
             }
           >
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
+            <option value="asc">Oldest</option>
+            <option value="desc">Newest</option>
           </select>
         </div>
       </div>
