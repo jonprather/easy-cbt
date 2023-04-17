@@ -44,9 +44,9 @@ interface CBTPROPS {
 }
 const initializeSaveStatus = (isError: boolean, title: string) => {
   if (isError) return "error";
-  return title?.toLowerCase()?.includes("update") ? "saved" : "unsaved";
+  return title?.toLowerCase()?.includes("update") ? "saved" : "initial";
 };
-export type TSaveStatus = "unsaved" | "saving" | "saved" | "error";
+export type TSaveStatus = "initial" | "unsaved" | "saving" | "saved" | "error";
 const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const { data: sessionData } = useSession();
@@ -98,22 +98,8 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
       toast.error("Error Saving Journal");
     },
   });
-
-  const [data, setData] = useState<CBT_FormDataType>({
-    name: "",
-    moodName: "",
-    moodLabel: "",
-    moodRating: 1,
-    automaticThoughts: [],
-    evidenceFor: "",
-    evidenceAgainst: "",
-    newThought: "",
-    rateBelief: 1,
-    rerateEmotion: 1,
-    id: "",
-  });
-  const setFormData = (data: CBTData | undefined) => {
-    setData({
+  const initializeDataObj = (data?: CBTData | undefined) => {
+    return {
       name: data?.name || "",
       moodName: data?.moodName || "",
       moodLabel: data?.moodLabel || "",
@@ -125,10 +111,18 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
       rerateEmotion: data?.rerateEmotion || 0,
       id: data?.id || "",
       automaticThoughts: data?.automaticThoughts || [],
-    });
+    };
   };
 
+  const [data, setData] = useState<CBT_FormDataType>(
+    initializeDataObj(initialData)
+  );
+
   useEffect(() => {
+    const setFormData = (data: CBTData | undefined) => {
+      const initialDataObj = initializeDataObj(data);
+      setData(initialDataObj);
+    };
     setFormData(initialData);
   }, [initialData]);
 
@@ -158,21 +152,9 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
       } else {
         postMessage(data);
       }
-
+      const dataObj = initializeDataObj();
       setData(() => {
-        return {
-          name: "",
-          moodName: "",
-          moodLabel: "",
-          moodRating: 1,
-          automaticThoughts: [],
-          evidenceFor: "",
-          evidenceAgainst: "",
-          newThought: "",
-          rateBelief: 1,
-          rerateEmotion: 1,
-          id: "",
-        };
+        return dataObj;
       });
 
       router.push("/").catch((error) => console.error(error));
@@ -226,7 +208,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
             />
             <AutomaticThoughts
               setData={setData}
-              handleChange={handleChange}
               data={data}
               currentStep={currentStep}
               setSaveStatus={setSaveStatus}

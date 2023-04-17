@@ -1,10 +1,16 @@
 import React from "react";
-
-type SaveStatus = "unsaved" | "saving" | "saved" | "error";
+import type { TSaveStatus } from "../organisms/CBTAppTemplate";
 
 interface SaveStatusIndicatorProps {
-  status: SaveStatus;
+  status: TSaveStatus;
 }
+const getClassNameFromStatus = (status: TSaveStatus): string => {
+  if (status === "unsaved") return "bg-yellow-400";
+  if (status === "saving") return "animate-pulse bg-blue-400";
+  if (status === "error") "bg-red-400";
+
+  return "bg-green-400";
+};
 
 const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
   status,
@@ -12,24 +18,10 @@ const SaveStatusIndicator: React.FC<SaveStatusIndicatorProps> = ({
   return (
     <div className="  mt-4 flex items-center justify-end space-x-2">
       <div
-        className={`h-3 w-3 rounded-full ${
-          status === "unsaved"
-            ? "bg-yellow-400"
-            : status === "saving"
-            ? "animate-pulse bg-blue-400"
-            : status === "saved"
-            ? "bg-green-400"
-            : "bg-red-400"
-        }`}
+        className={`h-3 w-3 rounded-full ${getClassNameFromStatus(status)}`}
       ></div>
-      <span className="min-w-[4.5rem] text-sm font-semibold">
-        {status === "unsaved"
-          ? "Unsaved"
-          : status === "saving"
-          ? "Saving..."
-          : status === "saved"
-          ? "Saved"
-          : "Error"}
+      <span className="min-w-[4.5rem] text-sm font-semibold capitalize">
+        {status}
       </span>
     </div>
   );
