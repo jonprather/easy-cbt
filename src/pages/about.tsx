@@ -1,4 +1,3 @@
-// components/About.tsx
 import React from "react";
 import BottomNav from "src/components/BottomNav";
 import Layout from "src/components/Layout";
@@ -48,6 +47,3 @@ const About: React.FC = () => {
 };
 
 export default About;
-
-// TODO i think this about page would be better served attached to a landing page and
-// this app should just focus on app stuff maybe use different subdomains

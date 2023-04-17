@@ -67,8 +67,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
     onError: () => {
       setSaveStatus("error");
       toast.error("Error Saving Journal");
-
-      // Handle error accordingly.
     },
   });
 
@@ -143,7 +141,6 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
 
   const handleSubmit = () => {
     try {
-      //   CBT_Schema.parse(formValues);
       if (!sessionData) {
         return toast.info("You must log in to save your journal!");
       }

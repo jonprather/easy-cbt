@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import type { RefObject } from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
 import { FaPlusCircle, FaTrash, FaFire } from "react-icons/fa";
-import type { ChangeEventHandler } from "react";
 import Modal from "./molecules/Modal";
 import DialogDemo from "./RadixDialog";
 import CharCountDisplay from "./atoms/CharacterCountDisplay";

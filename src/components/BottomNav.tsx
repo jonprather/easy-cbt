@@ -37,9 +37,6 @@ const BottomNav = () => {
   }, [router.pathname]);
 
   return (
-    // TODO i dont want this to override show up over the chat window
-    // So i think it def has to do with stacking context ie when i move it it doesn have same effect
-
     <div className=" btm-nav z-0 xs:hidden">
       <Link
         href="/"
@@ -82,5 +79,5 @@ const BottomNav = () => {
     </div>
   );
 };
-// TODO Could make the user settings instead of logout signin etc and make it a page
+
 export default BottomNav;

@@ -1,6 +1,5 @@
-import {
-  OpenAIApi,
-  Configuration,
+import { OpenAIApi, Configuration } from "openai";
+import type {
   CreateChatCompletionRequest,
   ChatCompletionRequestMessage,
 } from "openai";

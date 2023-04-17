@@ -47,7 +47,6 @@ const Rerate: React.FC<RerateProps> = ({
           max="100"
           className="range range-primary mt-2 block xs:max-w-xs"
           onBlur={() => console.log()}
-          // (errors.rateBelief = "")
           onChange={handleRateMood}
         />
         <div className="flex w-full justify-between px-2 pt-1 text-xs xs:max-w-xs">
@@ -57,12 +56,6 @@ const Rerate: React.FC<RerateProps> = ({
           <span>|</span>
           <span>High</span>
         </div>
-        {/* TODO implement autoSaves when person rests for a few secods and stuff has changed
-will need state for that i can access the data.rateMood etc and set it that way
-*/}
-        {/* {errors?.rateBelief && (
-          <div className="text-red-500">{errors.rateBelief}</div>
-        )} */}
 
         <div className="mt-4 flex items-end justify-between">
           <label className="label">
@@ -95,9 +88,6 @@ will need state for that i can access the data.rateMood etc and set it that way
           <span>|</span>
           <span>High</span>
         </div>
-        {/* {errors?.rerateEmotion && (
-          <div className="text-red-500">{errors.rerateEmotion}</div>
-        )} */}
       </div>
       <div className="mt-11 ">
         <Collapse

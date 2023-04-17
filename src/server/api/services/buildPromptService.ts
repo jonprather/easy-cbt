@@ -66,7 +66,6 @@ const buildPreviousMessage = (chatHistory: ChatMessageI[]) => {
     { role: "assistant", content: previousBotAnswer },
   ];
 };
-// So lets break this into
 
 const buildColumnNamesPrompt = (colNamesLongForm: string[]): string =>
   `In this form, the steps are named in a general way which follows with some notes about columns which may not be clear.${colNamesLongForm.join(
@@ -113,7 +112,3 @@ export const buildFullPrompt = (input: PromptData) => {
   ];
   return messageArray;
 };
-
-// TODO these prompts are not that effective at making a context aware helpful chatbot... it requires to much from user
-// and underdelivers a tthe start and over delivers once it gets going...
-// start with the system prompt and then the first user prompt

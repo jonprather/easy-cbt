@@ -80,6 +80,3 @@ const Home: NextPage = () => {
 };
 
 export default Home;
-
-// TODO would be cool to add search filter and sort to the prev journals...
-// can search based on name, filter by date or mood, sort by date mood etc, or alpha by name

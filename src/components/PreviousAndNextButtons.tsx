@@ -1,7 +1,6 @@
 import React from "react";
-import { FaArrowLeft, FaArrowRight, FaQuestionCircle } from "react-icons/fa";
-import Modal from "./molecules/Modal";
-import Chat from "./molecules/Chat";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+
 type Props = {
   currentStep: number;
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;

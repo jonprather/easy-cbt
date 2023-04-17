@@ -31,15 +31,6 @@ const useChat = (
       chatHistory?.filter((ele) => ele.role === "user") ?? [];
 
     if (userQueries[userQueries?.length - 1]?.content === "") return false;
-    // if (userQueries.length > 1) {
-    //   if (
-    //     userQueries[userQueries?.length - 1]?.text ===
-    //     userQueries[userQueries?.length - 2]?.text
-    //   ) {
-    //     return false;
-    //     // This is too restrictive...
-    //   }
-    // }
     return true;
   };
   try {

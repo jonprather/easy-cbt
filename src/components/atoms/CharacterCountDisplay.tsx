@@ -1,4 +1,3 @@
-// components/CharCountDisplay.tsx
 import React from "react";
 
 interface CharCountDisplayProps {

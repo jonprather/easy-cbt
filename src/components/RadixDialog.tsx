@@ -4,11 +4,9 @@ interface Props {
   icon?: JSX.Element;
   labelText: string;
 }
-import { ANTDataAtributes } from "./AutomaticThoughts";
 import { FaInfoCircle } from "react-icons/fa";
 import React from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-// import './styles.css';
 const Icon = (
   <span className="text-md  bg-transparent   p-0">
     <FaInfoCircle />

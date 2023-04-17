@@ -1,9 +1,4 @@
 import { z } from "zod";
-// import { CBT_FormSchema } from "../../../types/CBTFormTypes";
-// TODO this import broke not sure why it was working... broke after discord set upIDK why
-// TODO refactor into own controllers
-// also can refactor throws to be more concise ie dont have to build TRPC error in multiple spots just in catch
-//  and throw in the prior locaitons
 
 import { getAllJournalEntries } from "../services/CBTCrudServices/getAllJournalEntries";
 import { TRPCError } from "@trpc/server";
@@ -49,7 +44,7 @@ const CBT_FormSchemaWithId = CBT_FormSchema.extend({
 });
 export type CBT_FormDataWithId = z.infer<typeof CBT_FormSchemaWithId>;
 
-import { createTRPCRouter, publicProcedure, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 
 export const CBTFormRouter = createTRPCRouter({
   postMessage: protectedProcedure
@@ -116,7 +111,6 @@ export const CBTFormRouter = createTRPCRouter({
       const totalCount = await ctx.prisma.cBT_FormDataType.count({
         where: {
           userId: userId,
-          // categoryId: categoryId ? categoryId : undefined,
           name:
             trimmedSearchQuery && trimmedSearchQuery.length > 0
               ? {
@@ -133,7 +127,6 @@ export const CBTFormRouter = createTRPCRouter({
               : undefined,
         },
       });
-      // const sortObj = sortArr
       const pageCount = Math.ceil(totalCount / limit);
       const items = await ctx.prisma.cBT_FormDataType.findMany({
         take: limit + 1,
@@ -147,7 +140,6 @@ export const CBTFormRouter = createTRPCRouter({
             : undefined,
         where: {
           userId: userId,
-          // categoryId: categoryId ? categoryId : undefined,
           name:
             trimmedSearchQuery && trimmedSearchQuery.length > 0
               ? {
@@ -170,7 +162,7 @@ export const CBTFormRouter = createTRPCRouter({
       });
       let nextCursor: typeof cursor | undefined = undefined;
       if (items.length > limit) {
-        const nextItem = items.pop(); // return the last item from the array
+        const nextItem = items.pop();
         nextCursor = nextItem?.id;
       }
       return {
@@ -242,8 +234,3 @@ export const CBTFormRouter = createTRPCRouter({
       }
     }),
 });
-
-// TODO check edge cases again for diff errors add TESTING
-// TODO  also check error is properly thrown
-// consider persistence layer abstraction
-// Also make sure it sorts by most recent...  on top of table display

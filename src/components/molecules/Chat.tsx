@@ -49,9 +49,6 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
     },
     { enabled: formSubmitted, onSettled: () => setformSubmitted(false) }
   );
-  // TODO refactor- can move the setChatHistory logic inside useChat and pass just the data out
-
-  // TODO make breaks in the comments either based on the response or at a certain limit just break it up.
 
   const initBotConversation = () => {
     setChatHistory([...chatHistory, { role: "user", content: currentMessage }]);
@@ -77,7 +74,6 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
         onClick={toggleChat}
         className="btn-secondary btn-circle btn-lg btn fixed bottom-20 right-4  max-w-xs text-2xl xs:bottom-4 xs:right-4 xs:ml-0"
       >
-        {/* <FaQuestionCircle /> */}
         {showChat ? <FaWindowClose /> : <SiChatbot className="text-2xl" />}
       </button>
       {showChat && (
@@ -119,7 +115,6 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
                       : "chat-bubble-secondary"
                   }`}
                 >
-                  {/* <p>{message.author}:</p> */}
                   <p className="text overflow-clip overflow-ellipsis">
                     {message.content}
                   </p>
@@ -153,14 +148,13 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
                   onKeyDown={handleKeyDown}
                 />
                 <button
-                  className="btn-square btn-sm btn absolute bottom-3 right-2 z-50 border-none bg-transparent text-lg  text-gray-300 hover:bg-transparent disabled:bg-transparent disabled:text-gray-500"
+                  className="btn-sm btn-square btn absolute bottom-3 right-2 z-50 border-none bg-transparent text-lg  text-gray-300 hover:bg-transparent disabled:bg-transparent disabled:text-gray-500"
                   type="submit"
                   disabled={!currentMessage}
                 >
                   <FaTelegramPlane />
                 </button>
               </div>
-              {/* TODO Could make this work on enter... */}
             </form>
           </div>
         </div>

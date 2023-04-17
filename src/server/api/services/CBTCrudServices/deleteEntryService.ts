@@ -1,6 +1,4 @@
-// messageService.ts
-import type { CBT_FormData } from "../../routers/CBTForm";
-import type { PrismaClient, cBT_FormDataType } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 import validateJournalEntry from "../utils/validateJournalEntry";
 
 type inputObject = {

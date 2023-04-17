@@ -1,39 +1,6 @@
-// messageService.ts
 import type { CBT_FormData } from "../../routers/CBTForm";
-import type { PrismaClient, cBT_FormDataType } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
 
-interface MessageInput {
-  name?: string;
-  moodLabel?: string;
-  moodName?: string;
-  moodRating?: number;
-  automaticThoughts?: {
-    thought: string;
-    isHot: boolean;
-  }[];
-  evidenceFor?: string;
-  evidenceAgainst?: string;
-  newThought?: string;
-  rateBelief?: number;
-  rerateEmotion?: number;
-}
-
-interface MessageOutput {
-  id: string;
-  name: string;
-  moodLabel: string;
-  moodName: string;
-  moodRating: number;
-  automaticThoughts: {
-    thought: string;
-    isHot: boolean;
-  }[];
-  evidenceFor: string;
-  evidenceAgainst: string;
-  newThought: string;
-  rateBelief: number;
-  rerateEmotion: number;
-}
 type inputObject = {
   input: CBT_FormData;
   userId: string;

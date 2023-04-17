@@ -1,5 +1,4 @@
 import * as z from "zod";
-// So do i make id optional bc for some things its not needed like create and on openai api
 
 export const CBT_FormSchemaIdOptional = z.object({
   id: z.string().optional(),
@@ -63,11 +62,3 @@ import type { cBT_FormDataType, AutomaticThoughts } from "@prisma/client";
 export interface CBTData extends cBT_FormDataType {
   automaticThoughts: AutomaticThoughts[];
 }
-// automaticThoughts: z.array(
-//   z
-//     .object({
-//       thought: z.string(),
-//       isHot: z.boolean(),
-//     })
-//     .optional()
-// ),

@@ -28,7 +28,6 @@ const UpdateNote = () => {
       onError: () => {
         toast.error("Error loading Journal");
         setError("Error");
-        // Handle error accordingly.
       },
     }
   );

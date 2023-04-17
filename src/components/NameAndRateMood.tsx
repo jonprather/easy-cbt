@@ -47,7 +47,6 @@ const NameAndRateMood: React.FC<Props> = ({
         <input
           data-testid="name"
           value={data?.name ?? ""}
-          // TODO
           onChange={handleChange}
           placeholder="Some Title"
           type="text"
@@ -104,7 +103,6 @@ const NameAndRateMood: React.FC<Props> = ({
         <input
           value={data.moodRating}
           data-testid="moodRating"
-          // TODO
           onChange={handleChange}
           type="range"
           min="1"

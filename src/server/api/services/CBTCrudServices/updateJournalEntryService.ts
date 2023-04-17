@@ -13,8 +13,6 @@ const updateJournalEntryService = async ({
 }: inputObject) => {
   const post = await validateJournalEntry(userId, input.id, prisma);
 
-  //  Ok in production not sure why this doesnt update correctly anymore...
-  //  it doesnt seem to have an effect...
   const antList = await prisma?.automaticThoughts.findMany({
     where: {
       cBT_FormDataTypeId: input.id,
@@ -26,8 +24,7 @@ const updateJournalEntryService = async ({
       !input.automaticThoughts.some((inputAnt) => inputAnt?.id === ele.id)
   );
   const antDeleteArr = antDifference?.map((ele) => ele.id);
-  //so if the element is in input.element then remove it
-  // so we are left with the
+
   const antPrismaUpdateObj = input.automaticThoughts
     .filter((ele) => ele?.id)
     .map((ele) => {
@@ -50,7 +47,6 @@ const updateJournalEntryService = async ({
       };
     });
 
-  // how do i handle the id here? i mean if its new it doesnt have and id?? where: {id: ele.id}}})
   const deletedAnts = await prisma.automaticThoughts.deleteMany({
     where: {
       id: {
