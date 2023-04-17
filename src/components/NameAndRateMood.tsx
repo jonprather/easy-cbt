@@ -2,6 +2,7 @@ import EmojiSelector from "./EmojiSelector";
 import type { CBT_FormDataType } from "src/types/CBTFormTypes";
 
 import Modal from "./molecules/Modal";
+import CharCountDisplay from "./atoms/CharacterCountDisplay";
 type Props = {
   currentStep: number;
   handleChange: React.ChangeEventHandler<HTMLInputElement>;
@@ -14,6 +15,8 @@ const NameAndRateMood: React.FC<Props> = ({
   setData,
   data,
 }) => {
+  const charLimit = 500;
+
   const handleMoodChange = (moodName: string, moodLabel: string) => {
     setData((prev) => {
       return {
@@ -33,10 +36,10 @@ const NameAndRateMood: React.FC<Props> = ({
           <label className="label">
             <Modal
               id={"journal-title"}
-              labelText={"CBT Journal Title"}
-              title="Choose a title for your jounal entry"
+              labelText={"Name the situation"}
+              title="Name the situation that gave rise to the strong mood"
               content={
-                "Name it whatever you want. Naming it someting memorable will allow you to easily refer to this entry later."
+                "Naming the situation will help to see the connection between thoughts, moods, behaviors and situations. Also, Naming it someting memorable will allow you to easily refer to this entry later."
               }
             />
           </label>
@@ -49,8 +52,18 @@ const NameAndRateMood: React.FC<Props> = ({
           placeholder="Some Title"
           type="text"
           name="name"
+          maxLength={charLimit}
           className="input-bordered input w-full bg-white text-black xs:max-w-xs"
         />
+        <label className="label">
+          <span className="label-text-alt">
+            <CharCountDisplay
+              currentCount={data?.name?.length || 0}
+              charLimit={charLimit}
+            />
+          </span>
+        </label>
+
         {/* {errors?.name && <div className="text-red-500">{errors.name}</div>} */}
       </div>
 

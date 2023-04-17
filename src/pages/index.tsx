@@ -48,24 +48,23 @@ const Home: NextPage = () => {
               </Link>
               <Link
                 className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-                href="https://youtu.be/fZabZEc8H7c"
-                data-testid="walkthru-link"
-                target="_blank"
+                href="/guide"
+                data-testid="walkthru- "
               >
-                <h3 className="text-2xl font-bold">App Walkthru</h3>
+                <h3 className="text-2xl font-bold">Guide</h3>
                 <div className="text-lg">
                   {" "}
                   Learn how to get the most of the App{" "}
                 </div>
               </Link>
-              <Link
+              {/* <Link
                 className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-                href="https://www.youtube.com/watch?v=ZdyOwZ4_RnI"
-                target="_blank"
+                href="/about"
+                data-testid="walkthru- "
               >
-                <h3 className="text-2xl font-bold">Intro to CBT</h3>
-                <div className="text-lg">Learn the basics of CBT.</div>
-              </Link>
+                <h3 className="text-2xl font-bold">About </h3>
+                <div className="text-lg"> About the App</div>
+              </Link> */}
             </div>
           </div>
           <div className=" flex flex-col items-center gap-2">
