@@ -1,8 +1,9 @@
 import React, { useState } from "react";
+import CharCountDisplay from "../atoms/CharacterCountDisplay";
 interface SearchBarProps {
   onSearch: (searchTerm: string) => void;
 }
-
+const MAX_LENGTH = 40;
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -16,7 +17,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   };
 
   return (
-    <div className="form-control mb-6 ">
+    <div className="form-control mb-4 ">
       <form
         onSubmit={(e) => {
           e.preventDefault();
@@ -26,11 +27,13 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       >
         <input
           type="text"
+          maxLength={MAX_LENGTH}
           value={searchTerm}
           onChange={handleSearchChange}
           placeholder="Search…"
-          className=" input w-full"
+          className="input w-full"
         />
+
         <button className=" btn-square btn bg-transparent" type="submit">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -48,6 +51,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           </svg>
         </button>
       </form>
+      <label className="label">
+        <span className="label-text-alt">
+          <CharCountDisplay
+            charLimit={MAX_LENGTH}
+            currentCount={Number(searchTerm.length ?? 0)}
+          />
+        </span>
+      </label>
     </div>
   );
 };

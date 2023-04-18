@@ -1,15 +1,11 @@
 import React from "react";
 
 interface ErrorMessageProps {
-  showMessage: boolean;
   message?: string;
 }
 
-const ErrorMessage: React.FC<ErrorMessageProps> = ({
-  showMessage,
-  message,
-}) => {
-  if (!showMessage) {
+const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
+  if (!message?.length) {
     return null;
   }
 
