@@ -30,16 +30,20 @@ const Pagination: React.FC<PaginationProps> = ({
       </button>
 
       <div className="btn-neutral btn pointer-events-none font-semibold text-base-content shadow-md">
-        <span>
+        <span className="">
           {totalPages > 0 ? (
             <>
-              <span className="inline-block min-w-[.5rem]">
+              <span className="inline-block min-w-[2ch]">
                 {currentPage + 1}
-              </span>{" "}
-              / <span className="inline-block min-w-[.5rem]">{totalPages}</span>
+              </span>
+              <span className="hidden min-w-[3ch] six:inline-block">
+                / {totalPages}
+              </span>
             </>
           ) : (
-            <span className="inline-block min-w-[1rem]">0 / 0</span>
+            <span className="inline-block min-w-[1rem]">
+              0<span className="hidden six:inline"> / 0 </span>
+            </span>
           )}
         </span>
       </div>
