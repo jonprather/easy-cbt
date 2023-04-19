@@ -18,6 +18,7 @@ module.exports = {
       nunito: ["nunito", "sans-serif"],
     },
     screens: {
+      five: "320px",
       six: "375px",
       xs: "475px",
       ...defaultTheme.screens,
@@ -42,8 +43,5 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    require("daisyui"),
-    require("tailwindcss-animate"),
-  ],
+  plugins: [require("daisyui"), require("tailwindcss-animate")],
 };
