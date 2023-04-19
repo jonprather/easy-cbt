@@ -29,7 +29,7 @@ const Pagination: React.FC<PaginationProps> = ({
         <FaArrowLeft />
       </button>
 
-      <div className="btn-neutral btn pointer-events-none font-semibold text-base-content shadow-md">
+      <div className="btn-neutral btn pointer-events-none min-w-[5ch] font-semibold text-base-content shadow-md max-six:hidden six:min-w-[10ch]">
         <span className="">
           {totalPages > 0 ? (
             <>

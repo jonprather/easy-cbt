@@ -19,7 +19,8 @@ const FormNavigation: React.FC<Props> = ({
           }`}
           onClick={() => setCurrentStep(index)}
         >
-          {columnName}
+          <span className="hidden  max-six:inline">{index + 1}</span>
+          <span className="hidden six:inline">{columnName}</span>
         </button>
       ))}
     </div>

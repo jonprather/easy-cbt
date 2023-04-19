@@ -52,7 +52,6 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
         </div>
 
         <textarea
-          // evidenceName is passed in but is coded from evidenceDataAttributes obj
           maxLength={MAX_LENGTH}
           data-testid={evidenceName}
           className="textarea-bordered textarea h-44 resize-none bg-white text-black"

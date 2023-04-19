@@ -113,7 +113,7 @@ const Table = () => {
         <h2 className="mb-4 text-3xl font-medium text-white sm:mb-6 ">
           Past Entries
         </h2>
-        <div className="nav-utitlies mb-10 flex w-full  items-center  justify-between rounded-xl six:pl-2 six:pr-2  xs:max-w-full   xs:bg-slate-800 xs:p-2">
+        <div className="nav-utitlies mb-10 flex w-full  items-center  justify-between rounded-xl pl-1 pr-1 six:pl-2 six:pr-2  xs:max-w-full   xs:bg-slate-800 xs:p-2">
           <Pagination
             onPrevPage={handleFetchPreviousPage}
             onNextPage={handleFetchNextPage}

@@ -60,18 +60,12 @@ const BottomNav = () => {
       </Link>
       <Link
         href="/create"
-        className={
-          isCreateActive || isUpdateActive
-            ? "active relative z-0 "
-            : "relative z-0 "
-        }
+        className={isCreateActive ? "active relative z-0 " : "relative z-0 "}
       >
         <span className="relative z-0 text-lg ">
           <FaPlusCircle />
         </span>
-        <span className={"btm-nav-label"}>
-          {isUpdateActive ? "Updating Entry" : "New Entry"}
-        </span>
+        <span className={"btm-nav-label"}>New Entry</span>
       </Link>
       <div className={isUserActive ? "active" : ""}>
         <AuthShowcase />
