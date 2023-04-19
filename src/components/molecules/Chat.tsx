@@ -5,7 +5,7 @@ import { SiChatbot } from "react-icons/si";
 import type { CBT_FormDataType } from "src/types/CBTFormTypes";
 import type { ChatMessageI } from "src/server/api/services/getOpenAIChat";
 // import * as Dialog from "@radix-ui/react-dialog";
-
+import formatChatbotResponse from "src/utils/FormatChatbotResponse";
 export const chatBotName = "Chaddie";
 
 const introChat =
@@ -108,17 +108,30 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
                   message.role === "user" ? "chat-end" : "chat-start"
                 } xs:pl-2 xs:pr-2`}
               >
-                <div
-                  className={`chat-bubble ${
-                    message.role === "user"
-                      ? "chat-bubble-primary"
-                      : "chat-bubble-secondary"
-                  }`}
-                >
-                  <p className="text overflow-clip overflow-ellipsis">
-                    {message.content}
-                  </p>
-                </div>
+                {message.role === "user" && (
+                  <div className={"chat-bubble chat-bubble-primary"}>
+                    <p className="text overflow-clip overflow-ellipsis">
+                      {message.content}{" "}
+                    </p>
+                  </div>
+                )}
+                {message.role === "assistant" && (
+                  <div className="">
+                    {formatChatbotResponse(message.content)?.map((ele) => {
+                      return (
+                        <div
+                          className=" chat-bubble chat-bubble-secondary ml-4 mb-2"
+                          key={ele}
+                        >
+                          <p className="text overflow-clip overflow-ellipsis">
+                            {" "}
+                          </p>{" "}
+                          {ele}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             ))}
 
@@ -148,7 +161,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
                   onKeyDown={handleKeyDown}
                 />
                 <button
-                  className="btn-sm btn-square btn absolute bottom-3 right-2 z-50 border-none bg-transparent text-lg  text-gray-300 hover:bg-transparent disabled:bg-transparent disabled:text-gray-500"
+                  className="btn-square btn-sm btn absolute bottom-3 right-2 z-50 border-none bg-transparent text-lg  text-gray-300 hover:bg-transparent disabled:bg-transparent disabled:text-gray-500"
                   type="submit"
                   disabled={!currentMessage}
                 >

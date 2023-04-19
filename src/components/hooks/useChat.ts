@@ -1,6 +1,5 @@
 import { api } from "../../utils/api";
 import type { CBT_FormIdOptionalDataType } from "src/types/CBTFormTypes";
-import { chatBotName } from "../molecules/Chat";
 import type { ChatMessageI } from "src/server/api/services/getOpenAIChat";
 interface ChatProps {
   currentStep: number;
@@ -46,7 +45,6 @@ const useChat = (
         enabled: enabled && queryIsAcceptable(),
         onSettled,
         onSuccess: (data: { message: string; messageId: string }) => {
-          console.log("DATA RESPONSE ", data);
           setChatHistory([
             ...chatHistory,
             { role: "assistant", content: data.message },
