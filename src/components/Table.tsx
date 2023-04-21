@@ -10,6 +10,7 @@ import Pagination from "./molecules/Pagination";
 import EntryCardList from "./organisms/EntryList";
 
 import FilterNavUtilities from "./organisms/FilterNavUtilities";
+import Alert from "./molecules/Alert";
 const Table = () => {
   const utils = api.useContext();
   const { data: sessionData } = useSession();
@@ -93,6 +94,16 @@ const Table = () => {
   const nextCursor = data?.pages[page]?.nextCursor;
   const toShow = data?.pages[page]?.items ?? null;
 
+  function getInfoMessage(resultsCount: number): string {
+    if (resultsCount === 0) {
+      return "Sorry, there are no results.";
+    } else if (resultsCount === 1) {
+      return "You have found one result.";
+    } else {
+      return `You found ${resultsCount} results.`;
+    }
+  }
+
   if (!sessionData) {
     return (
       <div className="mb-6 mt-20 min-h-[16rem] text-center xs:p-2">
@@ -134,11 +145,14 @@ const Table = () => {
           />
         </div>
 
+        {(searchQuery || emojiData.moodName) && !isFetching ? (
+          <Alert message={getInfoMessage(toShow?.length ?? 0)} type="info" />
+        ) : null}
         <EntryCardList
           deletePost={deletePost}
           toShow={toShow}
           isFetching={!!isFetching}
-          errorMessage={error?.message || ""}
+          errorMessage={error?.message || "Testing and error message"}
         />
       </div>
     </>
