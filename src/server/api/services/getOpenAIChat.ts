@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { OpenAIApi, Configuration } from "openai";
 import type {
   CreateChatCompletionRequest,
@@ -40,8 +41,11 @@ export const getOpenAIChat = async (
       messageId: response.data.id,
     };
   } catch (error) {
-    console.log("E: ", error);
-    throw new Error(String(error));
+    throw new TRPCError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: `Error connecting to chat-${String(error)}`,
+      cause: error,
+    });
   }
 };
 
