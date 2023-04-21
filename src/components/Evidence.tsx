@@ -39,7 +39,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
 
   return (
     <>
-      <div className="form-control mb-10">
+      <div className="form-control mb-4">
         <div className="flex items-end justify-between">
           <label className="label">
             <Modal
@@ -74,7 +74,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
           .filter((thought) => thought?.isHot)
           .map((ele) => ele?.thought)
           .join("\n")}
-        title={"Hot Thoughts"}
+        title={"Prior Step Context: Hot Thoughts"}
       />
     </>
   );

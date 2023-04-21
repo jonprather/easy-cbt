@@ -5,7 +5,7 @@ import { PuffLoader } from "react-spinners";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import Link from "next/link";
 
-import ErrorMessage from "../molecules/ErrorMessage";
+import Alert from "../molecules/Alert";
 
 import Modal from "../molecules/Modal";
 
@@ -25,6 +25,9 @@ const EntryCardList: React.FC<EntryCardListProps> = ({
   toShow,
   deletePost,
 }) => {
+  if (errorMessage) {
+    return <Alert message={errorMessage} type="error" />;
+  }
   return (
     <div>
       <div className="flex justify-center">
@@ -33,7 +36,6 @@ const EntryCardList: React.FC<EntryCardListProps> = ({
           color="white"
           size={150}
         />
-        <ErrorMessage message={errorMessage} />
       </div>
       {!toShow?.length && (
         <div className="min-h-[38rem] min-w-[20rem] xs:min-w-[30rem]"></div>

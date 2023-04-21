@@ -68,6 +68,10 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
       initBotConversation();
     }
   };
+
+  // TODO (im not sure error is in array of mesages lets check) implement a retry button for when there is an error Or do i make it always available like chatGPT?
+  //regardless the functionality will likely be to pop the error responseoff messages then to retrigger the mutation
+
   return (
     <div className="fixed right-8 top-10 flex flex-col xs:max-w-7xl ">
       <button

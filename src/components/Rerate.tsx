@@ -92,7 +92,7 @@ const Rerate: React.FC<RerateProps> = ({
       <div className="mt-11 ">
         <Collapse
           evidence={data.newThought}
-          title="Balanced Thought"
+          title="Prior Step Context: Balanced Thought"
         ></Collapse>
       </div>
     </div>
