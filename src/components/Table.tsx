@@ -152,7 +152,7 @@ const Table = () => {
           deletePost={deletePost}
           toShow={toShow}
           isFetching={!!isFetching}
-          errorMessage={error?.message || "Testing and error message"}
+          errorMessage={error?.message || ""}
         />
       </div>
     </>
