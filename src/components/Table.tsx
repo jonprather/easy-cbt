@@ -56,6 +56,7 @@ const Table = () => {
   });
 
   const pageTotal = data?.pages[0]?.pageCount;
+  const totalCount = data?.pages[0]?.totalCount;
 
   React.useEffect(() => {
     if (!pageTotal) return;
@@ -146,7 +147,7 @@ const Table = () => {
         </div>
 
         {(searchQuery || emojiData.moodName) && !isFetching ? (
-          <Alert message={getInfoMessage(toShow?.length ?? 0)} type="info" />
+          <Alert message={getInfoMessage(totalCount ?? 0)} type="info" />
         ) : null}
         <EntryCardList
           deletePost={deletePost}

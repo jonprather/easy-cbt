@@ -169,6 +169,7 @@ export const CBTFormRouter = createTRPCRouter({
         items,
         nextCursor,
         pageCount,
+        totalCount,
       };
     }),
 
