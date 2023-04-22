@@ -19,12 +19,12 @@ const Alert: React.FC<AlertProps> = ({ message, type = "error" }) => {
 
   return (
     <div
-      className={` relative mx-auto w-[95%] rounded p-4 alert-${type} mb-8 flex cursor-pointer flex-row items-center justify-between shadow-lg`}
+      className={` relative mx-auto w-[95%] rounded p-2 pl-4 pr-2 alert-${type} mb-8 flex cursor-pointer flex-row items-center justify-between shadow-lg`}
       onClick={handleClick}
     >
       <span>{message}</span>
 
-      <button>
+      <button className="p-4">
         <FaRegWindowClose className="my-auto text-xl " />
       </button>
     </div>

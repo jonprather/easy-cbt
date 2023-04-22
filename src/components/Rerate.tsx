@@ -4,12 +4,16 @@ import Modal from "./molecules/Modal";
 import Collapse from "src/components/Collapse";
 
 import type { ChangeEventHandler } from "react";
+import type { InputField } from "./organisms/CBTAppTemplate";
 
 type RerateProps = {
   data: CBT_FormDataType;
   currentStep: number;
   columns: ["Name", "ANTS", "For", "against", "New", "Rerate"];
-  handleChange: ChangeEventHandler<HTMLInputElement>;
+  handleChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    control: InputField["control"]
+  ) => void;
 };
 
 const Rerate: React.FC<RerateProps> = ({
@@ -20,7 +24,7 @@ const Rerate: React.FC<RerateProps> = ({
   columns,
 }) => {
   const handleRateMood = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleChange(e);
+    handleChange(e, "RangeSlider");
   };
   if (currentStep !== columns.length - 1) return null;
   return (

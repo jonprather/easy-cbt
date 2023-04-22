@@ -1,13 +1,16 @@
 import EmojiSelector from "./EmojiSelector";
 import type { CBT_FormDataType } from "src/types/CBTFormTypes";
-
+import type { InputField } from "./organisms/CBTAppTemplate";
 import Modal from "./molecules/Modal";
 import CharCountDisplay from "./atoms/CharacterCountDisplay";
 const MAX_LENGTH = 500;
 
 type Props = {
   currentStep: number;
-  handleChange: React.ChangeEventHandler<HTMLInputElement>;
+  handleChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    control: InputField["control"]
+  ) => void;
   data: CBT_FormDataType;
   setData: React.Dispatch<React.SetStateAction<CBT_FormDataType>>;
 };
@@ -25,6 +28,9 @@ const NameAndRateMood: React.FC<Props> = ({
         moodName,
       };
     });
+  };
+  const handleMoodRating = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleChange(e, "RangeSlider");
   };
 
   if (currentStep !== 0) return null;
@@ -47,7 +53,7 @@ const NameAndRateMood: React.FC<Props> = ({
         <input
           data-testid="name"
           value={data?.name ?? ""}
-          onChange={handleChange}
+          onChange={(e) => handleChange(e, "Text")}
           placeholder="Some Title"
           type="text"
           name="name"
@@ -103,7 +109,7 @@ const NameAndRateMood: React.FC<Props> = ({
         <input
           value={data.moodRating}
           data-testid="moodRating"
-          onChange={handleChange}
+          onChange={handleMoodRating}
           type="range"
           min="1"
           max="100"

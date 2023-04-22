@@ -1,16 +1,19 @@
 import React from "react";
 import type { CBT_FormDataType } from "../types/CBTFormTypes";
-import type { ChangeEventHandler } from "react";
 import Collapse from "./Collapse";
 import Modal from "./molecules/Modal";
 import CharCountDisplay from "./atoms/CharacterCountDisplay";
+import type { InputField } from "./organisms/CBTAppTemplate";
 
 const MAX_LENGTH = 500;
 
 type newThoughtPropsI = {
   data: CBT_FormDataType;
   currentStep: number;
-  handleChange: ChangeEventHandler<HTMLTextAreaElement>;
+  handleChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    control: InputField["control"]
+  ) => void;
 };
 const NewBalancedThought: React.FC<newThoughtPropsI> = ({
   data,
@@ -22,6 +25,9 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
 
   if (currentStep !== 4) return null;
 
+  const handleNewThought = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    handleChange(e, "Text");
+  };
   return (
     <>
       <div className="form-control mb-4">
@@ -42,7 +48,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
           className="textarea-bordered textarea h-44 resize-none bg-white text-black"
           placeholder="So while that may be partially true ..."
           value={data.newThought}
-          onChange={handleChange}
+          onChange={handleNewThought}
           name="newThought"
         ></textarea>
         <label className="label">

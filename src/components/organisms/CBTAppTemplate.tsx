@@ -47,6 +47,21 @@ const initializeSaveStatus = (isError: boolean, title: string) => {
   return title?.toLowerCase()?.includes("update") ? "saved" : "initial";
 };
 export type TSaveStatus = "initial" | "unsaved" | "saving" | "saved" | "error";
+
+interface IText {
+  control: "Text";
+  name: string;
+  value: string;
+}
+
+interface IRangeSlider {
+  control: "RangeSlider";
+  name: string;
+  value: number;
+}
+
+export type InputField = IText | IRangeSlider;
+
 const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const { data: sessionData } = useSession();
@@ -125,17 +140,15 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
   }, [initialData]);
 
   const handleChange = (
-    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    control: InputField["control"]
   ) => {
     const { name, value } = event.target;
-    let altValue: undefined | number;
-    if (
-      name.toLowerCase().includes("rate") ||
-      name.toLowerCase().includes("rating")
-    ) {
-      altValue = +value;
-    }
-    setData((prevState) => ({ ...prevState, [name]: altValue || value }));
+
+    let processedValue: string | number = value;
+    if (control === "RangeSlider") processedValue = +value;
+
+    setData((prevState) => ({ ...prevState, [name]: processedValue }));
     setSaveStatus("unsaved");
   };
 

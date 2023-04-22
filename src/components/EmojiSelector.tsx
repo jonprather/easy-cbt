@@ -46,7 +46,6 @@ const EmojiSelector: React.FC<AutomaticThoughtsProps> = ({
       }}
       options={options}
       value={{ label: moodLabel, value: moodName }}
-      // isMulti
       onChange={(opt) => onChange(opt?.value ?? "", opt?.label ?? "")}
     />
   );

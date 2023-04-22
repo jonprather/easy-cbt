@@ -5,7 +5,7 @@ import Modal from "./molecules/Modal";
 
 import Collapse from "./Collapse";
 import CharCountDisplay from "./atoms/CharacterCountDisplay";
-
+import type { InputField } from "./organisms/CBTAppTemplate";
 const MAX_LENGTH = 500;
 type newThoughtPropsI = {
   data: CBT_FormDataType;
@@ -14,7 +14,10 @@ type newThoughtPropsI = {
   evidence: string;
   title: string;
   evidenceName: string;
-  handleChange: ChangeEventHandler<HTMLTextAreaElement>;
+  handleChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    control: InputField["control"]
+  ) => void;
 };
 const NewBalancedThought: React.FC<newThoughtPropsI> = ({
   data,
@@ -25,6 +28,10 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
   evidence,
   evidenceName,
 }) => {
+  const handleNewEvidence = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    handleChange(e, "Text");
+  };
+
   let content = "";
   const arg =
     " using facts and evidence from your past. You can also consider what an honest friend might tell you. Finally Statistics and logic can also help. ";
@@ -58,7 +65,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
           placeholder="The following Evidence suggests..."
           value={evidence}
           name={evidenceName}
-          onChange={handleChange}
+          onChange={handleNewEvidence}
         ></textarea>
         <label className="label">
           <span className="label-text-alt">
