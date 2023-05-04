@@ -76,13 +76,13 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
           </span>
         </label>
       </div>
-      <Collapse
+      {/* <Collapse
         evidence={data.automaticThoughts
           .filter((thought) => thought?.isHot)
           .map((ele) => ele?.thought)
           .join("\n")}
-        title={"Prior Step Context: Hot Thoughts"}
-      />
+        title={"Hot Thoughts"}
+      /> */}
     </>
   );
 };

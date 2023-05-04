@@ -37,6 +37,13 @@ export const columns: ["Name", "ANTS", "For", "against", "New", "Rerate"] = [
   "Rerate",
 ];
 
+import SwiperCore, { Navigation, Pagination } from "swiper";
+import "swiper/swiper-bundle.min.css";
+import { SwiperSlide, Swiper } from "swiper/react";
+// import { Swiper } from "swiper";
+
+// Install Swiper modules
+SwiperCore.use([Navigation, Pagination]);
 interface CBTPROPS {
   initialData?: CBTData | undefined;
   title: string;
@@ -64,6 +71,9 @@ export type InputField = IText | IRangeSlider;
 
 const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
   const [currentStep, setCurrentStep] = useState(0);
+
+  const [swiperInstance, setSwiperInstance] = useState<SwiperCore>();
+
   const { data: sessionData } = useSession();
   const [saveStatus, setSaveStatus] = useState<TSaveStatus>(() =>
     initializeSaveStatus(!!error, title)
@@ -200,9 +210,10 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
       <div className="mb-6 pt-8 text-center  sm:mb-16 sm:pt-16 lg:mb-20 lg:pt-24 ">
         <h1 className="text-md font-medium text-primary sm:text-xl">{title}</h1>
       </div>
+
       <FormNavSteps
         currentStep={currentStep}
-        setCurrentStep={setCurrentStep}
+        swiperInstance={swiperInstance}
         columns={columns}
       />
 
@@ -210,67 +221,90 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
         <SaveStatusIndicator status={saveStatus} />
         <div className="min-h-70 mx-auto flex w-full flex-col justify-between rounded pl-3 pr-3 shadow-lg xs:p-4 sm:mt-4   sm:max-w-3xl sm:bg-slate-800 md:mt-10">
           <div className=" mt-3  ">
-            <NameAndRateMood
-              currentStep={currentStep}
-              setData={setData}
-              handleChange={handleChange}
-              data={data}
-            />
-            <AutomaticThoughts
-              setData={setData}
-              data={data}
-              currentStep={currentStep}
-              setSaveStatus={setSaveStatus}
-            />
-
-            <Evidence
-              data={data}
-              handleChange={handleChange}
-              evidence={data.evidenceFor ?? ""}
-              currentStep={currentStep}
-              targetStep={2}
-              title="Evidence Supporting the Thought"
-              evidenceName={evidenceDataAttributes.evidenceFor}
-            />
-            <Evidence
-              data={data}
-              evidence={data.evidenceAgainst ?? ""}
-              handleChange={handleChange}
-              currentStep={currentStep}
-              targetStep={3}
-              title="Evidence against the thought"
-              evidenceName={evidenceDataAttributes.evidenceAgainst}
-            />
-
-            <NewBalancedThought
-              data={data}
-              handleChange={handleChange}
-              currentStep={currentStep}
-            />
-
-            <Rerate
-              currentStep={currentStep}
-              data={data}
-              handleChange={handleChange}
-              columns={columns}
-            />
-          </div>
-          {currentStep === columns.length - 1 && (
-            <button
-              data-testid={submitBtnDataAttribute}
-              onClick={handleSubmit}
-              disabled={currentStep !== columns.length - 1}
-              className="btn-accent btn mx-auto mt-8 mb-4  w-full max-w-sm  animate-none md:max-w-xs  "
+            <Swiper
+              spaceBetween={50}
+              slidesPerView={1}
+              onSlideChange={(swiper) => setCurrentStep(swiper.activeIndex)}
+              onSwiper={(swiper) => setSwiperInstance(swiper)}
             >
-              {data.id ? "Update Entry" : "Add Entry"}
-            </button>
-          )}
+              <SwiperSlide className="min-h-70">
+                <NameAndRateMood
+                  currentStep={currentStep}
+                  setData={setData}
+                  handleChange={handleChange}
+                  data={data}
+                />
+              </SwiperSlide>
+
+              <SwiperSlide className="min-h-70">
+                <AutomaticThoughts
+                  setData={setData}
+                  data={data}
+                  currentStep={currentStep}
+                  setSaveStatus={setSaveStatus}
+                />
+              </SwiperSlide>
+
+              <SwiperSlide className="min-h-70">
+                <Evidence
+                  data={data}
+                  handleChange={handleChange}
+                  evidence={data.evidenceFor ?? ""}
+                  currentStep={currentStep}
+                  targetStep={2}
+                  title="Evidence Supporting the Thought"
+                  evidenceName={evidenceDataAttributes.evidenceFor}
+                />
+              </SwiperSlide>
+
+              <SwiperSlide className="min-h-70">
+                <Evidence
+                  data={data}
+                  evidence={data.evidenceAgainst ?? ""}
+                  handleChange={handleChange}
+                  currentStep={currentStep}
+                  targetStep={3}
+                  title="Evidence against the thought"
+                  evidenceName={evidenceDataAttributes.evidenceAgainst}
+                />
+              </SwiperSlide>
+
+              <SwiperSlide className="min-h-70">
+                <NewBalancedThought
+                  data={data}
+                  handleChange={handleChange}
+                  currentStep={currentStep}
+                />
+              </SwiperSlide>
+
+              <SwiperSlide className="min-h-70">
+                <Rerate
+                  currentStep={currentStep}
+                  data={data}
+                  handleChange={handleChange}
+                  columns={columns}
+                  submitButton={() => {
+                    return (
+                      <button
+                        data-testid={submitBtnDataAttribute}
+                        onClick={handleSubmit}
+                        disabled={currentStep !== columns.length - 1}
+                        className="btn btn-accent mx-auto mt-8 mb-4  w-full max-w-sm  animate-none md:max-w-xs  "
+                      >
+                        {data.id ? "Update Entry" : "Add Entry"}
+                      </button>
+                    );
+                  }}
+                />
+              </SwiperSlide>
+            </Swiper>
+          </div>
         </div>
 
         <div className="mb-16  ">
           <PreviousAndNextButtons
             currentStep={currentStep}
-            setCurrentStep={setCurrentStep}
+            swiperInstance={swiperInstance}
             columns={columns}
           />
         </div>

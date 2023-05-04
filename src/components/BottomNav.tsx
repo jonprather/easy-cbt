@@ -37,7 +37,7 @@ const BottomNav = () => {
   }, [router.pathname]);
 
   return (
-    <div className=" btm-nav z-0 xs:hidden">
+    <div className=" btm-nav z-10 xs:hidden">
       <Link
         href="/"
         className={`relative z-0  ${isHomeActive ? "active" : ""} `}

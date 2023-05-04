@@ -118,7 +118,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
               data-testid={ANTDataAtributes.addAntBtn}
               type="button"
               onClick={handleClick}
-              className="btn-accent btn-square btn  text-lg"
+              className="btn btn-accent btn-square  text-lg"
             >
               <FaPlusCircle />
             </button>

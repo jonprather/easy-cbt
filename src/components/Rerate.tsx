@@ -14,13 +14,14 @@ type RerateProps = {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     control: InputField["control"]
   ) => void;
+  submitButton: () => JSX.Element;
 };
 
 const Rerate: React.FC<RerateProps> = ({
   data,
   currentStep,
   handleChange,
-
+  submitButton,
   columns,
 }) => {
   const handleRateMood = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,8 +29,8 @@ const Rerate: React.FC<RerateProps> = ({
   };
   if (currentStep !== columns.length - 1) return null;
   return (
-    <div className=" min-h-16 flex flex-col justify-between">
-      <div className="child-one">
+    <div className=" min-h-16 relative  flex flex-col justify-between">
+      <div className="child-one mb-20 md:mb-48">
         <div className=" flex items-end justify-between">
           <label className="label">
             <Modal
@@ -93,12 +94,14 @@ const Rerate: React.FC<RerateProps> = ({
           <span>High</span>
         </div>
       </div>
-      <div className="mt-11 ">
-        <Collapse
+      {/* <div className="mt-11 mb-16  "> */}
+      {/* <Collapse
           evidence={data.newThought}
-          title="Prior Step Context: Balanced Thought"
-        ></Collapse>
-      </div>
+          title="Balanced Thought"
+        ></Collapse> */}
+      {/* </div> */}
+
+      {submitButton()}
     </div>
   );
 };

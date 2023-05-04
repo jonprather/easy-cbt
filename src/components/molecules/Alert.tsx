@@ -16,7 +16,8 @@ const Alert: React.FC<AlertProps> = ({ message, type = "error" }) => {
   const handleClick = () => {
     setVisible(false);
   };
-
+  // this shows up again on going to later pages and will keep showing up again when go to page two etc
+  // have to handle the visibility in the parent state
   return (
     <div
       className={` relative mx-auto w-[95%] rounded p-2 pl-4 pr-2 alert-${type} mb-8 flex cursor-pointer flex-row items-center justify-between shadow-lg`}

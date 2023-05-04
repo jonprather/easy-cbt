@@ -60,14 +60,8 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
           </span>
         </label>
       </div>
-      <Collapse
-        evidence={data?.evidenceFor}
-        title={"Prior Step Context: Evidence For"}
-      />
-      <Collapse
-        evidence={data?.evidenceAgainst}
-        title={"Prior Step Context: Evidence Against"}
-      />
+      {/* <Collapse evidence={data?.evidenceFor} title={"Evidence For"} />
+      <Collapse evidence={data?.evidenceAgainst} title={" Evidence Against"} /> */}
     </>
   );
 };
