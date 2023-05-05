@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import type { cBT_FormDataType } from "@prisma/client";
 
 import { PuffLoader } from "react-spinners";
@@ -25,8 +25,17 @@ const EntryCardList: React.FC<EntryCardListProps> = ({
   toShow,
   deletePost,
 }) => {
+  const [alertIsVisible, setAlertIsVisible] = useState(true);
+
   if (errorMessage) {
-    return <Alert message={errorMessage} type="error" />;
+    return (
+      <Alert
+        message={errorMessage}
+        type="error"
+        alertIsVisible={alertIsVisible}
+        setAlertIsVisible={setAlertIsVisible}
+      />
+    );
   }
   return (
     <div>

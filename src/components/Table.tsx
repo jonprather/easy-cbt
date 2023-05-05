@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { api } from "../utils/api";
 
 import { toast } from "react-toastify";
@@ -14,7 +14,7 @@ import Alert from "./molecules/Alert";
 const Table = () => {
   const utils = api.useContext();
   const { data: sessionData } = useSession();
-  const [page, setPage] = useState(0);
+  const [alertIsVisible, setAlertIsVisible] = useState(true);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [sortingOption, setSortingOption] = useState<TSortOptionValues>({
@@ -39,10 +39,31 @@ const Table = () => {
     }
   );
 
+  type actionType = {
+    type: "INCREMENT" | "DECREMENT" | "RESET";
+  };
+  const pageReducer = (state: typeof initialState, action: actionType) => {
+    switch (action.type) {
+      case "INCREMENT":
+        void fetchNextPage();
+        return { page: state.page + 1 };
+      case "DECREMENT":
+        return { page: state.page - 1 };
+      default:
+        return { page: 0 };
+    }
+  };
+  const initialState = { page: 1 };
+  const [pageState, dispatchPageNumber] = useReducer(pageReducer, initialState);
   // When user filters or sorts reset the page to 0
   React.useEffect(() => {
-    setPage(0);
+    dispatchPageNumber({ type: "RESET" });
   }, [searchQuery, emojiData, sortingOption]);
+
+  // when updating the filter reset the alertVisibility
+  React.useEffect(() => {
+    setAlertIsVisible(true);
+  }, [searchQuery, emojiData]);
 
   const { mutate: deletePost } = api.CBT.delete.useMutation({
     onError: (err) => {
@@ -60,24 +81,21 @@ const Table = () => {
 
   React.useEffect(() => {
     if (!pageTotal) return;
-    if (page > pageTotal) {
-      setPage((prev) => {
-        return prev - 1;
-      });
+    if (pageState.page > pageTotal) {
+      dispatchPageNumber({ type: "DECREMENT" });
     }
-  }, [pageTotal, page]);
+  }, [pageTotal, pageState]);
 
   const getSearchQuery = (searchQuery: string) => {
     setSearchQuery(searchQuery);
   };
 
   const handleFetchNextPage = () => {
-    void fetchNextPage();
-    setPage((prev) => prev + 1);
+    dispatchPageNumber({ type: "INCREMENT" });
   };
 
   const handleFetchPreviousPage = () => {
-    setPage((prev) => prev - 1);
+    dispatchPageNumber({ type: "DECREMENT" });
   };
 
   const handleMoodChange = (moodName: string, moodLabel: string) => {
@@ -92,17 +110,18 @@ const Table = () => {
   const emitSortingData = (option: TSortOptionValues) => {
     setSortingOption(option);
   };
-  const nextCursor = data?.pages[page]?.nextCursor;
-  const toShow = data?.pages[page]?.items ?? null;
+  const nextCursor = data?.pages[pageState.page]?.nextCursor;
+  const toShow = data?.pages[pageState.page]?.items ?? null;
 
   function getInfoMessage(resultsCount: number): string {
+    if (resultsCount === -1 || !!isFetching) return "...Loading";
     if (resultsCount === 0) {
       return "Sorry, there are no results.";
-    } else if (resultsCount === 1) {
-      return "You have found one result.";
-    } else {
-      return `You found ${resultsCount} results.`;
     }
+    if (resultsCount === 1) {
+      return "You have found one result.";
+    }
+    return `You found ${resultsCount} results.`;
   }
 
   if (!sessionData) {
@@ -129,7 +148,7 @@ const Table = () => {
           <Pagination
             onPrevPage={handleFetchPreviousPage}
             onNextPage={handleFetchNextPage}
-            currentPage={page}
+            currentPage={pageState.page}
             totalPages={pageTotal ?? 0}
             nextCursor={nextCursor}
           />
@@ -147,7 +166,12 @@ const Table = () => {
         </div>
 
         {(searchQuery || emojiData.moodName) && !isFetching ? (
-          <Alert message={getInfoMessage(totalCount ?? 0)} type="info" />
+          <Alert
+            message={getInfoMessage(totalCount ?? -1)}
+            type="info"
+            alertIsVisible={alertIsVisible}
+            setAlertIsVisible={setAlertIsVisible}
+          />
         ) : null}
         <EntryCardList
           deletePost={deletePost}
