@@ -45,7 +45,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
         <textarea
           maxLength={MAX_LENGTH}
           data-testid="newBalancedThoughtInput"
-          className="textarea-bordered textarea h-44 resize-none bg-white text-black"
+          className="md:text-md textarea-bordered textarea h-44 resize-none bg-white text-lg text-black"
           placeholder="So while that may be partially true ..."
           value={data.newThought}
           onChange={handleNewThought}
