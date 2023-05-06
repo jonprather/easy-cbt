@@ -204,7 +204,11 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
       debouncedSave.cancel();
     };
   }, [data, postMessage, updatePost, sessionData, saveStatus]);
-
+  const swiperParams = {
+    // Other swiper configuration options...
+    touchStartPreventDefault: false,
+    touchMoveStopPropagation: false,
+  };
   return (
     <div className=" bg-gradient-to-br from-[#000709] to-[#022534]">
       <div className="mb-6 pt-8 text-center  sm:mb-16 sm:pt-16 lg:mb-20 lg:pt-24 ">
@@ -226,6 +230,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
               slidesPerView={1}
               onSlideChange={(swiper) => setCurrentStep(swiper.activeIndex)}
               onSwiper={(swiper) => setSwiperInstance(swiper)}
+              {...swiperParams}
             >
               <SwiperSlide className="min-h-70">
                 <NameAndRateMood
@@ -289,7 +294,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
                         data-testid={submitBtnDataAttribute}
                         onClick={handleSubmit}
                         disabled={currentStep !== columns.length - 1}
-                        className="btn btn-accent mx-auto mt-8 mb-4  w-full max-w-sm  animate-none md:max-w-xs  "
+                        className="btn-accent btn mx-auto mt-8 mb-4  w-full max-w-sm  animate-none md:max-w-xs  "
                       >
                         {data.id ? "Update Entry" : "Add Entry"}
                       </button>

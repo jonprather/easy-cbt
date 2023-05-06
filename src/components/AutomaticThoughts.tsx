@@ -112,13 +112,13 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               name="AddANT"
-              className="sm:max-w-x-lg input-bordered input w-full bg-white text-black"
+              className="sm:max-w-x-lg swiper-no-swiping input-bordered input w-full bg-white text-black"
             />
             <button
               data-testid={ANTDataAtributes.addAntBtn}
               type="button"
               onClick={handleClick}
-              className="btn btn-accent btn-square  text-lg"
+              className="btn-accent btn-square btn  text-lg"
             >
               <FaPlusCircle />
             </button>
@@ -148,7 +148,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
           </label>
         </div>
 
-        <div className=" over h-48 w-full overflow-y-auto overscroll-contain rounded-lg bg-slate-300 p-2 ">
+        <div className="swiper-no-swiping over h-48 w-full overflow-y-auto overscroll-contain rounded-lg bg-slate-300 p-2 ">
           <ul>
             {!data?.automaticThoughts[0] && (
               <li className="relative mb-2 rounded bg-gray-100 p-2">

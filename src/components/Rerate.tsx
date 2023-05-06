@@ -50,7 +50,7 @@ const Rerate: React.FC<RerateProps> = ({
           value={data.rateBelief}
           min="1"
           max="100"
-          className="range range-primary mt-2 block xs:max-w-xs"
+          className="swiper-no-swiping range range-primary mt-2 block xs:max-w-xs"
           onBlur={() => console.log()}
           onChange={handleRateMood}
         />
@@ -84,7 +84,7 @@ const Rerate: React.FC<RerateProps> = ({
           min="1"
           max="100"
           name="rerateEmotion"
-          className="range range-primary mt-2 block xs:max-w-xs"
+          className="swiper-no-swiping range range-primary mt-2 block xs:max-w-xs"
         />
         <div className="flex w-full justify-between px-2 pt-1 text-xs xs:max-w-xs">
           <span>Low</span>

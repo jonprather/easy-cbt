@@ -58,7 +58,7 @@ const NameAndRateMood: React.FC<Props> = ({
           type="text"
           name="name"
           maxLength={MAX_LENGTH}
-          className="input-bordered input w-full bg-white text-black xs:max-w-xs"
+          className="swiper-no-swiping input-bordered input w-full bg-white text-black xs:max-w-xs"
         />
         <label className="label">
           <span className="label-text-alt">
@@ -114,7 +114,7 @@ const NameAndRateMood: React.FC<Props> = ({
           min="1"
           max="100"
           name="moodRating"
-          className="range range-primary mt-2 block xs:max-w-xs "
+          className="swiper-no-swiping range range-primary mt-2 block xs:max-w-xs "
         />
         <div className="flex w-full justify-between px-2 pt-1 text-xs xs:max-w-xs">
           <span>Low</span>

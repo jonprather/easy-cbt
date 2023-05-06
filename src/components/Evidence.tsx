@@ -61,7 +61,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
         <textarea
           maxLength={MAX_LENGTH}
           data-testid={evidenceName}
-          className="md:text-md textarea-bordered textarea h-44 resize-none bg-white text-lg text-black"
+          className="md:text-md swiper-no-swiping textarea-bordered textarea h-44 resize-none bg-white text-lg text-black"
           placeholder="The following Evidence suggests..."
           value={evidence}
           name={evidenceName}

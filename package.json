@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "next dev ",
+    "dev:network": "next dev --hostname 0.0.0.0",
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start"
