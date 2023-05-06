@@ -21,9 +21,10 @@ const Home: NextPage = () => {
                   <div className=" absolute top-4 left-4 h-10 w-10">
                     <Image
                       alt="logo"
-                      src="/logo.svg"
-                      fill
-                      className="relative w-12  xs:hidden"
+                      src="/biglogo.png"
+                      width={48}
+                      height={48}
+                      className="relative rounded-full xs:hidden"
                     />
                   </div>
                   <span className="">EASY</span>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import Logo from "public/logo.png";
 import AuthShowCase from "./AuthShowCase";
 import Link from "next/link";
 import { FaHome } from "react-icons/fa";
@@ -48,7 +47,13 @@ const Navbar: React.FC = () => {
           <div className=" relative flex">
             <div className="relative h-8 w-8">
               {/* TODO fix this logo */}
-              <Image alt="logo" src="/logo.svg" fill className="  w-12 " />
+              <Image
+                alt="logo"
+                src="/biglogo.png"
+                width={48}
+                height={48}
+                className=" w-32 rounded-full bg-white text-white"
+              />
             </div>
 
             {/* <span className="ml-2 text-[hsl(186,100%,70%)]">EasyCBT</span> */}
