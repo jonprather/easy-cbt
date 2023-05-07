@@ -14,7 +14,7 @@ const Modal: React.FC<ModalProps> = ({
   title,
   labelText,
   icon = (
-    <span className="text-md  bg-transparent   p-0">
+    <span className="text-md bg-transparent   p-0">
       <FaInfoCircle />
     </span>
   ),
@@ -23,7 +23,7 @@ const Modal: React.FC<ModalProps> = ({
     <div className="ml-0">
       <label
         htmlFor={id}
-        className="flex items-center justify-end text-lg hover:cursor-pointer"
+        className="swiper-no-swiping flex  items-center justify-end text-lg hover:cursor-pointer"
       >
         {!!{ labelText } && (
           <span className="label-text  mr-2 capitalize text-white">

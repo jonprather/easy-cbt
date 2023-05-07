@@ -294,7 +294,7 @@ const CBTAppTemplate: React.FC<CBTPROPS> = ({ initialData, title, error }) => {
                         data-testid={submitBtnDataAttribute}
                         onClick={handleSubmit}
                         disabled={currentStep !== columns.length - 1}
-                        className="btn-accent btn mx-auto mt-8 mb-4  w-full max-w-sm  animate-none md:max-w-xs  "
+                        className="swiper-no-swiping btn-accent btn mx-auto mt-8 mb-4  w-full max-w-sm  animate-none md:max-w-xs  "
                       >
                         {data.id ? "Update Entry" : "Add Entry"}
                       </button>

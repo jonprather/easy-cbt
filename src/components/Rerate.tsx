@@ -32,7 +32,7 @@ const Rerate: React.FC<RerateProps> = ({
     <div className=" min-h-16 relative  flex flex-col justify-between">
       <div className="child-one mb-20 md:mb-48">
         <div className=" flex items-end justify-between">
-          <label className="label">
+          <label className="label" htmlFor="rateBeliefInput">
             <Modal
               id={"newThoughtBelieft-modal"}
               labelText={"Rate belief"}
@@ -45,6 +45,7 @@ const Rerate: React.FC<RerateProps> = ({
         </div>
         <input
           data-testid="rateBeliefInput"
+          id="rateBeliefInput"
           type="range"
           name="rateBelief"
           value={data.rateBelief}
@@ -54,7 +55,7 @@ const Rerate: React.FC<RerateProps> = ({
           onBlur={() => console.log()}
           onChange={handleRateMood}
         />
-        <div className="flex w-full justify-between px-2 pt-1 text-xs xs:max-w-xs">
+        <div className="swiper-no-swiping flex w-full justify-between px-2 pt-1 text-xs xs:max-w-xs">
           <span>Low</span>
           <span>|</span>
           <span>|</span>
@@ -63,7 +64,7 @@ const Rerate: React.FC<RerateProps> = ({
         </div>
 
         <div className="mt-4 flex items-end justify-between">
-          <label className="label">
+          <label className="label" htmlFor="rerateMoodInput">
             <Modal
               id={"rerateMood-modal"}
               labelText={"Rerate Mood Intensity"}
@@ -78,6 +79,7 @@ const Rerate: React.FC<RerateProps> = ({
 
         <input
           data-testid="rerateMoodInput"
+          id="rerateMoodInput"
           onChange={handleRateMood}
           value={data.rerateEmotion}
           type="range"
@@ -86,7 +88,7 @@ const Rerate: React.FC<RerateProps> = ({
           name="rerateEmotion"
           className="swiper-no-swiping range range-primary mt-2 block xs:max-w-xs"
         />
-        <div className="flex w-full justify-between px-2 pt-1 text-xs xs:max-w-xs">
+        <div className="swiper-no-swiping flex w-full justify-between px-2 pt-1 text-xs xs:max-w-xs">
           <span>Low</span>
           <span>|</span>
           <span>|</span>

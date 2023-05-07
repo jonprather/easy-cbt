@@ -32,7 +32,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
     <>
       <div className="form-control mb-4">
         <div className=" flex items-end justify-between">
-          <label className="label">
+          <label className="label" htmlFor="newBalancedThought">
             <Modal
               id={"newThought-modal"}
               labelText={"New Balanced Thought"}
@@ -45,20 +45,21 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
         <textarea
           maxLength={MAX_LENGTH}
           data-testid="newBalancedThoughtInput"
+          id="newBalancedThought"
           className="md:text-md swiper-no-swiping textarea-bordered textarea h-44 resize-none bg-white text-lg text-black"
           placeholder="So while that may be partially true ..."
           value={data.newThought}
           onChange={handleNewThought}
           name="newThought"
         ></textarea>
-        <label className="label">
+        <div className="label">
           <span className="label-text-alt">
             <CharCountDisplay
               charLimit={MAX_LENGTH}
               currentCount={Number(data?.newThought?.length ?? 0)}
             />
           </span>
-        </label>
+        </div>
       </div>
       {/* <Collapse evidence={data?.evidenceFor} title={"Evidence For"} />
       <Collapse evidence={data?.evidenceAgainst} title={" Evidence Against"} /> */}

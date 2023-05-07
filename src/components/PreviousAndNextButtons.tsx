@@ -26,6 +26,7 @@ const PreviousAndNextButtons: React.FC<Props> = ({
           onClick={() => handleButtonClick(currentStep - 1)}
           disabled={currentStep === 0}
           className="btn-neutral btn mt-1 ml-3 text-lg xs:ml-0"
+          aria-label="previous step"
         >
           <FaArrowLeft />
         </button>
@@ -34,6 +35,7 @@ const PreviousAndNextButtons: React.FC<Props> = ({
           onClick={() => handleButtonClick(currentStep + 1)}
           disabled={currentStep === columns.length - 1}
           className="btn-neutral btn mt-1 ml-3 text-lg xs:ml-0"
+          aria-label="next step"
         >
           <FaArrowRight />
         </button>

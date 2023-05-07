@@ -81,7 +81,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
   return (
     <>
       <div className="form-control  mb-10">
-        <label className="label flex  justify-start">
+        <label className="label flex  justify-start" htmlFor="ANT">
           <DialogDemo
             title="Automatic Negative Thoughts"
             labelText="Automatic Thoughts"
@@ -104,6 +104,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
         <div className="form-control">
           <div className="input-group ">
             <input
+              id="ANT"
               maxLength={MAX_LENGTH}
               data-testid={ANTDataAtributes.addAntInput}
               type="text"
@@ -118,7 +119,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
               data-testid={ANTDataAtributes.addAntBtn}
               type="button"
               onClick={handleClick}
-              className="btn-accent btn-square btn  text-lg"
+              className="swiper-no-swiping btn-accent btn-square btn text-lg"
             >
               <FaPlusCircle />
             </button>
@@ -136,7 +137,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
 
       <div>
         <div className="flex items-end justify-between">
-          <label className="label">
+          <div id="box-description" className="label">
             <Modal
               id={"hot-thought"}
               labelText={"Choose the hot thought"}
@@ -145,10 +146,14 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
                 "Please choose the thought that is most closely related to your choosen strong mood. It is useful to consider each thought and listen to your body and see the reaction."
               }
             />
-          </label>
+          </div>
         </div>
 
-        <div className="swiper-no-swiping over h-48 w-full overflow-y-auto overscroll-contain rounded-lg bg-slate-300 p-2 ">
+        <div
+          aria-labelledby="box-description"
+          role="listbox"
+          className="swiper-no-swiping over h-48 w-full overflow-y-auto overscroll-contain rounded-lg bg-slate-300 p-2 "
+        >
           <ul>
             {!data?.automaticThoughts[0] && (
               <li className="relative mb-2 rounded bg-gray-100 p-2">
@@ -168,6 +173,8 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
               >
                 <button
                   data-testid={ANTDataAtributes.toggleHotAntBtn}
+                  role="option"
+                  aria-selected={thoughts?.isHot}
                   className={`text-md mr-4 flex w-[90%]  cursor-pointer items-center p-2 text-left ${
                     thoughts?.isHot ? "text-gray-900" : "text-gray-900"
                   }`}
@@ -187,6 +194,7 @@ const AutomaticThoughts: React.FC<AutomaticThoughtsProps> = ({
 
                 <button
                   data-testid={ANTDataAtributes.deleteAntBtn}
+                  aria-label="Delete thought"
                   className={`text-md absolute bottom-0 right-0 p-4  ${
                     thoughts?.isHot ? "text-slate-600" : "text-slate-400"
                   }`}

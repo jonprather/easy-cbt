@@ -68,13 +68,11 @@ const NameAndRateMood: React.FC<Props> = ({
             />
           </span>
         </label>
-
-        {/* {errors?.name && <div className="text-red-500">{errors.name}</div>} */}
       </div>
 
       <div className="child-two">
         <div className="flex items-end justify-between">
-          <label className="label">
+          <label className="label" htmlFor="emojiSelector">
             <Modal
               id={"selectMood"}
               labelText={"Select Your Mood"}
@@ -95,7 +93,7 @@ const NameAndRateMood: React.FC<Props> = ({
         )} */}
 
         <div className="mt-4 flex items-end justify-between">
-          <label className="label">
+          <label className="label" htmlFor="moodRating">
             <Modal
               id={"rateMood"}
               labelText={"Rate Your Mood Intensity"}
@@ -109,6 +107,7 @@ const NameAndRateMood: React.FC<Props> = ({
         <input
           value={data.moodRating}
           data-testid="moodRating"
+          id="moodRating"
           onChange={handleMoodRating}
           type="range"
           min="1"
@@ -116,7 +115,7 @@ const NameAndRateMood: React.FC<Props> = ({
           name="moodRating"
           className="swiper-no-swiping range range-primary mt-2 block xs:max-w-xs "
         />
-        <div className="flex w-full justify-between px-2 pt-1 text-xs xs:max-w-xs">
+        <div className="swiper-no-swiping flex w-full justify-between px-2 pt-1 text-xs xs:max-w-xs">
           <span>Low</span>
           <span>|</span>
           <span>|</span>

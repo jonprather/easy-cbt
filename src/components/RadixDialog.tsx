@@ -20,7 +20,7 @@ const DialogDemo: React.FC<Props> = ({
 }) => (
   <Dialog.Root>
     <Dialog.Trigger asChild>
-      <button className="flex items-center justify-end text-lg hover:cursor-pointer">
+      <button className="swiper-no-swiping flex items-center justify-end text-lg hover:cursor-pointer">
         {!!{ labelText } && (
           <span className="label-text  mr-2 capitalize text-white">
             {labelText}

@@ -48,7 +48,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
     <>
       <div className="form-control mb-4">
         <div className="flex items-end justify-between">
-          <label className="label">
+          <label className="label" htmlFor={evidenceName}>
             <Modal
               id={evidenceName}
               labelText={title}
@@ -61,6 +61,7 @@ const NewBalancedThought: React.FC<newThoughtPropsI> = ({
         <textarea
           maxLength={MAX_LENGTH}
           data-testid={evidenceName}
+          id={evidenceName}
           className="md:text-md swiper-no-swiping textarea-bordered textarea h-44 resize-none bg-white text-lg text-black"
           placeholder="The following Evidence suggests..."
           value={evidence}

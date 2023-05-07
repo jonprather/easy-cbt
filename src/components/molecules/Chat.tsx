@@ -76,7 +76,8 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
     <div className="fixed right-8 top-10 z-50 flex flex-col xs:max-w-7xl ">
       <button
         onClick={toggleChat}
-        className="btn btn-secondary btn-circle btn-lg fixed bottom-20 right-4  max-w-xs text-2xl xs:bottom-4 xs:right-4 xs:ml-0"
+        aria-label={`${showChat ? "close" : "open"} chatbot`}
+        className="btn-secondary btn-circle btn-lg btn fixed bottom-20 right-4  max-w-xs text-2xl xs:bottom-4 xs:right-4 xs:ml-0"
       >
         {showChat ? <FaWindowClose /> : <SiChatbot className="text-2xl" />}
       </button>
@@ -165,7 +166,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
                   onKeyDown={handleKeyDown}
                 />
                 <button
-                  className="btn btn-square btn-sm absolute bottom-3 right-2 z-50 border-none bg-transparent text-lg  text-gray-300 hover:bg-transparent disabled:bg-transparent disabled:text-gray-500"
+                  className="btn-sm btn-square btn absolute bottom-3 right-2 z-50 border-none bg-transparent text-lg  text-gray-300 hover:bg-transparent disabled:bg-transparent disabled:text-gray-500"
                   type="submit"
                   disabled={!currentMessage}
                 >
