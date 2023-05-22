@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { FaWindowClose, FaTelegramPlane } from "react-icons/fa";
 import { GrPowerReset } from "react-icons/gr";
 import { SiChatbot } from "react-icons/si";
+
 import type { CBT_FormDataType } from "src/types/CBTFormTypes";
 import type { ChatMessageI } from "src/server/api/services/getOpenAIChat";
-// import * as Dialog from "@radix-ui/react-dialog";
+
 import formatChatbotResponse from "src/utils/FormatChatbotResponse";
+
 export const chatBotName = "Chaddie";
 
 const introChat =
@@ -60,7 +62,6 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
     initBotConversation();
   };
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    console.log("IN HANDLEKEY", e, e.key);
     if (currentMessage.trim() === "") return;
     if (e.code === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -68,9 +69,6 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
       initBotConversation();
     }
   };
-
-  // TODO (im not sure error is in array of mesages lets check) implement a retry button for when there is an error Or do i make it always available like chatGPT?
-  //regardless the functionality will likely be to pop the error responseoff messages then to retrigger the mutation
 
   return (
     <div className="fixed right-8 top-10 z-50 flex flex-col xs:max-w-7xl ">
@@ -149,7 +147,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
             )}
             {isError && (
               <div className="xs:pr-2` chat chat-start xs:pl-2">
-                <div className={`chat-bubble  chat-bubble-secondary `}>
+                <div className={`chat-bubble chat-bubble-error `}>
                   <p>{error?.message}</p>
                 </div>
               </div>

@@ -32,8 +32,7 @@ const useChat = (
     if (userQueries[userQueries?.length - 1]?.content === "") return false;
     return true;
   };
-  try {
-  } catch (error) {}
+
   const { data, isLoading, isFetching, isError, error } =
     api.chatbot.askGPT.useQuery(
       {
