@@ -28,12 +28,9 @@ export const getOpenAIChat = async (
       messages: chatGPTMessages,
       model: "gpt-3.5-turbo",
     };
-
     const response = await openAI.createChatCompletion(request);
     if (!response?.data || !response?.data?.choices) {
-      return {
-        text: "The bot didn't respond. Please try again later.",
-      };
+      throw new Error("The bot didn't respond. Please try again later.");
     }
 
     return {
@@ -43,7 +40,7 @@ export const getOpenAIChat = async (
   } catch (error) {
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
-      message: `Error connecting to chat-${String(error)}`,
+      message: `Error connecting to chat. ${String(error)}`,
       cause: error,
     });
   }

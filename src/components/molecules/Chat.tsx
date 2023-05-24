@@ -157,7 +157,7 @@ const Chat: React.FC<Props> = ({ currentStep, data }) => {
             <form onSubmit={handleSubmit}>
               <div className="relative mb-1">
                 <textarea
-                  className="textarea h-12 w-full  resize-none bg-neutral text-white"
+                  className="textarea h-12 w-full resize-none bg-neutral text-lg text-white"
                   placeholder="Ask the chatbot something..."
                   value={currentMessage}
                   onChange={(e) => setCurrentMessage(e.target.value)}
